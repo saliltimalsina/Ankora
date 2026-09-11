@@ -867,6 +867,10 @@ section:has(> #svc-stage){display:block!important}
 .shw.is-pinned .shw-pin{position:sticky;top:var(--shw-top,0px);height:calc(100vh - var(--shw-top,0px));overflow:clip;overflow-clip-margin:90px;display:flex;align-items:center}
 .shw-pin::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
   background:linear-gradient(#F4F1E7,rgba(244,241,231,0) 14%)}  /* top fade only; no bottom band so texture stays continuous under the card */
+/* Desktop (pinned) drops the fade entirely: the pin's top edge sits under the fixed
+   nav, so there is no seam left to hide -- the scrim just read as a cream band
+   greying out the graph paper. Mobile keeps it; there the stage starts mid-scroll. */
+.shw.is-pinned .shw-pin::before{content:none}
 
 .shw-wrap{position:relative;z-index:2;width:100%;max-width:1380px;margin:0 auto;padding:0 52px;
   display:flex;flex-direction:column;gap:30px}
