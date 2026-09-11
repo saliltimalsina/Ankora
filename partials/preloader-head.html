@@ -1,0 +1,31 @@
+<style id="ank-pl-boot">
+/* Painted before anything else so the page never flashes behind the preloader.
+   Body content is only hidden, not display:none — layout, fonts and the homepage's
+   own scripts carry on underneath while the mark draws. The ground matches
+   graph-paper.webp's own base, so the sheet never shifts colour when the texture lands. */
+html.ank-pl{background:#FCFAF6!important;}
+html.ank-pl body{visibility:hidden!important;}
+html.ank-pl body #ank-pl{visibility:visible!important;}
+
+/* The scroll lock is a SEPARATE class on purpose. Hiding overflow takes the
+   scrollbar away, so dropping it reflows the page ~15px wider->narrower; doing
+   that at the same moment the overlay dissolves reads as a hard snap. The lock
+   is released a beat earlier instead, while the sheet is still opaque, so the
+   reflow happens out of sight and the dissolve lands on a settled layout. */
+html.ank-pl-lock{overflow:hidden!important;}
+html.ank-pl-lock body{overflow:hidden!important;}
+</style>
+<link rel="preload" as="image" href="/images/texture/graph-paper.webp" fetchpriority="high"/>
+<script id="ank-pl-boot-js">
+(function () {
+  try {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (sessionStorage.getItem("ank-pl-seen") === "1") return;
+  } catch (e) {}
+  var root = document.documentElement;
+  root.classList.add("ank-pl", "ank-pl-lock");
+  // Failsafe: if the body script never runs (parse error, blocked asset), give the
+  // page back rather than leaving a visitor staring at a blank sheet.
+  setTimeout(function () { root.classList.remove("ank-pl", "ank-pl-lock"); }, 8000);
+})();
+</script>
