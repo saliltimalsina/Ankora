@@ -1,0 +1,67 @@
+/* Ankora design tokens + baseline.
+   Ported from the hand-written contact.html so the rebuilt app and the
+   remaining snapshot pages agree on colour and type. Font families come from
+   next/font/local in app/layout.tsx, which sets --font-disp/body/serif/hand. */
+
+:root {
+  /* greens */
+  --ink: #002813;
+  --green: #004822;
+  --green-d: #0c3d26;
+  --ever: #1e6b47;
+  --muted: #407659;
+  /* accents */
+  --lime: #d5e27b;
+  --lime-soft: #cfe8a3;
+  --pink: #e7b7af;
+  --copper: #b5703c;
+  /* grounds */
+  --paper: #fbf8ef;
+  --ground: #f4f1e6;
+  --sand: #f8f5ed;
+  --line: #e3decf;
+
+  /* type stacks — the next/font variables fall back to the same families the
+     snapshot names, so a missing variable degrades rather than breaks */
+  --disp: var(--font-disp), "RadionB", "Arial Narrow", system-ui, sans-serif;
+  --body: var(--font-body), "Basis Grotesque Pro", ui-sans-serif, system-ui, sans-serif;
+  --serif: var(--font-serif), "Tobias", Georgia, serif;
+  --hand: var(--font-hand), "Caveat", cursive;
+
+  --nav-h: 104px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Anchor targets clear the fixed navbar */
+[id] { scroll-margin-top: var(--nav-h); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

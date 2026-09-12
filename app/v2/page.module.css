@@ -1,0 +1,42 @@
+.main { padding-top: 64px; }
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: calc(100vh - 64px);
+  justify-content: center;
+  padding: 64px clamp(22px, 6vw, 96px);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+.title {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--disp);
+  font-size: clamp(44px, 9vw, 120px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+.title em { font-family: var(--serif); font-weight: 400; text-transform: lowercase; }
+
+.lede { margin: 0; max-width: 52ch; font-size: 18px; line-height: 1.55; }
+.lede code {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(213, 226, 123, 0.16);
+  font-size: 0.9em;
+}
