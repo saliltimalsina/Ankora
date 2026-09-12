@@ -41,7 +41,17 @@ const hand = localFont({
   src: [{ path: "../public/fonts/caveat-0.woff2", weight: "400", style: "normal" }],
 });
 
+// Absolute base for OG/twitter image URLs. No production domain is recorded in
+// the repo, so take it from the environment: NEXT_PUBLIC_SITE_URL if set,
+// otherwise the Vercel production domain, otherwise the local dev server.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3200");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Ankora Labs | Design. Build. Grow.",
   description:
     "Ankora Labs designs and builds digital products that are fast, scalable, and built to make an impact.",
