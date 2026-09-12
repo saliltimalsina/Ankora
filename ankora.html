@@ -812,17 +812,22 @@ section:has(> #svc-stage){display:block!important}
     }
   }
 
+  // #svc-stage is React-owned: the client render tears the server node out and
+  // inserts a fresh empty one, so for a few frames there is NO #svc-stage in the
+  // document at all. init() fires on a fixed DOMContentLoaded+60ms timer, so it
+  // can land inside that gap. Bailing there used to skip the observer too, and
+  // the services section never got built for the rest of the pageload — the page
+  // jumped straight from "Build what matters" to "You bring the vision".
+  // So: never bail on a missing mount, and always arm the observer.
   function init(){
-    var mount=document.getElementById("svc-stage");
-    if(!mount) return;
-    if(mount.getAttribute("data-svc-built")!=="1"){ mount.setAttribute("data-svc-built","1"); build(mount); }
-    placeMobile();
-    var obs=new MutationObserver(function(){
+    function ensure(){
       var m=document.getElementById("svc-stage");
       if(m && !m.querySelector(".svc-inner") && !m.querySelector(".svc-mobile")){ m.setAttribute("data-svc-built","1"); build(m); }
       placeMobile();
-    });
-    obs.observe(document.body,{childList:true,subtree:true});
+    }
+    ensure();
+    var obs=new MutationObserver(ensure);
+    obs.observe(document.documentElement,{childList:true,subtree:true});
     // rebuild + re-place on breakpoint cross
     var wasM=MOBILE();
     window.addEventListener("resize",function(){ var m=MOBILE(); if(m!==wasM){ wasM=m; var el=document.getElementById("svc-stage"); if(el){ el.innerHTML=""; build(el);} } placeMobile(); });
