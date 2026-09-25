@@ -1,0 +1,36 @@
+<script id="ankc-hash-scroll">
+/* Deep links into the homepage (/#show-stage, /#why-us, /#main-footer, …)
+   arriving from another page. The browser jumps to the hash before these
+   sections exist (the showcase and footer are injected after hydration),
+   so the jump lands at the top. Wait for the target, scroll to it, then
+   re-settle once while pins and images finish laying out. Stops the moment
+   the visitor scrolls themselves. */
+(function () {
+  var id = decodeURIComponent((location.hash || "").slice(1));
+  if (!id || !/^[\w-]+$/.test(id)) return;
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  var userMoved = false, t0 = Date.now(), done = false;
+  function stop() { userMoved = true; }
+  ["wheel", "touchstart", "keydown"].forEach(function (e) {
+    window.addEventListener(e, stop, { passive: true, once: true });
+  });
+  function go() {
+    var el = document.getElementById(id);
+    if (!el || userMoved) return false;
+    el.scrollIntoView({ block: "start" });
+    return true;
+  }
+  (function wait() {
+    if (userMoved) return;
+    if (go()) {
+      if (done) return;
+      done = true;
+      // layout keeps moving for a while (hydration, pin spacers, images,
+      // the preloader handing back): settle a couple more times
+      [500, 1400, 3200].forEach(function (d) { setTimeout(go, d); });
+      return;
+    }
+    if (Date.now() - t0 < 10000) setTimeout(wait, 100);
+  })();
+})();
+</script>

@@ -15,6 +15,10 @@ import { join } from "node:path";
 // The preloader follows the same rule: its overlay goes at the end of <body>,
 // while the small boot snippet that paints the green ground goes in <head> so
 // nothing of the page flashes before the mark draws.
+//
+// partials/hash-scroll.html makes /#section links from other pages land on
+// their section (those sections are injected after load, so the browser's own
+// jump misses them).
 export const dynamic = "force-static";
 
 const HIDE_REACT_NAV =
@@ -23,15 +27,16 @@ const HIDE_REACT_NAV =
   "</style>";
 
 export async function GET() {
-  const [page, navbar, plHead, plBody] = await Promise.all([
+  const [page, navbar, plHead, plBody, hashScroll] = await Promise.all([
     readFile(join(process.cwd(), "ankora.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "navbar.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "preloader-head.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "preloader.html"), "utf8"),
+    readFile(join(process.cwd(), "partials", "hash-scroll.html"), "utf8"),
   ]);
   const html = page
     .replace("</head>", plHead + "</head>")
-    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + "</body>");
+    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });
