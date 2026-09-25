@@ -1,0 +1,87 @@
+.scene {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  aspect-ratio: 5 / 4;
+  container-type: inline-size;
+  font-family: var(--body);
+  color: #1d2a20;
+}
+
+/* ---- the call ---- */
+.call {
+  position: absolute;
+  left: 0;
+  top: 2cqw;
+  width: 62cqw;
+  padding: 3cqw;
+  border-radius: 2.4cqw;
+  background: #fffef8;
+  box-shadow: 0 24px 44px -26px rgba(0, 30, 10, 0.5);
+}
+.callHead { display: flex; align-items: center; justify-content: space-between; font-size: 1.8cqw; }
+.live { display: inline-flex; align-items: center; gap: 1cqw; font-weight: 600; }
+.live i { width: 1.4cqw; height: 1.4cqw; border-radius: 50%; background: #d4483b; box-shadow: 0 0 0 0.6cqw rgba(212, 72, 59, 0.18); }
+.timer { color: rgba(0, 40, 19, 0.5); }
+
+.wave { display: flex; align-items: center; gap: 0.55cqw; height: 9cqw; margin: 2.6cqw 0; }
+.wave i { flex: 1; height: 100%; border-radius: 0.6cqw; background: #002813; }
+.wave i:last-child { background: #b5703c; }
+
+.transcript { margin: 0; font-size: 2.5cqw; line-height: 1.5; color: #1d2a20; }
+.transcript mark {
+  padding: 0 0.3cqw;
+  border-radius: 0.5cqw;
+  color: inherit;
+  background: linear-gradient(#e7b7af, #e7b7af) no-repeat 0 0 / 100% 100%;
+}
+
+/* ---- the ticket ---- */
+.ticket {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 48cqw;
+  padding: 2.8cqw;
+  border: 1px solid rgba(0, 40, 19, 0.14);
+  border-radius: 2.4cqw;
+  background: #fffef8;
+  box-shadow: 0 28px 50px -24px rgba(0, 30, 10, 0.55);
+  cursor: pointer;
+}
+.tHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6cqw; }
+.tHead b { font-family: var(--disp); font-size: 3cqw; text-transform: uppercase; color: #002813; }
+.tHead span { padding: 0.4cqw 1.4cqw; border-radius: 99px; background: #d5e27b; font-size: 1.6cqw; font-weight: 600; color: #002813; }
+.field { display: flex; align-items: baseline; justify-content: space-between; padding: 1.1cqw 0; border-top: 1px dashed rgba(0, 40, 19, 0.16); font-size: 2cqw; }
+.field span { color: rgba(0, 40, 19, 0.5); }
+.field b { font-weight: 600; }
+.draft {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  margin-top: 1.4cqw;
+  padding: 1.4cqw 1.6cqw;
+  border-radius: 1.4cqw;
+  background: #eef3e6;
+  font-size: 1.8cqw;
+  font-weight: 500;
+  color: #1e6b47;
+}
+.draft svg { flex: none; width: 2.4cqw; height: 2.4cqw; }
+.draft path { fill: none; stroke: #1e6b47; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* phrase lifted out of the transcript, on its way to the ticket */
+.chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  padding: 0 0.3cqw;
+  border-radius: 0.5cqw;
+  background: #e7b7af;
+  font-size: 2.5cqw;
+  line-height: 1.5;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.45);
+}

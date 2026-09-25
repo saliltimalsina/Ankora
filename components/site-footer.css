@@ -1,0 +1,27 @@
+/* Homepage footer, lifted verbatim from the ankora.html snapshot (ankora-footer-css)
+   so /services and the homepage match. Font stacks point at the next/font
+   variables, and the pre-grow state keys off .will-grow (set by SiteFooter)
+   instead of the snapshot's html.aj flag. */
+#main-footer.afoot{position:relative;background:#002813;color:#c7d4b6;padding:40px 30px 0;overflow:hidden;font-family:var(--body);border:0;}
+#main-footer.afoot a{color:inherit;text-decoration:none;}
+.afoot-inner{max-width:1720px;margin:0 auto;position:relative;}
+.afoot-labels{display:flex;justify-content:space-between;padding:0 6px;font-size:13px;letter-spacing:.035em;color:#8a9d79;font-weight:500;position:relative;z-index:4;}
+.afoot-plants{display:flex;justify-content:center;align-items:flex-end;margin-top:14px;pointer-events:none;overflow:visible;}
+.afoot-plants-svg{display:block;width:auto;height:130px;max-width:90%;overflow:visible;}.aplant{transform-box:fill-box;transform-origin:50% 100%;will-change:transform;}.aground{transform-box:fill-box;transform-origin:50% 100%;}.afoot-plants.will-grow:not(.is-in) .aplant{opacity:0;transform:translateY(6%) scaleY(.04);}.afoot-plants.is-in .aplant{animation:aplant-grow .85s cubic-bezier(.22,.9,.3,1) both;animation-delay:var(--gd,0s);}@keyframes aplant-grow{0%{opacity:0;transform:translateY(6%) scaleY(.04)}55%{opacity:1}80%{transform:translateY(0) scaleY(1.06)}100%{opacity:1;transform:translateY(0) scaleY(1)}}.afoot-plants.is-sway .aplant{animation:aplant-sway var(--sd,5s) ease-in-out var(--sp,0s) infinite;}@keyframes aplant-sway{0%{transform:rotate(0)}25%{transform:rotate(var(--amp,1.6deg))}50%{transform:rotate(0)}75%{transform:rotate(calc(-1*var(--amp,1.6deg)))}100%{transform:rotate(0)}}@media (prefers-reduced-motion:reduce){.afoot-plants .aplant{animation:none!important;opacity:1!important;transform:none!important}}
+.afoot-card{position:relative;margin-top:-2px;border-radius:34px 34px 0 0;padding:60px 44px 0;overflow:hidden;z-index:1;background:linear-gradient(180deg,rgba(170,198,128,.30) 0%,rgba(170,198,128,0) 16%),radial-gradient(140% 80% at 50% -10%,rgba(176,202,134,.5) 0%,rgba(176,202,134,0) 50%),linear-gradient(180deg,#4f6a43 0%,#36502f 24%,#21391f 52%,#112a18 78%,#002813 100%);}
+.afoot-cols{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:36px;padding:6px 6px 0;}
+.afoot-col h4{font-size:16px;font-weight:500;color:#8fab6f;letter-spacing:.01em;margin:0 0 24px;}
+.afoot-col a,.afoot-col .txt{display:block;font-size:18px;color:#c2d6a4;margin-bottom:16px;letter-spacing:.005em;transition:color .2s ease;}
+.afoot-col a:hover{color:#eaf3da;}
+.afoot-col .txt{color:#9fb58a;}
+.afoot-col a .ar{display:inline-block;width:12px;height:12px;margin-left:7px;vertical-align:baseline;color:#8fab6f;}
+.afoot-col a .ar svg{width:100%;height:100%;display:block;}
+.afoot-brand .afoot-logo{width:150px;height:auto;display:block;margin:0 0 22px;}
+.afoot-backtop{position:absolute;bottom:30px;right:44px;z-index:2;display:inline-flex;align-items:center;font-size:16px;font-weight:500;line-height:1.2;color:#c2d6a4;transition:color .2s ease;}
+.afoot-backtop:hover{color:#eaf3da;}
+.afoot-backtop .ar{display:inline-block;width:12px;height:12px;margin-left:7px;color:#8fab6f;}
+.afoot-backtop .ar svg{width:100%;height:100%;display:block;}
+.afoot-mark{position:relative;text-align:center;margin-top:34px;line-height:.78;pointer-events:none;user-select:none;}
+.afoot-mark span{font-family:var(--disp);font-weight:600;font-size:clamp(80px,18vw,320px);letter-spacing:.01em;color:rgba(188,212,152,.11);display:block;text-align:center;transform:translateY(22%);}
+@media (max-width:900px){.afoot-cols{grid-template-columns:repeat(2,1fr);gap:30px 28px;}.afoot-backtop{bottom:18px;right:22px;}.afoot-card{padding:46px 22px 0;}.afoot-col a,.afoot-col .txt{font-size:16px;}.afoot-mark span{font-size:clamp(56px,20vw,320px);}}
+@media (max-width:560px){.afoot-labels{font-size:11px;}.afoot-cols{grid-template-columns:1fr;gap:30px 0;}.afoot-brand{margin-bottom:4px;}.afoot-plants-svg{width:92%;height:auto;max-width:92%;}.afoot-plants{overflow:hidden;}}

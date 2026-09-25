@@ -65,3 +65,13 @@ button {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* GSAP pages: ScrollTrigger drives scroll position itself (pins, snapping,
+   programmatic jumps); CSS smooth scrolling would re-ease every one of those. */
+html:has([data-gsap-page]) { scroll-behavior: auto; }
+
+/* Hero pieces that animate in stay hidden until GSAP takes over, so there is
+   no flash of the final layout. Reduced motion (and <noscript>) shows them. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-hide] { visibility: hidden; }
+}

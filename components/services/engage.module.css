@@ -1,0 +1,91 @@
+.engage {
+  position: relative;
+  padding: clamp(110px, 16vh, 180px) clamp(20px, 5vw, 72px);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.head { max-width: 1300px; margin: 0 auto clamp(48px, 8vh, 80px); }
+.kicker {
+  margin: 0 0 18px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.h2 {
+  margin: 0;
+  font-family: var(--disp);
+  font-size: clamp(40px, 6vw, 96px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--green-d);
+}
+.h2 em { font-family: var(--serif); font-weight: 400; text-transform: none; color: var(--ever); }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.card { perspective: 900px; }
+.tilt {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: clamp(26px, 3vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fffef7;
+  color: var(--green-d);
+  transform-style: preserve-3d;
+  box-shadow: 0 30px 60px -40px rgba(0, 40, 19, 0.5);
+}
+.dark .tilt { background: var(--green-d); border-color: var(--green-d); color: var(--paper); }
+
+.tag {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: var(--lime);
+  color: var(--green-d);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.dark .tag { background: var(--pink); }
+.tilt h3 {
+  margin: 12px 0 0;
+  font-family: var(--disp);
+  font-size: clamp(40px, 4vw, 64px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  transform: translateZ(30px);
+}
+.tilt p { margin: 0; font-size: 16px; line-height: 1.55; opacity: 0.8; }
+.tilt ul { margin: 8px 0 0; padding: 0; list-style: none; }
+.tilt li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  font-size: 14px;
+}
+.tilt li::before { content: "✓"; font-weight: 700; color: var(--ever); }
+.dark .tilt li::before { color: var(--lime); }
+.link { margin-top: auto; padding-top: 18px; font-weight: 500; }
+.link span { display: inline-block; transition: transform 0.3s; }
+.link:hover span { transform: translateX(4px); }
+
+@media (max-width: 900px) {
+  .cards { grid-template-columns: 1fr; }
+}
