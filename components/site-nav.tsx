@@ -8,7 +8,7 @@ import s from "./site-nav.module.css";
 // (/, /contact); this is what replaces it as those routes move over.
 
 const LINKS = [
-  { href: "/#svc-stage", label: "Services", mega: true },
+  { href: "/services", label: "Services", mega: true },
   { href: "/#show-stage", label: "Work" },
   { href: "/#why-us", label: "Why Us" },
   { href: "/#testimonials", label: "Testimonials" },
@@ -17,7 +17,7 @@ const LINKS = [
 
 const SERVICES = [
   {
-    href: "/#svc-stage",
+    href: "/services#design",
     title: "Product Design",
     sub: "UI/UX, design systems & prototypes",
     icon: (
@@ -30,7 +30,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/#svc-stage",
+    href: "/services#engineering",
     title: "Engineering",
     sub: "Web apps & full-stack builds",
     icon: (
@@ -41,7 +41,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/#svc-stage",
+    href: "/services#mobile",
     title: "Mobile",
     sub: "iOS & Android apps",
     icon: (
@@ -52,7 +52,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/#svc-stage",
+    href: "/services#ai",
     title: "AI / Intelligence",
     sub: "AI features & workflow automation",
     icon: (
@@ -116,22 +116,6 @@ export default function SiteNav() {
                 <li key={l.label} className={l.mega ? s.svc : undefined}>
                   <a className={s.link} href={l.href} aria-haspopup={l.mega || undefined}>
                     {l.label}
-                    {l.mega && (
-                      <svg
-                        className={s.caret}
-                        width="11"
-                        height="11"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
-                    )}
                   </a>
 
                   {l.mega && (
@@ -151,8 +135,8 @@ export default function SiteNav() {
                       </div>
                       <a className={s.megaFeat} href="/#show-stage" role="menuitem">
                         <span className={s.featTag}>Featured</span>
-                        <span className={s.featTitle}>See the products we&rsquo;ve shipped</span>
-                        <span className={s.featCta}>Explore our work &rarr;</span>
+                        <span className={s.featTitle}>See what our founding team has built</span>
+                        <span className={s.featCta}>View the projects &rarr;</span>
                       </a>
                     </div>
                   )}

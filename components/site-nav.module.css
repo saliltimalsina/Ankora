@@ -54,9 +54,6 @@
 }
 .link:hover { border-bottom-color: currentColor; }
 
-.caret { transition: transform 0.2s ease; opacity: 0.65; margin-top: 1px; }
-.svc:hover .caret,
-.svc:focus-within .caret { transform: rotate(180deg); opacity: 1; }
 
 /* ---- services mega menu ---- */
 .mega {
