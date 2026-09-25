@@ -1,0 +1,220 @@
+/* Homepage showcase styles, lifted from the ankora.html snapshot (show-style). Font
+   tokens point at the next/font variables first. */
+/* ============================================================
+   "From the lab" — Selected-work showcase, v4 (light / cream).
+   Editorial one-screen PINNED stage modelled on the supplied ref:
+   LEFT  = big index + serif project name + platform + location + 1 stat
+   CENTER= browser window (16:10 shot) + description + discipline chips
+   RIGHT = folder cabinet (kept) — active folder pulls out in lime
+   BELOW = prev/next arrows + numbered step timeline
+   Scrolling the pinned track advances the active project (01 -> 06).
+   Self-contained; reuses site font tokens. No deps.
+   ============================================================ */
+.shw{
+  --ink:#002813; --ink-2:rgba(0,40,19,.66); --ink-3:rgba(0,40,19,.46);
+  --line:rgba(0,40,19,.12); --line-soft:rgba(0,40,19,.07);
+  --paper:#FFFEF9; --paper-2:#FBF8EF;
+  --green:#1E6B47; --green-d:#0C3D26;
+  --lime:#D7E36A; --lime-d:#C2D24F; --lime-l:#E6EF96; --lime-ink:#1B3A12;
+  --sage:#E7EEE2;
+  --disp:var(--font-disp),"Radion","Arial Narrow",system-ui,sans-serif;
+  --body:var(--font-body),"Basis Grotesque Pro","BasisGrotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:var(--font-serif),"Tobias",Georgia,serif;
+  position:relative; isolation:isolate; width:100%;
+  background:#F4F1E7 url(/images/texture/graph-paper.webp); background-size:760px;
+  color:var(--ink); font-family:var(--body); -webkit-font-smoothing:antialiased;
+  padding-bottom:clamp(64px,9vh,124px);   /* breathing room before the next (dark "as seen in") section; padding (not margin) so the graph-paper texture fills it */
+}
+.shw *{box-sizing:border-box}
+.shw.is-pinned{height:var(--shw-h,420vh)}
+
+/* pinned stage */
+.shw-pin{position:relative;background:#F4F1E7 url(/images/texture/graph-paper.webp);background-size:760px}
+.shw.is-pinned .shw-pin{position:sticky;top:var(--shw-top,0px);height:calc(100vh - var(--shw-top,0px));overflow:clip;overflow-clip-margin:90px;display:flex;align-items:center}
+.shw-pin::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(#F4F1E7,rgba(244,241,231,0) 14%)}  /* top fade only; no bottom band so texture stays continuous under the card */
+/* Desktop (pinned) drops the fade entirely: the pin's top edge sits under the fixed
+   nav, so there is no seam left to hide -- the scrim just read as a cream band
+   greying out the graph paper. Mobile keeps it; there the stage starts mid-scroll. */
+.shw.is-pinned .shw-pin::before{content:none}
+
+.shw-wrap{position:relative;z-index:2;width:100%;max-width:1380px;margin:0 auto;padding:0 52px;
+  display:flex;flex-direction:column;gap:30px}
+/* centered content gives a balanced gap top AND bottom (timeline stays visible) */
+.shw.is-pinned .shw-wrap{padding-top:clamp(16px,4vh,48px);padding-bottom:clamp(16px,4vh,48px)}
+.shw:not(.is-pinned) .shw-wrap{padding:96px 24px 88px}
+.shw-cols{display:grid;grid-template-columns:348px minmax(0,1fr);gap:30px;align-items:start}
+
+/* ---------- LEFT ---------- */
+.shw-left{align-self:start}
+.shw-cur{transition:opacity .42s cubic-bezier(.2,.7,.2,1),transform .42s cubic-bezier(.2,.7,.2,1)}
+.shw-cur.swap{opacity:0;transform:translateY(12px)}
+.shw-num{font-family:var(--disp);font-weight:800;font-size:clamp(72px,7.6vw,116px);line-height:.9;
+  color:var(--green-d);letter-spacing:-.03em}
+.shw-numrule{width:52px;height:2px;background:var(--line);margin:16px 0 18px}
+.shw-pname{font-family:var(--disp);font-weight:800;font-size:clamp(36px,4vw,58px);line-height:1.02;
+  color:var(--green-d);letter-spacing:-.03em;margin:0}
+.shw-plat{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink-3);
+  margin-top:16px;line-height:1.55;max-width:22ch}
+.shw-loc{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:var(--ink-2);margin-top:14px}
+.shw-loc svg{width:14px;height:14px;color:var(--green)}
+.shw-rule{height:1px;background:var(--line);margin:22px 0}
+.shw-stat{display:flex;align-items:center;gap:14px}
+.shw-stat-ic{width:54px;height:54px;flex:none;border-radius:50%;background:var(--sage);display:grid;place-items:center;color:var(--green)}
+.shw-stat-ic svg{width:22px;height:22px}
+.shw-stat-num{font-family:var(--body);font-weight:700;font-size:30px;color:var(--green);line-height:1;letter-spacing:-.01em}
+.shw-stat-cap{font-size:13px;color:var(--ink-2);margin-top:4px;max-width:21ch;line-height:1.35}
+
+/* ---------- CENTER (everything inside one card) ---------- */
+.shw-stage{min-width:0}
+.shw-card{position:relative;width:100%;max-width:854px;margin-inline:auto;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px;
+  box-shadow:0 46px 90px -50px rgba(0,40,19,.42),0 16px 36px -26px rgba(0,40,19,.18);
+  transition:opacity .42s cubic-bezier(.2,.7,.2,1),transform .42s cubic-bezier(.2,.7,.2,1)}
+.shw-card.swap{opacity:0;transform:translateY(14px)}
+.shw-browser{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;text-decoration:none;
+  transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+a.shw-browser:hover{transform:translateY(-3px)}
+.shw-bbar{position:relative;display:flex;align-items:center;height:44px;padding:0 16px;background:#fff;border-bottom:1px solid var(--line-soft)}
+.shw-bbar .dots{display:flex;gap:7px}
+.shw-bbar .dots i{width:11px;height:11px;border-radius:50%;display:block}
+.shw-bbar .dots i:nth-child(1){background:#ED6A5E}.shw-bbar .dots i:nth-child(2){background:#F4BF4F}.shw-bbar .dots i:nth-child(3){background:#61C554}
+.shw-burl{position:absolute;left:50%;transform:translateX(-50%);width:min(56%,360px);height:28px;border-radius:8px;
+  background:#F1EEE4;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;color:#4d6b59}
+.shw-burl svg{width:11px;height:11px;opacity:.7}
+.shw-bshot{display:block;width:100%;height:auto;max-height:450px;object-fit:cover;object-position:top center;background:#eceadf}
+/* ----- caption below the image: minimal, a few lines ----- */
+.shw-meta{padding:0 4px}
+.shw-mhead{display:flex;align-items:baseline;gap:13px;margin-top:15px}
+.shw-mnum{font-family:var(--disp);font-weight:800;font-size:21px;line-height:1;letter-spacing:-.02em;color:var(--green)}
+.shw-mname{font-family:var(--disp);font-weight:800;font-size:clamp(26px,2.5vw,38px);line-height:1;letter-spacing:-.03em;color:var(--green-d);margin:0}
+.shw-mloc{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--ink-2);white-space:nowrap}
+.shw-mloc svg{width:14px;height:14px;color:var(--green)}
+.shw-pdesc{font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:9px 0 12px;max-width:74ch;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.shw-mfoot{display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.shw-statmin{display:inline-flex;align-items:center;gap:9px}
+.shw-statmin .ic{width:26px;height:26px;flex:none;border-radius:7px;background:var(--sage);display:grid;place-items:center;color:var(--green)}
+.shw-statmin .ic svg{width:14px;height:14px}
+.shw-statmin b{font-weight:700;font-size:16px;color:var(--green);letter-spacing:-.01em}
+.shw-statmin span{font-size:13px;color:var(--ink-2)}
+.shw-chips{display:flex;gap:9px;flex-wrap:wrap}
+.shw-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--ink);
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+.shw-chip svg{width:13px;height:13px;color:var(--green)}
+
+/* ---------- LEFT: folder cabinet (kept, upgraded) ---------- */
+.shw-right2{align-self:center}
+.shw-rlabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:18px}
+.shw-note{margin-top:16px;padding-top:13px;border-top:1px solid var(--line-soft);font-size:11.5px;line-height:1.55;color:var(--ink-3);max-width:34ch}
+.shw-note strong{font-weight:600;color:var(--ink-2,var(--ink-3))}
+.shw-railrow{display:flex;align-items:stretch;gap:30px}
+.shw-folders{position:relative;flex:1 1 auto;min-width:0;display:flex;flex-direction:column;padding-top:9px}
+.shw-folder{position:relative;display:flex;align-items:center;gap:12px;text-align:left;width:100%;cursor:pointer;
+  font-family:inherit;background:var(--paper);border:1px solid var(--line-soft);border-radius:6px 14px 14px 14px;
+  padding:16px 16px 17px;margin-top:-9px;appearance:none;
+  box-shadow:0 12px 24px -18px rgba(0,40,19,.4);
+  transition:transform .4s cubic-bezier(.2,.7,.2,1),background .4s,box-shadow .4s,border-color .4s}
+.shw-folder:first-child{margin-top:0}
+/* small clean folder tab */
+.shw-folder::before{content:"";position:absolute;left:-1px;top:-9px;width:56px;height:11px;
+  background:var(--paper);border:1px solid var(--line-soft);border-bottom:0;border-radius:8px 8px 0 0}
+.shw-folder:hover{transform:translateX(-8px);z-index:30}
+.shw-folder.is-active{background:var(--lime);border-color:var(--lime-d);color:var(--lime-ink);
+  transform:translateX(-20px) scale(1.035);box-shadow:-7px 26px 46px -22px rgba(30,107,71,.5)}
+.shw-folder.is-active::before{background:var(--lime);border-color:var(--lime-d)}
+.shw-folder-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.shw-folder-idx{font-family:var(--disp);font-weight:800;font-size:12px;letter-spacing:-.01em;color:var(--ink-3);margin-bottom:8px}
+.shw-folder.is-done .shw-folder-idx{color:var(--green)}
+.shw-folder.is-active .shw-folder-idx{color:var(--lime-ink)}
+.shw-folder-name{font-family:var(--disp);font-weight:800;font-size:17px;line-height:1.08;letter-spacing:-.02em;color:var(--ink)}
+.shw-folder.is-active .shw-folder-name{color:var(--lime-ink)}
+.shw-folder-cat{font-family:var(--body);font-weight:500;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
+.shw-folder.is-active .shw-folder-cat{color:rgba(27,58,18,.62)}
+.shw-folder-ic{width:32px;height:32px;flex:none;border-radius:9px;display:grid;place-items:center;background:var(--sage);color:var(--green)}
+.shw-folder.is-active .shw-folder-ic{background:rgba(27,58,18,.14);color:var(--lime-ink)}
+.shw-folder-ic svg{width:16px;height:16px}
+
+/* ---------- BOTTOM: timeline ---------- */
+/* vertical scroll-progress spine — sits beside the folders, matches their height */
+.shw-vtl{position:relative;flex:none;width:24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:4px 0}
+.shw-vtl::before{content:"";position:absolute;top:18px;bottom:18px;left:50%;transform:translateX(-50%);width:3px;border-radius:3px;background:var(--line)}
+.shw-vfill{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:3px;border-radius:3px;background:var(--green);
+  height:calc((100% - 36px) * var(--shw-prog,0));transition:height .12s linear;z-index:1}
+.shw-vstep{position:relative;z-index:2;width:28px;height:28px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
+.shw-vstep .d{width:12px;height:12px;border-radius:50%;background:#cdd6c6;box-shadow:0 0 0 5px #F4F1E7;transition:all .3s}
+.shw-vstep.done .d{background:var(--green)}
+.shw-vstep.cur .d{width:16px;height:16px;background:#fff;border:4px solid var(--green);box-shadow:0 0 0 5px #F4F1E7,0 0 0 9px rgba(30,107,71,.16)}
+.shw-vstep:hover .d{transform:scale(1.15)}
+
+/* entrance reveal */
+.shw-reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.shw-reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media(max-height:820px){
+  .shw-mname{font-size:clamp(22px,2vw,31px)}
+  .shw-mhead{margin-top:11px}
+  .shw-pdesc{margin:8px 0 10px;font-size:14px}
+  .shw-wrap{gap:22px}
+  .shw-folder{padding:13px 15px 14px;margin-top:-8px}
+  .shw-folder-name{font-size:15px}.shw-folder-idx{margin-bottom:6px}.shw-folder-cat{margin-top:5px}
+  .shw-folder-ic{width:30px;height:30px}
+}
+@media(max-width:1080px){
+  .shw-cols{grid-template-columns:1fr;gap:30px}
+  .shw-vtl{display:none}
+  .shw-stage{order:-1}            /* big card leads on narrow screens */
+  .shw-folders{flex-direction:row;overflow-x:auto;padding:16px 4px 18px;gap:14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .shw-folder{flex:0 0 210px;margin-top:0;scroll-snap-align:start}
+  .shw-folder::before{left:14px}
+  .shw-folder:hover{transform:none}
+  .shw-folder.is-active{transform:translateY(-7px) scale(1.02)}
+}
+@media(max-width:560px){
+  .shw-mname{font-size:32px}.shw-mhead{flex-wrap:wrap;gap:8px}.shw-mloc{margin-left:0}
+}
+
+/* ---------- MOBILE: sticky-browser showcase (built only when !PIN_ON) ---------- */
+.shw .shw-wrap.shw-m{max-width:620px;gap:0;padding-top:clamp(26px,6vh,60px)}
+.shw-m-top{position:sticky;top:calc(var(--shw-top,0px) + 8px);z-index:6;background:#F4F1E7;padding-bottom:14px}
+.shw-m-top::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:18px;pointer-events:none;
+  background:linear-gradient(#F4F1E7,rgba(244,241,231,0))}
+/* when pinned, fill the band above the header so scrolled-up dimmed sections don't ghost through */
+.shw-m-top.stuck::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:60vh;background:#F4F1E7;pointer-events:none}
+.shw-m-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px}
+.shw-m-head .shw-rlabel{margin-bottom:0}
+.shw-m-prog{display:flex;align-items:center;gap:10px;flex:0 1 190px;min-width:120px}
+.shw-m-bar{position:relative;flex:1;height:5px;border-radius:5px;background:rgba(0,40,19,.12);overflow:hidden}
+.shw-m-bar i{position:absolute;top:0;left:0;bottom:0;width:20%;border-radius:5px;background:var(--green);
+  transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.shw-m-count{font-size:12px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.shw-m-card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  transition:opacity .42s cubic-bezier(.2,.7,.2,1),transform .42s cubic-bezier(.2,.7,.2,1)}
+.shw-m-card.swap{opacity:0;transform:translateY(10px)}
+.shw-m-card .shw-browser{border:0;border-radius:16px}
+.shw-m-card .shw-bbar{height:38px}
+.shw-m-card .shw-bshot{max-height:250px}
+.shw-m-secs{position:relative;z-index:1}
+.shw-m-sec{min-height:58vh;display:flex;flex-direction:column;align-items:flex-start;
+  padding:4vh 2px 0;opacity:.32;transition:opacity .45s cubic-bezier(.2,.7,.2,1)}
+.shw-m-sec.is-active{opacity:1}
+.shw-m-num{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--green);letter-spacing:-.01em}
+.shw-m-name{font-family:var(--disp);font-weight:800;font-size:clamp(30px,9vw,46px);line-height:1.02;letter-spacing:-.03em;color:var(--green-d);margin:8px 0 0}
+.shw-m-cat{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-top:10px}
+.shw-m-stat{display:inline-flex;align-items:center;gap:10px;margin-top:18px}
+.shw-m-stat .ic{width:30px;height:30px;flex:none;border-radius:8px;background:var(--sage);display:grid;place-items:center;color:var(--green)}
+.shw-m-stat .ic svg{width:15px;height:15px}
+.shw-m-stat b{font-weight:700;font-size:18px;color:var(--green);letter-spacing:-.01em}
+.shw-m-stat span{font-size:13px;color:var(--ink-2)}
+.shw-m-loc{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink-2);margin-top:12px}
+.shw-m-loc svg{width:14px;height:14px;color:var(--green)}
+.shw-m-desc{font-size:15px;line-height:1.55;color:var(--ink-2);margin:14px 0 16px;max-width:46ch}
+.shw-m .shw-chips{gap:8px}
+
+@media(prefers-reduced-motion:reduce){
+  .shw-reveal,.shw-card,.shw-cur,.shw-folder,.shw-browser,.shw-vfill,.shw-m-card,.shw-m-sec,.shw-m-bar i{transition:none!important}
+  .shw-reveal{opacity:1;transform:none}
+  .shw-m-sec{opacity:1}
+}
+/* portfolio thumbnails, shown full-bleed */
+.shw-thumb{position:relative;display:block;overflow:hidden}.shw-thumb .shw-bshot{width:100%;height:auto;max-height:none;aspect-ratio:16/10;object-fit:cover;object-position:center}.shw-m-card .shw-thumb .shw-bshot{max-height:none}

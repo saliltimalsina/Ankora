@@ -1055,47 +1055,44 @@ a.shw-browser:hover{transform:translateY(-3px)}
   .shw-reveal{opacity:1;transform:none}
   .shw-m-sec{opacity:1}
 }
+
+/* portfolio thumbnails, shown full-bleed */
+.shw-thumb{position:relative;display:block;overflow:hidden}.shw-thumb .shw-bshot{width:100%;height:auto;max-height:none;aspect-ratio:16/10;object-fit:cover;object-position:center}.shw-m-card .shw-thumb .shw-bshot{max-height:none}
 </style>
 
 <script id="show-script">
 (function(){
   var RM=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Real products. Screenshots are the existing /images/homepage/Trail*.webp.
-  // live:1 = confirmed public URL (others land on "#").
-  // NOTE: plat / loc / role / impact are PLACEHOLDER copy used to populate the
-  // layout — swap in verified specifics per project before launch.
+  // Projects from Salil's portfolio (saliltimalsina.com.np), done before
+  // Ankora; shown as the founding team's work, with credit to their owners.
+  // No outcome figures on purpose: we only state what we did and when.
   var P=[
-    {n:"Hukut",cat:"Marketplace",plat:"Multi-category marketplace platform",loc:"Nepal",
-     d:"A multi-category online marketplace — electronics, daily deals, and fast local delivery across the country.",
-     role:["Product Design","Frontend Development","Design System"],
-     impact:["+63%","Lift in mobile checkout completion"],
-     img:"Trail7",alt:"Hukut online marketplace homepage",ic:"bag",
-     url:"https://hukut.com",dom:"hukut.com",live:1},
-    {n:"Answer Service",cat:"AI call answering",plat:"AI call-answering platform",loc:"Nepal",
-     d:"An always-on answering desk that picks up calls, handles requests, transcribes in real time, and routes the rest.",
-     role:["Product Design","Frontend Development","AI Workflow Design"],
-     impact:["+42%","Improvement in call resolution time"],
-     img:"Trail2",alt:"Answer Service live-call dashboard",ic:"wave",
-     url:"https://answerservice.ai",dom:"answerservice.ai",live:1},
-    {n:"Ratna",cat:"Furniture commerce",plat:"Furniture commerce experience",loc:"Nepal",
-     d:"Solid-wood furniture made for modern Nepali homes — browse the catalogue and shop by room.",
-     role:["Brand & Art Direction","Product Design","Frontend Development"],
-     impact:["2.1×","Longer time on product pages"],
-     img:"Trail1",alt:"Ratna furniture store homepage",ic:"cube",
-     url:"#",dom:"ratna.studio",live:0},
-    {n:"TryBoko",cat:"Wellness & nutrition",plat:"Wellness & nutrition, D2C",loc:"Nepal",
-     d:"Ancient nutrition for modern living — a premium wellness brand sold direct to customers.",
-     role:["Product Design","Frontend Development","Brand"],
-     impact:["+38%","Repeat subscription rate"],
-     img:"Trail9",alt:"TryBoko nutrition brand homepage",ic:"leaf",
-     url:"#",dom:"tryboko.com",live:0},
-    {n:"Skathi",cat:"Cultural archive",plat:"Cultural archive & media",loc:"Nepal",
-     d:"A living archive of art, sound, and culture from Nepal — built to browse, listen, and explore.",
-     role:["Product Design","Frontend Development","Motion"],
-     impact:["12k+","Artefacts catalogued"],
-     img:"Trail3",alt:"Skathi art and culture archive homepage",ic:"arch",
-     url:"#",dom:"skathi.art",live:0}
+    {n:"Telvox",cat:"AI voice platform",yr:"2026",
+     d:"One command centre for teams to build their AI voice agents, audit what they said, and bill for it.",
+     role:["Product Design","AI Platform"],
+     img:"/images/work/telvox-card.webp",thumb:1,pos:"0% 50%",alt:"Telvox AI voice agent platform",ic:"wave",
+     url:"https://telvox.ai",dom:"telvox.ai",live:1},
+    {n:"OCCS",cat:"Call centre platform",yr:"2024–2026",
+     d:"The screen 300+ call centre clerks work in all day, with everything needed during a live call on one screen.",
+     role:["UX","Product Design","Research"],
+     img:"/images/work/occs-card.webp",thumb:1,alt:"OCCS callbacks screen with an incoming call, on a laptop",ic:"srv",
+     url:"#",dom:"OCCS clerk console",live:0},
+    {n:"Mantra Ideas",cat:"Agency website",yr:"2026",
+     d:"Mantra Ideas’ own site, designed and built down to every pixel and every line.",
+     role:["Web Design","Development"],
+     img:"/images/work/mantra-ideas.webp",alt:"Mantra Ideas homepage",ic:"cube",
+     url:"https://mantraideas.com",dom:"mantraideas.com",live:1},
+    {n:"Telvox.ai",cat:"Landing page",yr:"2026",
+     d:"The site that pitches Telvox before the demo does.",
+     role:["Landing Page","Web Design","Development"],
+     img:"/images/work/telvox-site-card.webp",thumb:1,alt:"Telvox marketing site on a laptop",ic:"arch",
+     url:"https://telvox.ai",dom:"telvox.ai",live:1},
+    {n:"Hukut",cat:"E-commerce",yr:"2025",
+     d:"Nepal’s gadget store, rebuilt so visitors actually become buyers.",
+     role:["E-commerce","Product Design"],
+     img:"/images/work/hukut-card.webp",thumb:1,alt:"Hukut gadget store on a laptop",ic:"bag",
+     url:"https://hukut.com",dom:"hukut.com",live:1}
   ];
 
   var LOCK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>';
@@ -1118,7 +1115,7 @@ a.shw-browser:hover{transform:translateY(-3px)}
   };
 
   function num(i){return ("0"+(i+1)).slice(-2);}
-  function shot(p){return '/images/homepage/'+p.img+'.webp';}
+  function shot(p){return p.img;}
   function chips(a){var s="";for(var i=0;i<a.length;i++)s+='<span class="shw-chip">'+(CHIPIC[i%CHIPIC.length])+a[i]+'</span>';return s;}
 
   function build(el){
@@ -1143,12 +1140,12 @@ a.shw-browser:hover{transform:translateY(-3px)}
     return '<div class="shw-pin"><div class="shw-wrap">'+
         '<div class="shw-cols">'+
           '<aside class="shw-right2 shw-reveal">'+
-            '<span class="shw-rlabel">Explore our work</span>'+
+            '<span class="shw-rlabel">From our founding team</span>'+
             '<div class="shw-railrow">'+
               '<div class="shw-vtl" id="shw-steps">'+vsteps+'</div>'+
               '<div class="shw-folders" id="shw-folders">'+folders+'</div>'+
             '</div>'+
-            '<p class="shw-note">A mix of collaborative and agency work. My involvement varied by project.</p>'+
+            '<p class="shw-note">Products our founding team designed and built before Ankora, at previous companies. Names and marks belong to their owners.</p>'+
           '</aside>'+
           '<div class="shw-stage shw-reveal"><div class="shw-card" id="shw-card"></div></div>'+
         '</div>'+
@@ -1158,21 +1155,20 @@ a.shw-browser:hover{transform:translateY(-3px)}
   function mobileMarkup(){
     var secs="";
     for(var i=0;i<P.length;i++){var p=P[i];
-      var loc=p.loc?('<span class="shw-m-loc">'+PIN+p.loc+'</span>'):'';
+      var loc='<span class="shw-m-loc">'+p.yr+'</span>';
       secs+='<section class="shw-m-sec" data-i="'+i+'">'+
         '<span class="shw-m-num">'+num(i)+'</span>'+
         '<h3 class="shw-m-name">'+p.n+'</h3>'+
         '<div class="shw-m-cat">'+p.cat+'</div>'+
-        '<div class="shw-m-stat"><span class="ic">'+TREND+'</span><b>'+p.impact[0]+'</b><span>'+p.impact[1]+'</span></div>'+
         loc+
         '<p class="shw-m-desc">'+p.d+'</p>'+
-        '<div class="shw-chips">'+chips(p.role)+'</div>'+
+        '<div class="shw-chips">'+'<span class="shw-chip" style="background:none;border:0;padding-left:0;opacity:.6;font-size:11px;letter-spacing:.14em;text-transform:uppercase">Our role</span>'+chips(p.role)+'</div>'+
       '</section>';
     }
     return '<div class="shw-pin"><div class="shw-wrap shw-m">'+
         '<div class="shw-m-top">'+
           '<div class="shw-m-head">'+
-            '<span class="shw-rlabel">Explore our work</span>'+
+            '<span class="shw-rlabel">From our founding team</span>'+
             '<div class="shw-m-prog"><span class="shw-m-bar"><i></i></span><span class="shw-m-count">1/'+P.length+'</span></div>'+
           '</div>'+
           '<div class="shw-m-card" id="shw-card"></div>'+
@@ -1183,10 +1179,18 @@ a.shw-browser:hover{transform:translateY(-3px)}
 
   var active=0, swapT=0, builtMobile=false, elWired=false;
 
+  // Portfolio thumbnails are finished compositions (device mockups on their
+  // own grounds), so they're shown full-bleed rather than inside a fake
+  // browser window.
+  // Portfolio thumbnails are finished compositions, so they fill the frame
+  // with no fake browser bar, trimmed only as much as the frame needs (`pos`
+  // picks which side to keep). Live-site screenshots keep the browser.
   function fillBrowser(p){
     var fr=shot(p);
     var tag=p.live?'a':'div';
     var attr=p.live?(' href="'+p.url+'" target="_blank" rel="noreferrer"'):'';
+    if(p.thumb) return '<'+tag+' class="shw-browser shw-thumb"'+attr+'>'+
+        '<img class="shw-bshot" src="'+fr+'" alt="'+p.alt+'"'+(p.pos?' style="object-position:'+p.pos+'"':'')+' loading="lazy" decoding="async"></'+tag+'>';
     return '<'+tag+' class="shw-browser"'+attr+'>'+
         '<div class="shw-bbar"><span class="dots"><i></i><i></i><i></i></span><span class="shw-burl">'+LOCK+p.dom+'</span></div>'+
         '<img class="shw-bshot" src="'+fr+'" alt="'+p.alt+'" loading="lazy" decoding="async"></'+tag+'>';
@@ -1196,11 +1200,10 @@ a.shw-browser:hover{transform:translateY(-3px)}
       '<div class="shw-meta">'+
         '<div class="shw-mhead"><span class="shw-mnum">'+num(i)+'</span>'+
           '<h2 class="shw-mname">'+p.n+'</h2>'+
-          '<span class="shw-mloc">'+PIN+p.loc+'</span></div>'+
+          '<span class="shw-mloc">'+p.yr+'</span></div>'+
         '<p class="shw-pdesc">'+p.d+'</p>'+
         '<div class="shw-mfoot">'+
-          '<div class="shw-statmin"><span class="ic">'+TREND+'</span><b>'+p.impact[0]+'</b><span>'+p.impact[1]+'</span></div>'+
-          '<div class="shw-chips">'+chips(p.role)+'</div>'+
+          '<div class="shw-chips">'+'<span class="shw-chip" style="background:none;border:0;padding-left:0;opacity:.6;font-size:11px;letter-spacing:.14em;text-transform:uppercase">Our role</span>'+chips(p.role)+'</div>'+
         '</div>'+
       '</div>';
   }
