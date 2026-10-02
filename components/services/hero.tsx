@@ -357,8 +357,8 @@ export default function Hero() {
         </h1>
 
         <p data-fade className={s.lede}>
-          Design, engineering, mobile and AI under one roof, so your product goes from idea to launch without the
-          hand-offs.
+          Web design, development, mobile apps and AI under one roof in Kathmandu, Nepal, so your product goes from
+          idea to launch without the hand-offs.
         </p>
 
         <ul data-fade className={s.links} aria-label="Our services">

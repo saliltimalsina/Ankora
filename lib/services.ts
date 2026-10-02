@@ -37,8 +37,8 @@ export const SERVICES: Service[] = [
       "Research, wireframes, and polished interfaces. We turn rough ideas into products people actually want to use, and hand off systems your team can keep building on.",
     deliverables: [
       "User research & product audits",
-      "UX flows & wireframes",
-      "UI design & clickable prototypes",
+      "UI/UX design: flows, wireframes & prototypes",
+      "Website & app UI design",
       "Design systems & component libraries",
       "Brand & art direction",
     ],
@@ -57,10 +57,10 @@ export const SERVICES: Service[] = [
     blurb:
       "Fast, accessible, search-ready builds on a modern stack, shipped to production and not just handed off as a mockup.",
     deliverables: [
-      "Marketing sites & web apps",
-      "React / Next.js frontends",
-      "APIs, backends & integrations",
-      "CMS & e-commerce",
+      "Business websites & web apps",
+      "E-commerce with eSewa, Khalti & Fonepay",
+      "React / Next.js frontends, APIs & backends",
+      "CMS, hosting & domain setup",
       "Performance, accessibility & SEO",
     ],
     stack: ["Next.js", "TypeScript", "Node", "Postgres", "Vercel"],
@@ -80,7 +80,7 @@ export const SERVICES: Service[] = [
     deliverables: [
       "iOS & Android apps",
       "Offline-first data & sync",
-      "Push, auth & in-app payments",
+      "Push, auth & local payment gateways",
       "App Store & Play Store launch",
       "Ongoing releases & maintenance",
     ],
@@ -144,6 +144,22 @@ export const ENGAGEMENTS = [
 
 export const FAQ = [
   {
+    q: "How much does a website cost in Nepal?",
+    a: "A custom business website with us usually starts around Rs 60,000, an e-commerce site or web app around Rs 1,50,000, and a full product with mobile apps around Rs 4,00,000. The real number depends on pages, features and integrations; after a first call you get a fixed, written quote.",
+  },
+  {
+    q: "Can you integrate eSewa, Khalti, Fonepay and other payments?",
+    a: "Yes. We integrate eSewa, Khalti, Fonepay, connectIPS and bank QR for local payments, and Stripe or PayPal when you sell abroad, plus SMS, email, maps and whatever else your product needs.",
+  },
+  {
+    q: "Do you handle hosting, domains and maintenance?",
+    a: "Yes. We set up hosting, your .com or .com.np domain, SSL and backups, and can keep the site updated, monitored and secure after launch on a monthly care plan.",
+  },
+  {
+    q: "Do you work with businesses outside Kathmandu?",
+    a: "Yes. We're a remote-first team based in Kathmandu and work with clients all over Nepal and abroad. Calls, demos and handover all happen online, and we're reachable on weekdays and weekends.",
+  },
+  {
     q: "Can you do design only, or engineering only?",
     a: "Yes. Most clients use both, but we regularly pick up a design system for an in-house dev team, or build from designs someone else made.",
   },
@@ -164,3 +180,46 @@ export const FAQ = [
     a: "You own everything: code, design files and accounts. Many teams keep us on as a Partner; others take it in-house with a proper handover.",
   },
 ];
+
+// Indicative starting prices in NPR, set against the Nepali market in Oct 2026
+// (templated sites from ~Rs 10k, professional sites Rs 25k–1.2 lakh,
+// e-commerce Rs 60k–2 lakh+, custom apps Rs 1–6 lakh+). Ankora quotes custom
+// design and engineering, so it sits in the upper-middle. Revisit as the
+// studio prices real projects.
+export const PRICING = [
+  {
+    name: "Business website",
+    from: "60,000",
+    weeks: "3–5 weeks",
+    fits: "Companies, startups & professionals",
+    items: ["Custom design, no templates", "Up to 8 pages + CMS", "Mobile-first & fast", "SEO setup & Google Analytics", "Hosting, domain & SSL setup"],
+  },
+  {
+    name: "E-commerce & web apps",
+    from: "1,50,000",
+    weeks: "6–10 weeks",
+    fits: "Online stores, portals & dashboards",
+    items: ["Everything in Business website", "eSewa, Khalti & Fonepay checkout", "Products, orders & inventory admin", "Customer accounts & dashboards", "APIs & third-party integrations"],
+  },
+  {
+    name: "Product build",
+    from: "4,00,000",
+    weeks: "10–16 weeks",
+    fits: "Startups & new digital products",
+    items: ["UX research & clickable prototype", "Web app + iOS & Android apps", "Backend, APIs & admin panel", "Analytics, QA & store launch", "Weekly demos on staging"],
+  },
+];
+
+export const CARE_PLAN = { from: "5,000", note: "Hosting, updates, backups and small changes every month." };
+
+// Who the work is for. Each kind of client is backed by real work (see the
+// chapter clients above); `look` is the phrase people search for it.
+export const INDUSTRIES = [
+  { name: "E-commerce & retail", look: "E-commerce website development", proof: "Ratna · Hukut", color: "#D5E27B" },
+  { name: "Fintech & payments", look: "Fintech & money transfer apps", proof: "TransferNet", color: "#EBD5C0" },
+  { name: "AI-powered services", look: "AI chatbots & automation", proof: "Answer Service", color: "#E7B7AF" },
+  { name: "Startups & new products", look: "MVP & startup app development", proof: "Sprint → Build", color: "#CFE8A3" },
+  { name: "Businesses going online", look: "Company & business websites", proof: "From Rs 60,000", color: "#FBF8EF" },
+];
+
+export const INTEGRATIONS = ["eSewa", "Khalti", "Fonepay", "connectIPS", "IME Pay", "Bank QR", "Stripe", "PayPal", "SMS gateways", "Google Maps", "Email & WhatsApp", "Any REST API"];

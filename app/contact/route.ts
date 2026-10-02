@@ -11,12 +11,17 @@ import { siteUrl } from "../../lib/site-url";
 // /public.
 //
 // contact.html carries only a title and description, so the canonical and
-// social-card tags are added here against siteUrl.
+// social-card tags are added here against siteUrl, and the title and
+// description are replaced with the Kathmandu web design ones.
 export const dynamic = "force-static";
 
-const TITLE = "Contact — Ankora Labs";
+const TITLE = "Contact Ankora Labs | Web Design Company in Kathmandu, Nepal";
 const DESC =
-  "Tell us about your idea. Ankora Labs designs, builds and ships digital products — from concept to click.";
+  "Get a website, web app or mobile app built in Nepal. Ankora Labs is a Kathmandu web design and development team: reply within 24 hours, 7 days a week.";
+// contact.html's own <title> and description are the old generic ones; they
+// are swapped for the ones above on the way out.
+const OLD_TITLE = "<title>Contact — Ankora Labs</title>";
+const OLD_DESC = /<meta name="description" content="[^"]*"\/>/;
 const SEO_HEAD =
   `<link rel="canonical" href="${siteUrl}/contact"/>` +
   `<meta property="og:title" content="${TITLE}"/>` +
@@ -34,6 +39,8 @@ export async function GET() {
     readFile(join(process.cwd(), "partials", "preloader.html"), "utf8"),
   ]);
   const html = page
+    .replace(OLD_TITLE, `<title>${TITLE}</title>`)
+    .replace(OLD_DESC, `<meta name="description" content="${DESC}"/>`)
     .replace("<!--ANKORA_NAV-->", navbar)
     .replace("</head>", SEO_HEAD + plHead + "</head>")
     .replace("</body>", plBody + "</body>");

@@ -83,6 +83,9 @@ const BUSINESS_LD = () =>
     telephone: "+977-9840171882",
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
     areaServed: ["Nepal", "Worldwide"],
+    openingHours: "Mo-Su",
+    priceRange: "Rs 60,000+",
+    sameAs: ["https://www.linkedin.com/company/ankora"],
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +
   "</script>";

@@ -8,10 +8,12 @@ import Process from "../../components/services/process";
 import Engage from "../../components/services/engage";
 import WorkShowcase from "../../components/showcase/work-showcase";
 import Faq from "../../components/services/faq";
+import Pricing from "../../components/services/pricing";
+import BuiltFor from "../../components/services/built-for";
 import Cta from "../../components/services/cta";
 import ScrollRefresh from "../../components/services/scroll-refresh";
 import SiteFooter from "../../components/site-footer";
-import { FAQ, SERVICES } from "../../lib/services";
+import { FAQ, PRICING, SERVICES } from "../../lib/services";
 import { siteUrl } from "../../lib/site-url";
 
 // /services — every service on one page. Content comes from lib/services.ts,
@@ -31,7 +33,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured data: the four services (each at its section anchor) and the FAQ,
+// Structured data: the four services (each at its section anchor), the
+// starting prices and the FAQ,
 // so search can show them as rich results.
 const ld = JSON.stringify({
   "@context": "https://schema.org",
@@ -52,6 +55,23 @@ const ld = JSON.stringify({
       })),
     },
     {
+      "@type": "OfferCatalog",
+      name: "Website and app development pricing in Nepal",
+      url: `${siteUrl}/services#pricing`,
+      itemListElement: PRICING.map((p) => ({
+        "@type": "Offer",
+        name: p.name,
+        description: p.items.join(", "),
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          minPrice: Number(p.from.replace(/,/g, "")),
+          priceCurrency: "NPR",
+        },
+        areaServed: "Nepal",
+        seller: { "@id": `${siteUrl}/#organization` },
+      })),
+    },
+    {
       "@type": "FAQPage",
       mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
     },
@@ -69,7 +89,9 @@ export default function ServicesPage() {
         <ServiceIndex />
         <Process />
         <Engage />
+        <Pricing />
         <WorkShowcase />
+        <BuiltFor />
         <Faq />
         <Cta />
       </main>

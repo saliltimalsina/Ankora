@@ -9,8 +9,8 @@ import s from "./marquee.module.css";
 // with scroll velocity, follow the scroll direction, lean into it, then settle.
 const TOOLS = SERVICES.flatMap((svc) => svc.stack);
 const WORDS = [
-  "Research", "Wireframes", "Prototypes", "Design systems",
-  "Web apps", "APIs", "E-commerce", "Performance",
+  "Research", "UI/UX", "Prototypes", "Design systems",
+  "Business websites", "Web apps", "E-commerce", "eSewa · Khalti", "SEO", "Hosting",
   "iOS", "Android", "Offline sync",
   "Assistants", "Search", "Automation", "Agents",
 ];
