@@ -92,7 +92,7 @@ export default function Process() {
   );
 
   return (
-    <section ref={root} className={s.process} aria-labelledby="svc-process-title">
+    <section ref={root} id="process" className={s.process} aria-labelledby="svc-process-title">
       <div className={s.head} data-head>
         <p className={s.kicker}>How we work</p>
         <h2 id="svc-process-title" className={s.h2}>

@@ -11,17 +11,20 @@ import Faq from "../../components/services/faq";
 import Cta from "../../components/services/cta";
 import ScrollRefresh from "../../components/services/scroll-refresh";
 import SiteFooter from "../../components/site-footer";
+import JsonLd, { breadcrumbs } from "../../components/json-ld";
+import { SERVICES } from "../../lib/services";
+import { siteUrl } from "../../lib/site-url";
 
-// /services — every service on one page. Content comes from lib/services.ts,
-// which will also feed /services/[slug] when the per-service pages land.
+// /services — every service on one page, linking out to /services/[slug].
+// Content comes from lib/services.ts.
 
 export const metadata: Metadata = {
-  title: "Services | Ankora Labs",
+  title: "Services: Product Design, Web, Mobile & AI | Ankora Labs",
   description:
     "Product design, engineering, mobile and AI from one team. See what Ankora Labs builds and how we work.",
   alternates: { canonical: "/services" },
   openGraph: {
-    title: "Services | Ankora Labs",
+    title: "Services: Product Design, Web, Mobile & AI | Ankora Labs",
     description: "Product design, engineering, mobile and AI from one team.",
     url: "/services",
     images: ["/images/homepage/meta-image.jpg"],
@@ -49,6 +52,26 @@ export default function ServicesPage() {
       <noscript>
         <style>{`[data-hero-hide]{visibility:visible!important}`}</style>
       </noscript>
+      <JsonLd
+        data={{
+          "@graph": [
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Services", path: "/services" },
+            ]),
+            {
+              "@type": "ItemList",
+              name: "Ankora Labs services",
+              itemListElement: SERVICES.map((x, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: x.title,
+                url: `${siteUrl}/services/${x.slug}`,
+              })),
+            },
+          ],
+        }}
+      />
     </>
   );
 }
