@@ -22,10 +22,19 @@ import { siteUrl } from "../lib/site-url";
 // jump misses them).
 //
 // The snapshot's og:url, og:image, twitter:image and canonical are root-relative,
-// which link-preview scrapers ignore, so they're rewritten against siteUrl.
+// which link-preview scrapers ignore, so they're rewritten against siteUrl. The
+// JSON-LD blocks get the same treatment (schema.org wants absolute URLs), and the
+// older one's "Ankora" name is aligned with the "Ankora Labs" used everywhere else.
+//
+// The snapshot still holds two hidden links to the source site's pages
+// (/accounts-payable/, /invoices/) that 404 here; crawlers follow hidden links
+// too, so they're pointed at /services.
 export const dynamic = "force-static";
 
 const ABSOLUTE_META = /(<meta (?:property|name)="(?:og:url|og:image|twitter:image)" content=|<link rel="canonical" href=)"\/([^"]*)"/g;
+const JSON_LD = /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g;
+const JSON_LD_URL = /"(url|logo|@id)":"\/([^"]*)"/g;
+const DEAD_LINKS = /href="\/(?:accounts-payable|invoices)\/"/g;
 
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
@@ -42,6 +51,14 @@ export async function GET() {
   ]);
   const html = page
     .replace(ABSOLUTE_META, (_, tag, path) => `${tag}"${new URL(path, siteUrl)}"`)
+    .replace(JSON_LD, (_, open, body, close) =>
+      open +
+      body
+        .replace('"name":"Ankora",', '"name":"Ankora Labs",')
+        .replace(JSON_LD_URL, (_m: string, key: string, path: string) => `"${key}":"${new URL(path, siteUrl)}"`) +
+      close,
+    )
+    .replace(DEAD_LINKS, 'href="/services"')
     .replace("</head>", plHead + "</head>")
     .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + "</body>");
   return new Response(html, {

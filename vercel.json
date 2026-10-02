@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.ankoralabs.com"
+        }
+      ],
+      "destination": "https://ankoralabs.com/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/images/(.*)",

@@ -19,9 +19,13 @@ export const metadata: Metadata = {
   title: "Services | Ankora Labs",
   description:
     "Product design, engineering, mobile and AI from one team. See what Ankora Labs builds and how we work.",
+  alternates: { canonical: "/services" },
   openGraph: {
     title: "Services | Ankora Labs",
     description: "Product design, engineering, mobile and AI from one team.",
+    url: "/services",
+    images: ["/images/homepage/meta-image.jpg"],
+    type: "website",
   },
 };
 

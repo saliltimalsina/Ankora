@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import SiteNav from "../../components/site-nav";
 import s from "./page.module.css";
 
@@ -7,6 +8,9 @@ import s from "./page.module.css";
 // parity, then the two swap and the snapshot (plus public/amplify and every
 // injected MutationObserver hack) gets deleted. Each converted section moves
 // from the snapshot into a real component here, one commit at a time.
+
+// Work in progress: keep it out of search results until it replaces `/`.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function V2Home() {
   return (
