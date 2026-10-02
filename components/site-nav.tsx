@@ -9,15 +9,15 @@ import s from "./site-nav.module.css";
 
 const LINKS = [
   { href: "/services", label: "Services", mega: true },
-  { href: "/work", label: "Work" },
-  { href: "/about", label: "About" },
+  { href: "/#show-stage", label: "Work" },
+  { href: "/#why-us", label: "Why Us" },
   { href: "/#testimonials", label: "Testimonials" },
-  { href: "/contact", label: "Contact" },
+  { href: "/#main-footer", label: "Contact" },
 ];
 
 const SERVICES = [
   {
-    href: "/services/design",
+    href: "/services#design",
     title: "Product Design",
     sub: "UI/UX, design systems & prototypes",
     icon: (
@@ -30,7 +30,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/services/engineering",
+    href: "/services#engineering",
     title: "Engineering",
     sub: "Web apps & full-stack builds",
     icon: (
@@ -41,7 +41,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/services/mobile",
+    href: "/services#mobile",
     title: "Mobile",
     sub: "iOS & Android apps",
     icon: (
@@ -52,7 +52,7 @@ const SERVICES = [
     ),
   },
   {
-    href: "/services/ai",
+    href: "/services#ai",
     title: "AI / Intelligence",
     sub: "AI features & workflow automation",
     icon: (
@@ -133,7 +133,7 @@ export default function SiteNav() {
                           </a>
                         ))}
                       </div>
-                      <a className={s.megaFeat} href="/work" role="menuitem">
+                      <a className={s.megaFeat} href="/#show-stage" role="menuitem">
                         <span className={s.featTag}>Featured</span>
                         <span className={s.featTitle}>See what our founding team has built</span>
                         <span className={s.featCta}>View the projects &rarr;</span>

@@ -75,7 +75,7 @@ export default function Cta() {
             Book a Call
           </a>
         </div>
-        <a className={s.secondary} href="/work">
+        <a className={s.secondary} href="/#show-stage">
           See our work <span aria-hidden="true">→</span>
         </a>
       </div>

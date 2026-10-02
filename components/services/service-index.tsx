@@ -134,9 +134,6 @@ export default function ServiceIndex() {
                     <a data-in className={s.cta} href="/contact">
                       {svc.cta} <span aria-hidden="true">→</span>
                     </a>
-                    <a data-in className={s.more} href={`/services/${svc.slug}`}>
-                      More about {svc.title}
-                    </a>
                   </div>
                 </div>
               </div>

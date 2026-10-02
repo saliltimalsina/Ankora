@@ -36,6 +36,45 @@ const JSON_LD = /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g
 const JSON_LD_URL = /"(url|logo|@id)":"\/([^"]*)"/g;
 const DEAD_LINKS = /href="\/(?:accounts-payable|invoices)\/"/g;
 
+// The snapshot's title is the tagline alone, which says nothing about what
+// Ankora does; search results get the studio description instead. Only the
+// HTML tags are rewritten: editing the same string inside the RSC payload
+// breaks the stream ("Connection closed" on hydration).
+const OLD_TITLE = "Ankora Labs | Design. Build. Grow.";
+const TITLE = "Ankora Labs | Product Design & Development Studio";
+const TITLE_TAGS = [
+  [`<title>${OLD_TITLE}</title>`, `<title>${TITLE}</title>`],
+  [`<meta property="og:title" content="${OLD_TITLE}"/>`, `<meta property="og:title" content="${TITLE}"/>`],
+  [`<meta name="twitter:title" content="${OLD_TITLE}"/>`, `<meta name="twitter:title" content="${TITLE}"/>`],
+];
+// Hydration puts the payload's old title back, and search engines read the
+// rendered page, so keep document.title on the new one.
+const KEEP_TITLE =
+  "<script>(function(){var t=" +
+  JSON.stringify(TITLE) +
+  ";function f(){if(document.title!==t)document.title=t}f();" +
+  "new MutationObserver(f).observe(document.head,{childList:true,subtree:true,characterData:true})})()</script>";
+
+// Business details the snapshot's Organization lacks (location, contact, what
+// it offers), on the same @id so Google merges them into one entity.
+const BUSINESS_LD = () =>
+  '<script type="application/ld+json">' +
+  JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${siteUrl}/#organization`,
+    name: "Ankora Labs",
+    url: `${siteUrl}/`,
+    logo: `${siteUrl}/images/logos/ankora-labs.svg`,
+    image: `${siteUrl}/images/homepage/meta-image.jpg`,
+    email: "ankoralabscontact@gmail.com",
+    telephone: "+977-9840171882",
+    address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
+    areaServed: "Worldwide",
+    knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
+  }) +
+  "</script>";
+
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
   ".rt-fixed.rt-top-0.rt-h-1100:not(.ankc-nav-desktop):not(.ankc-nav-mobile){display:none!important}" +
@@ -49,7 +88,7 @@ export async function GET() {
     readFile(join(process.cwd(), "partials", "preloader.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "hash-scroll.html"), "utf8"),
   ]);
-  const html = page
+  const html = TITLE_TAGS.reduce((h, [from, to]) => h.replace(from, to), page)
     .replace(ABSOLUTE_META, (_, tag, path) => `${tag}"${new URL(path, siteUrl)}"`)
     .replace(JSON_LD, (_, open, body, close) =>
       open +
@@ -59,8 +98,8 @@ export async function GET() {
       close,
     )
     .replace(DEAD_LINKS, 'href="/services"')
-    .replace("</head>", plHead + "</head>")
-    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + "</body>");
+    .replace("</head>", BUSINESS_LD() + plHead + "</head>")
+    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + KEEP_TITLE + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });

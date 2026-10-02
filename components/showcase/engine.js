@@ -5,8 +5,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { PROJECTS } from "../../lib/work";
-
 let mounted = false;
 
 export function mountShowcase(el) {
@@ -19,8 +17,36 @@ function run(el) {
 
   var RM=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Projects live in lib/work.ts (shared with /work).
-  var P=PROJECTS;
+  // Projects from Salil's portfolio (saliltimalsina.com.np), done before
+  // Ankora; shown as the founding team's work, with credit to their owners.
+  // No outcome figures on purpose: we only state what we did and when.
+  var P=[
+    {n:"Telvox",cat:"AI voice platform",yr:"2026",
+     d:"One command centre for teams to build their AI voice agents, audit what they said, and bill for it.",
+     role:["Product Design","AI Platform"],
+     img:"/images/work/telvox-card.webp",thumb:1,pos:"0% 50%",alt:"Telvox AI voice agent platform",ic:"wave",
+     url:"https://telvox.ai",dom:"telvox.ai",live:1},
+    {n:"OCCS",cat:"Call centre platform",yr:"2024–2026",
+     d:"The screen 300+ call centre clerks work in all day, with everything needed during a live call on one screen.",
+     role:["UX","Product Design","Research"],
+     img:"/images/work/occs-card.webp",thumb:1,alt:"OCCS callbacks screen with an incoming call, on a laptop",ic:"srv",
+     url:"#",dom:"OCCS clerk console",live:0},
+    {n:"Mantra Ideas",cat:"Agency website",yr:"2026",
+     d:"Mantra Ideas’ own site, designed and built down to every pixel and every line.",
+     role:["Web Design","Development"],
+     img:"/images/work/mantra-ideas.webp",alt:"Mantra Ideas homepage",ic:"cube",
+     url:"https://mantraideas.com",dom:"mantraideas.com",live:1},
+    {n:"Telvox.ai",cat:"Landing page",yr:"2026",
+     d:"The site that pitches Telvox before the demo does.",
+     role:["Landing Page","Web Design","Development"],
+     img:"/images/work/telvox-site-card.webp",thumb:1,alt:"Telvox marketing site on a laptop",ic:"arch",
+     url:"https://telvox.ai",dom:"telvox.ai",live:1},
+    {n:"Hukut",cat:"E-commerce",yr:"2025",
+     d:"Nepal’s gadget store, rebuilt so visitors actually become buyers.",
+     role:["E-commerce","Product Design"],
+     img:"/images/work/hukut-card.webp",thumb:1,alt:"Hukut gadget store on a laptop",ic:"bag",
+     url:"https://hukut.com",dom:"hukut.com",live:1}
+  ];
 
   var LOCK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>';
   var PIN='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14.5s5-4.4 5-8.2A5 5 0 0 0 3 6.3c0 3.8 5 8.2 5 8.2Z"/><circle cx="8" cy="6.2" r="1.8"/></svg>';

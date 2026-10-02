@@ -232,9 +232,6 @@ export default function Chapters() {
                     {svc.cta}
                     <span aria-hidden="true">→</span>
                   </a>
-                  <a className={s.more} href={`/services/${svc.slug}`}>
-                    More about {svc.title}
-                  </a>
                   <p className={s.stack}>
                     <b>Tools</b> {svc.stack.join(", ")}
                   </p>

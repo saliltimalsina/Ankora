@@ -11,12 +11,11 @@ import Faq from "../../components/services/faq";
 import Cta from "../../components/services/cta";
 import ScrollRefresh from "../../components/services/scroll-refresh";
 import SiteFooter from "../../components/site-footer";
-import JsonLd, { breadcrumbs } from "../../components/json-ld";
-import { SERVICES } from "../../lib/services";
+import { FAQ, SERVICES } from "../../lib/services";
 import { siteUrl } from "../../lib/site-url";
 
-// /services — every service on one page, linking out to /services/[slug].
-// Content comes from lib/services.ts.
+// /services — every service on one page. Content comes from lib/services.ts,
+// which will also feed /services/[slug] when the per-service pages land.
 
 export const metadata: Metadata = {
   title: "Services: Product Design, Web, Mobile & AI | Ankora Labs",
@@ -31,6 +30,33 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+// Structured data: the four services (each at its section anchor) and the FAQ,
+// so search can show them as rich results.
+const ld = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      name: "Ankora Labs services",
+      itemListElement: SERVICES.map((x, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Service",
+          name: x.title,
+          description: x.blurb,
+          url: `${siteUrl}/services#${x.slug}`,
+          provider: { "@id": `${siteUrl}/#organization` },
+        },
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+  ],
+}).replace(/</g, "\\u003c");
 
 export default function ServicesPage() {
   return (
@@ -52,26 +78,7 @@ export default function ServicesPage() {
       <noscript>
         <style>{`[data-hero-hide]{visibility:visible!important}`}</style>
       </noscript>
-      <JsonLd
-        data={{
-          "@graph": [
-            breadcrumbs([
-              { name: "Home", path: "/" },
-              { name: "Services", path: "/services" },
-            ]),
-            {
-              "@type": "ItemList",
-              name: "Ankora Labs services",
-              itemListElement: SERVICES.map((x, i) => ({
-                "@type": "ListItem",
-                position: i + 1,
-                name: x.title,
-                url: `${siteUrl}/services/${x.slug}`,
-              })),
-            },
-          ],
-        }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
     </>
   );
 }
