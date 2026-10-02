@@ -1,0 +1,156 @@
+/* Site navigation (components/kit/nav.html). Self-contained: no utility CSS,
+   so it renders the same on React pages and inside the homepage snapshot.
+   Desktop from 1280px; below that, logo + burger with a full-screen menu. */
+
+.ank-nav {
+  --nav-ink: #25201f;
+  --nav-green: #004822;
+  --nav-ground: #f8f5ed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 110;
+  font-family: var(--font-body, "BasisGrotesque"), "Basis Grotesque Pro", ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+}
+.ank-nav a { text-decoration: none; }
+.ank-nav ul { list-style: none; margin: 0; padding: 0; }
+
+.ank-nav-bar {
+  height: 64px;
+  background: var(--nav-ground);
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06));
+}
+.ank-nav-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1600px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+
+.ank-nav-logo { display: block; margin-left: 8px; }
+.ank-nav-logo img { display: block; width: auto; height: 50px; max-width: none; }
+
+/* links */
+.ank-nav-links { height: 100%; margin-left: 32px; margin-right: auto; }
+.ank-nav-links > ul { display: flex; align-items: center; gap: 32px; height: 100%; }
+.ank-nav-links > ul > li { position: relative; display: flex; align-items: center; height: 100%; }
+.ank-nav-link {
+  padding: 6px 4px;
+  border-bottom: 1px solid transparent;
+  color: var(--nav-ink);
+  transition: border-color 0.2s;
+}
+.ank-nav-link:hover,
+.ank-nav-link[aria-current="page"] { border-bottom-color: var(--nav-ink); }
+
+/* buttons */
+.ank-nav-actions { display: flex; align-items: center; gap: 12px; }
+.ank-nav-btn {
+  min-width: fit-content;
+  padding: 6px 16px;
+  border-radius: 999px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.ank-nav-btn-ghost { border: 1.5px solid var(--nav-green); color: var(--nav-green); }
+.ank-nav-btn-ghost:hover { background: var(--nav-green); color: #cfe8a3; }
+.ank-nav-btn-solid { background: var(--nav-green); color: #d5e27b; }
+.ank-nav-btn-solid:hover { background: #407659; }
+
+/* services mega menu */
+.ank-svc-trigger { display: inline-flex; align-items: center; gap: 5px; }
+.ank-mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 130;
+  display: flex;
+  gap: 16px;
+  min-width: 580px;
+  padding: 18px;
+  border: 1px solid #e7e2d2;
+  border-radius: 18px;
+  background: #fffef7;
+  box-shadow: 0 24px 60px -14px rgba(2, 18, 10, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+.ank-mega::before { content: ""; position: absolute; top: -16px; left: 0; right: 0; height: 16px; }
+.ank-svc:hover .ank-mega,
+.ank-svc:focus-within .ank-mega { opacity: 1; visibility: visible; transform: translateY(0); }
+.ank-mega-grid { display: grid; grid-template-columns: repeat(2, minmax(196px, 1fr)); gap: 4px; }
+.ank-mega-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 12px; transition: background 0.15s ease; }
+.ank-mega-item:hover { background: #eef3e6; }
+.ank-mi-ic { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: #e3efd0; color: #1f5130; }
+.ank-mi-t { display: block; color: #0d2a16; font-size: 15px; font-weight: 600; line-height: 1.2; }
+.ank-mi-s { display: block; margin-top: 3px; color: #5f6b5f; font-size: 12.5px; line-height: 1.32; }
+.ank-mega-feat { display: flex; flex: 0 0 200px; flex-direction: column; padding: 18px; border-radius: 14px; background: #0c3a1f; color: #f8f6ed; transition: background 0.15s ease; }
+.ank-mega-feat:hover { background: #0f4a28; }
+.ank-feat-tag { align-self: flex-start; padding: 3px 9px; border-radius: 999px; background: #cfe8a3; color: #16361f; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.ank-feat-title { margin-top: 20px; font-size: 17px; font-weight: 600; line-height: 1.28; }
+.ank-feat-cta { margin-top: auto; padding-top: 16px; color: #cfe8a3; font-size: 13px; }
+
+/* burger + mobile menu */
+.ank-burger {
+  display: none;
+  flex: 0 0 auto;
+  padding: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #0c3d26;
+  cursor: pointer;
+}
+.ank-burger svg { display: block; }
+.ank-burger .ic-close,
+.ank-burger.is-x .ic-burger { display: none; }
+.ank-burger.is-x .ic-close { display: block; }
+
+.ank-mnav-panel {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 109;
+  display: none;
+  padding: 10px 22px 28px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--nav-ground);
+}
+.ank-mnav-panel.is-open { display: block; }
+.ank-mnav-panel li a { display: block; padding: 13px 2px; border-bottom: 1px solid #ece7d8; color: #0c3d26; font-size: 16px; font-weight: 500; }
+.ank-mnav-panel li:last-child a { border-bottom: 0; }
+.ank-mnav-panel li a:hover { color: var(--nav-green); }
+.ank-mnav-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.ank-mnav-cta,
+.ank-mnav-book,
+.ank-mnav-wa { display: flex; align-items: center; justify-content: center; padding: 13px 22px; border-radius: 999px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.ank-mnav-cta { background: var(--nav-green); color: #cfe8a3; }
+.ank-mnav-cta:hover { background: #407659; }
+.ank-mnav-book,
+.ank-mnav-wa { border: 1.5px solid var(--nav-green); color: var(--nav-green); }
+.ank-mnav-book:hover,
+.ank-mnav-wa:hover { background: var(--nav-green); color: #cfe8a3; }
+
+@media (max-width: 1279px) {
+  .ank-nav-in { padding: 0 12px; }
+  .ank-nav-logo img { width: 132px; height: auto; }
+  .ank-nav-links,
+  .ank-nav-actions { display: none; }
+  .ank-burger { display: flex; }
+}
+@media (min-width: 1280px) {
+  .ank-mnav-panel.is-open { display: none; }
+}

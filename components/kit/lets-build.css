@@ -1,0 +1,101 @@
+/* "Let's build" ending (components/kit/lets-build.html). Plain colours and
+   font fallbacks so it renders the same inside the homepage snapshot. */
+.lb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(120px, 18vh, 200px) clamp(20px, 5vw, 72px) clamp(110px, 16vh, 180px);
+  background: #002813;
+  color: #fbf8ef;
+  text-align: center;
+  line-height: 1.5;
+  font-family: var(--font-body, "Basis Grotesque Pro"), "BasisGrotesque", ui-sans-serif, system-ui, sans-serif;
+}
+.lb a { text-decoration: none; }
+.lb-tear {
+  position: absolute;
+  top: -3.3vw;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 8vw;
+  object-fit: cover;
+  pointer-events: none;
+}
+.lb-kicker { margin: 0; color: #d5e27b; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.lb-big {
+  margin: 18px 0 0;
+  overflow: clip;
+  overflow-clip-margin: 0;
+  color: #d5e27b;
+  font-family: var(--font-disp, "RadionB"), "Radion B", "Arial Narrow", system-ui, sans-serif;
+  font-size: clamp(64px, 15vw, 260px);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.lb-sub { max-width: 44ch; margin: 28px 0 0; color: rgba(251, 248, 239, 0.78); font-size: clamp(16px, 1.3vw, 20px); line-height: 1.5; }
+
+.lb-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 28px; margin-top: 40px; }
+.lb-magnet { margin: -24px; padding: 24px; }
+.lb-primary {
+  display: inline-block;
+  padding: 18px 34px;
+  border-radius: 99px;
+  background: #e7b7af;
+  color: #002813;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lb-primary:hover { background: #f0c7c0; }
+.lb-secondary { color: #fbf8ef; font-weight: 500; }
+.lb-secondary span { display: inline-block; transition: transform 0.3s; }
+.lb-secondary:hover span { transform: translateX(4px); }
+
+/* WhatsApp as a chat bubble: squared tail corner, typing dots and a lime
+   fill on hover */
+.lb-bubble {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 24px;
+  border: 1.5px solid rgba(213, 226, 123, 0.55);
+  border-radius: 26px 26px 26px 6px;
+  color: #fbf8ef;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+.lb-bubble svg { flex: none; width: 19px; height: 19px; color: #d5e27b; transition: color 0.3s; }
+.lb-bubble:hover { border-color: #d5e27b; background: #d5e27b; color: #002813; transform: rotate(-2deg) translateY(-2px); }
+.lb-bubble:hover svg { color: #002813; }
+.lb-typing { display: inline-flex; gap: 3px; width: 0; overflow: hidden; transition: width 0.3s; }
+.lb-typing i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: lb-typing 1.1s infinite ease-in-out; }
+.lb-typing i:nth-child(2) { animation-delay: 0.15s; }
+.lb-typing i:nth-child(3) { animation-delay: 0.3s; }
+.lb-bubble:hover .lb-typing { width: 18px; }
+@keyframes lb-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* CSS-only entrance for pages without GSAP (homepage: public/kit/home.js) */
+@media (prefers-reduced-motion: no-preference) {
+  .lb.lb-fade [data-fade],
+  .lb.lb-fade .lb-big { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .lb.lb-fade.in [data-fade],
+  .lb.lb-fade.in .lb-big { opacity: 1; transform: none; }
+  .lb.lb-fade.in .lb-big { transition-delay: 0.1s; }
+  .lb.lb-fade.in .lb-sub { transition-delay: 0.2s; }
+  .lb.lb-fade.in .lb-actions { transition-delay: 0.3s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-typing i { animation: none; }
+  .lb-bubble { transition: none; }
+}

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import SiteNav from "../../components/site-nav";
 import Hero from "../../components/services/hero";
 import ServiceIndex from "../../components/services/service-index";
@@ -11,7 +10,7 @@ import WorkShowcase from "../../components/showcase/work-showcase";
 import Faq from "../../components/services/faq";
 import Pricing from "../../components/services/pricing";
 import BuiltFor from "../../components/services/built-for";
-import Cta from "../../components/services/cta";
+import LetsBuild from "../../components/lets-build";
 import ScrollRefresh from "../../components/services/scroll-refresh";
 import SiteFooter from "../../components/site-footer";
 import { FAQ, SERVICES } from "../../lib/services";
@@ -76,11 +75,10 @@ export default function ServicesPage() {
         <WorkShowcase />
         <BuiltFor />
         <Faq />
-        <Cta />
+        <LetsBuild second={{ href: "/#show-stage", text: "See our work" }} />
       </main>
       <SiteFooter />
       <ScrollRefresh />
-      <Script src="/site-kit.js" strategy="afterInteractive" />
       <noscript>
         <style>{`[data-hero-hide]{visibility:visible!important}`}</style>
       </noscript>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { siteUrl } from "../lib/site-url";
+import { kitScripts } from "../lib/kit";
 
 // Root layout for the rebuilt app. Route handlers (app/route.ts serving the
 // homepage snapshot, app/contact/route.ts) return raw Responses and are not
@@ -70,7 +71,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${disp.variable} ${body.variable} ${serif.variable} ${hand.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* booking popup, nav menu, footer plants, WhatsApp pill (public/kit/site.js) */}
+        <div hidden dangerouslySetInnerHTML={{ __html: kitScripts() }} />
+      </body>
     </html>
   );
 }

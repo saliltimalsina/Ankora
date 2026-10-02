@@ -1,30 +1,37 @@
-/* Ankora site kit, loaded on every page.
+/* Ankora site behaviour, loaded on every page (React pages via app/layout.tsx,
+ * the homepage snapshot via app/route.ts). Settings come from lib/site.ts as
+ * window.ANKORA.
  *
- * 1. Cal.com element-click embed: any [data-cal-link] opens the 30-min booking
- *    popup, light theme, Ankora green.
- * 2. Booking-link shim: the homepage snapshot still carries the old Cal link
+ * 1. Cal.com element-click embed: any [data-cal-link] opens the booking popup,
+ *    light theme, Ankora green.
+ * 2. Booking-link shim: the homepage snapshot still carries an old Cal link
  *    inside its RSC payload (can't be edited without breaking hydration), so
  *    every [data-cal-link] is pointed at the current one on click, before Cal
  *    reads it. If embed.js never loaded (blocked by an extension), the click
  *    opens the cal.com booking page in a new tab instead of doing nothing.
- * 3. Floating WhatsApp pill on phones, shown after the first screen (not on
+ * 3. Nav (components/kit/nav.html): mobile menu and the current-page link.
+ * 4. Footer (components/kit/footer.html): plants grow in, then sway.
+ * 5. Floating WhatsApp pill on phones, shown after the first screen (not on
  *    /contact, which has WhatsApp everywhere already).
  */
 (function () {
-  var CAL_LINK = "ankoralabs/30min";
-  var CAL_CONFIG = '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}';
-  var WA = "https://wa.me/ankoralabs?text=" + encodeURIComponent("Hi Ankora! I'd like to talk about a project.");
+  var A = window.ANKORA || {};
+  var CAL_LINK = A.calLink || "ankoralabs/30min";
+  var CAL_URL = A.calUrl || "https://cal.com/" + CAL_LINK;
+  var CAL_NS = A.calNs || "30min";
+  var CAL_CONFIG = A.calConfig || '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}';
+  var WA = (A.wa || "https://wa.me/ankoralabs") + "?text=" + encodeURIComponent(A.waHello || "Hi Ankora! I'd like to talk about a project.");
 
   /* ---- 1. Cal.com loader (vendor snippet) ---- */
   (function (C, A, L) { var p = function (a, ar) { a.q.push(ar); }; var d = C.document; C.Cal = C.Cal || function () { var cal = C.Cal; var ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-  Cal("init", "30min", { origin: "https://app.cal.com" });
+  Cal("init", CAL_NS, { origin: "https://app.cal.com" });
   // Note when embed.js actually arrives; blockers (ad/tracker extensions) often stop it.
   var calReady = false;
   var tag = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]');
   if (tag) tag.addEventListener("load", function () { calReady = true; });
   Cal.config = Cal.config || {};
   Cal.config.forwardQueryParams = true;
-  Cal.ns["30min"]("ui", {
+  Cal.ns[CAL_NS]("ui", {
     theme: "light",
     cssVarsPerTheme: { light: { "cal-brand": "#004822" }, dark: { "cal-brand": "#D5E27B" } },
     hideEventTypeDetails: false,
@@ -38,13 +45,13 @@
       var el = e.target && e.target.closest && e.target.closest("[data-cal-link]");
       if (!el) return;
       el.setAttribute("data-cal-link", CAL_LINK);
-      el.setAttribute("data-cal-namespace", "30min");
+      el.setAttribute("data-cal-namespace", CAL_NS);
       el.setAttribute("data-cal-config", CAL_CONFIG);
       if (!calReady) {
         // popup can't open: send them to the booking page instead
         e.preventDefault();
         e.stopImmediatePropagation();
-        window.open("https://cal.com/" + CAL_LINK, "_blank", "noopener");
+        window.open(CAL_URL, "_blank", "noopener");
         return;
       }
       if (el.hasAttribute("href")) e.preventDefault();
@@ -52,7 +59,61 @@
     true,
   );
 
-  /* ---- 3. WhatsApp pill (phones only) ---- */
+  /* ---- 3. nav: mobile menu + current page ---- */
+  function nav() {
+    var root = document.querySelector("[data-ank-nav]");
+    if (!root || root.getAttribute("data-ready")) return;
+    root.setAttribute("data-ready", "1");
+    var path = location.pathname.replace(/\/$/, "") || "/";
+    root.querySelectorAll(".ank-nav-link").forEach(function (a) {
+      if (a.getAttribute("href") === path) a.setAttribute("aria-current", "page");
+    });
+    var btn = root.querySelector("[data-nav-toggle]");
+    var panel = root.querySelector(".ank-mnav-panel");
+    var bar = root.querySelector(".ank-nav-bar");
+    if (!btn || !panel) return;
+    function place() { if (bar) panel.style.top = Math.round(bar.getBoundingClientRect().bottom) + "px"; }
+    function set(open) {
+      panel.classList.toggle("is-open", open);
+      btn.classList.toggle("is-x", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.style.overflow = open ? "hidden" : "";
+      if (open) place();
+    }
+    btn.addEventListener("click", function (e) { e.preventDefault(); set(!panel.classList.contains("is-open")); });
+    panel.addEventListener("click", function (e) {
+      var a = e.target.closest("a");
+      if (a && !a.hasAttribute("data-cal-link")) set(false);
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+    window.addEventListener("resize", function () { if (panel.classList.contains("is-open")) place(); });
+  }
+
+  /* ---- 4. footer plants ---- */
+  function plants() {
+    var el = document.querySelector("#main-footer .afoot-plants");
+    // dataset.anim is shared with the snapshot's own footer script, so only one runs
+    if (!el || el.dataset.anim) return;
+    el.dataset.anim = "1";
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.classList.add("is-in"); return; }
+    var longest = 0;
+    el.querySelectorAll(".aplant").forEach(function (p) {
+      longest = Math.max(longest, parseFloat(getComputedStyle(p).getPropertyValue("--gd")) || 0);
+    });
+    el.classList.add("will-grow");
+    var go = function () {
+      el.classList.add("is-in");
+      setTimeout(function () { el.classList.add("is-sway"); }, (longest + 0.85) * 1000 + 1500);
+    };
+    try {
+      var io = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { io.disconnect(); go(); }
+      }, { threshold: 0.25 });
+      io.observe(el);
+    } catch (e) { go(); }
+  }
+
+  /* ---- 5. WhatsApp pill (phones only) ---- */
   function pill() {
     // /contact already offers WhatsApp in its card, channels and brief builder
     if (document.getElementById("ank-wa") || location.pathname === "/contact") return;
@@ -82,6 +143,9 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", pill);
-  else pill();
+  function ready() { nav(); plants(); pill(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready);
+  else ready();
+  // the homepage injects its footer after hydration; pick it up when it lands
+  window.addEventListener("load", plants);
 })();

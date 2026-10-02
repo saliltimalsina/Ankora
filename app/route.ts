@@ -1,17 +1,22 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { siteUrl } from "../lib/site-url";
+import { SITE } from "../lib/site";
+import { kitCss, kitHtml, kitScripts } from "../lib/kit";
 
 // Root route handler: serve the Ankora homepage snapshot with the shared navbar
 // and the shared preloader.
 //
 // The homepage is a hydrated React (RSC) snapshot, so replacing its nav markup
-// in place gets clobbered on hydration. Instead we append the shared component
-// (partials/navbar.html) at the end of <body> — nodes there are outside React's
-// reconciled tree and survive hydration — and hide the original React nav with
-// scoped CSS (matches the fixed nav wrappers but not our .ankc-nav-* ones).
-// Result: /contact and / render the exact same navbar. The /amplify/_next
-// chunks still load so the rest of the homepage animates as before.
+// in place gets clobbered on hydration. Instead the shared nav
+// (components/kit/nav.html, the same one every React page renders) is appended
+// at the end of <body>, where nodes sit outside React's reconciled tree and
+// survive hydration, and the snapshot's own React nav is hidden with scoped CSS.
+// The other shared pieces fill <!--KIT:...--> markers in ankora.html: the
+// footer, its CSS and the work showcase. The "Let's build" ending ships as a
+// <template> that public/kit/home.js inserts after load (like the showcase).
+// The /amplify/_next chunks still load so the rest of the homepage animates as
+// before.
 //
 // The preloader follows the same rule: its overlay goes at the end of <body>,
 // while the small boot snippet that paints the green ground goes in <head> so
@@ -79,46 +84,53 @@ const BUSINESS_LD = () =>
     url: `${siteUrl}/`,
     logo: `${siteUrl}/images/logos/ankora-labs.svg`,
     image: `${siteUrl}/images/homepage/meta-image.jpg`,
-    email: "ankoralabscontact@gmail.com",
-    telephone: "+977-9840171882",
+    email: SITE.email,
+    telephone: SITE.phone.replace(" ", "-"),
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
     areaServed: ["Nepal", "Worldwide"],
     openingHours: "Mo-Su",
-    sameAs: ["https://www.linkedin.com/company/ankoralabs"],
+    sameAs: [SITE.linkedin],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",
-      telephone: "+977-9840171882",
-      email: "ankoralabscontact@gmail.com",
-      url: "https://wa.me/ankoralabs",
+      telephone: SITE.phone.replace(" ", "-"),
+      email: SITE.email,
+      url: SITE.whatsapp,
       availableLanguage: ["English", "Nepali"],
       areaServed: "NP",
     },
     potentialAction: {
       "@type": "ReserveAction",
       name: "Book a 30-minute call",
-      target: "https://cal.com/ankoralabs/30min",
+      target: SITE.calUrl,
     },
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +
   "</script>";
 
-// Cal.com booking popup, booking-link shim and WhatsApp pill (public/site-kit.js),
-// shared by every page, plus the homepage's closing CTA (public/home-cta.js).
-const SITE_KIT =
-  '<script src="/site-kit.js" defer></script>' +
-  // closing "Your idea, next" CTA band, injected after hydration
-  '<script src="/home-cta.js" defer></script>';
+// Shared components, filled into the snapshot (see the note at the top).
+const KIT = () => ({
+  head: `<style id="ank-kit-css">${kitCss("nav")}${kitCss("lets-build")}</style>`,
+  footerCss: `<style id="ankora-footer-css">${kitCss("footer")}</style>`,
+  footer: kitHtml("footer"),
+  showcaseCss: `<style id="show-style">${kitCss("showcase")}</style>`,
+  // showcase engine + homepage placement (showcase, "Let's build"), after site.js
+  scripts:
+    kitScripts() +
+    '<script src="/kit/showcase.js" defer></script><script src="/kit/home.js" defer></script>' +
+    `<template id="ank-lb-tpl">${kitHtml("lets-build", { SECOND_HREF: "/services", SECOND_TEXT: "Our services" })}</template>`,
+  nav: kitHtml("nav"),
+});
 
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
-  ".rt-fixed.rt-top-0.rt-h-1100:not(.ankc-nav-desktop):not(.ankc-nav-mobile){display:none!important}" +
+  ".rt-fixed.rt-top-0.rt-h-1100{display:none!important}" +
   "</style>";
 
 export async function GET() {
-  const [page, navbar, plHead, plBody, hashScroll] = await Promise.all([
+  const kit = KIT();
+  const [page, plHead, plBody, hashScroll] = await Promise.all([
     readFile(join(process.cwd(), "ankora.html"), "utf8"),
-    readFile(join(process.cwd(), "partials", "navbar.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "preloader-head.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "preloader.html"), "utf8"),
     readFile(join(process.cwd(), "partials", "hash-scroll.html"), "utf8"),
@@ -133,8 +145,13 @@ export async function GET() {
       close,
     )
     .replace(DEAD_LINKS, 'href="/services"')
-    .replace("</head>", BUSINESS_LD() + plHead + "</head>")
-    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + KEEP_TITLE + SITE_KIT + "</body>");
+    // function replacements: the snippets are inserted literally ("$" stays "$")
+    .replace("<!--KIT:footer-css-->", () => kit.footerCss)
+    .replaceAll("<!--KIT:footer-->", () => kit.footer)
+    .replace("<!--KIT:showcase-css-->", () => kit.showcaseCss)
+    .replace("<!--KIT:showcase-js-->", "")
+    .replace("</head>", () => BUSINESS_LD() + kit.head + plHead + "</head>")
+    .replace("</body>", () => HIDE_REACT_NAV + kit.nav + plBody + hashScroll + KEEP_TITLE + kit.scripts + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });

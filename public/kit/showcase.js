@@ -1,17 +1,17 @@
-// The homepage's "From the lab" work showcase (#show-stage), lifted verbatim
-// from the ankora.html snapshot's show-script so /services shows the same
-// component. Only the homepage-specific injection code (which located its spot
-// by searching the snapshot's text) is replaced by mountShowcase(el).
-/* eslint-disable */
-// @ts-nocheck
-
-let mounted = false;
-
-export function mountShowcase(el) {
-  if (mounted && el.getAttribute("data-built") === "1") return;
-  mounted = true;
-  run(el);
-}
+/* Work showcase ("From our founding team"), one engine for every page.
+ * window.AnkoraShowcase.mount(el) builds the stage inside `el`: markup, sticky
+ * pin and scroll-driven folder switching. The homepage mounts it from
+ * public/kit/home.js, /services from components/showcase/work-showcase.tsx.
+ * Styles: components/kit/showcase.css.
+ */
+(function () {
+  if (window.AnkoraShowcase) return;
+  var mounted = false;
+  function mount(el) {
+    if (mounted && el.getAttribute("data-built") === "1") return;
+    mounted = true;
+    run(el);
+  }
 
 function run(el) {
 
@@ -287,3 +287,6 @@ function run(el) {
   el.id = "show-stage";
   build(el);
 }
+
+  window.AnkoraShowcase = { mount: mount };
+})();

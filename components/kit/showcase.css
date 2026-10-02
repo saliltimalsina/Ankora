@@ -1,5 +1,6 @@
-/* Homepage showcase styles, lifted from the ankora.html snapshot (show-style). Font
-   tokens point at the next/font variables first. */
+/* Work showcase styles (public/kit/showcase.js), one copy for every page. Font
+   tokens use the next/font variables when present, the snapshot's @font-face
+   names otherwise. */
 /* ============================================================
    "From the lab" — Selected-work showcase, v4 (light / cream).
    Editorial one-screen PINNED stage modelled on the supplied ref:
@@ -17,12 +18,12 @@
   --green:#1E6B47; --green-d:#0C3D26;
   --lime:#D7E36A; --lime-d:#C2D24F; --lime-l:#E6EF96; --lime-ink:#1B3A12;
   --sage:#E7EEE2;
-  --disp:var(--font-disp),"Radion","Arial Narrow",system-ui,sans-serif;
-  --body:var(--font-body),"Basis Grotesque Pro","BasisGrotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --serif:var(--font-serif),"Tobias",Georgia,serif;
+  --disp:var(--font-disp, "RadionB"),"Radion B","Arial Narrow",system-ui,sans-serif;
+  --body:var(--font-body, "Basis Grotesque Pro"),"BasisGrotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:var(--font-serif, "Tobias"),Georgia,serif;
   position:relative; isolation:isolate; width:100%;
   background:#F4F1E7 url(/images/texture/graph-paper.webp); background-size:760px;
-  color:var(--ink); font-family:var(--body); -webkit-font-smoothing:antialiased;
+  color:var(--ink); font-family:var(--body); line-height:1.5; -webkit-font-smoothing:antialiased;
   padding-bottom:clamp(64px,9vh,124px);   /* breathing room before the next (dark "as seen in") section; padding (not margin) so the graph-paper texture fills it */
 }
 .shw *{box-sizing:border-box}
