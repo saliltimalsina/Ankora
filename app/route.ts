@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { siteUrl } from "../lib/site-url";
 
 // Root route handler: serve the Ankora homepage snapshot with the shared navbar
 // and the shared preloader.
@@ -19,7 +20,12 @@ import { join } from "node:path";
 // partials/hash-scroll.html makes /#section links from other pages land on
 // their section (those sections are injected after load, so the browser's own
 // jump misses them).
+//
+// The snapshot's og:url, og:image, twitter:image and canonical are root-relative,
+// which link-preview scrapers ignore, so they're rewritten against siteUrl.
 export const dynamic = "force-static";
+
+const ABSOLUTE_META = /(<meta (?:property|name)="(?:og:url|og:image|twitter:image)" content=|<link rel="canonical" href=)"\/([^"]*)"/g;
 
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
@@ -35,6 +41,7 @@ export async function GET() {
     readFile(join(process.cwd(), "partials", "hash-scroll.html"), "utf8"),
   ]);
   const html = page
+    .replace(ABSOLUTE_META, (_, tag, path) => `${tag}"${new URL(path, siteUrl)}"`)
     .replace("</head>", plHead + "</head>")
     .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + "</body>");
   return new Response(html, {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { siteUrl } from "../lib/site-url";
 
 // Root layout for the rebuilt app. Route handlers (app/route.ts serving the
 // homepage snapshot, app/contact/route.ts) return raw Responses and are not
@@ -40,15 +41,6 @@ const hand = localFont({
   display: "swap",
   src: [{ path: "../public/fonts/caveat-0.woff2", weight: "400", style: "normal" }],
 });
-
-// Absolute base for OG/twitter image URLs. No production domain is recorded in
-// the repo, so take it from the environment: NEXT_PUBLIC_SITE_URL if set,
-// otherwise the Vercel production domain, otherwise the local dev server.
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3200");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

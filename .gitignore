@@ -12,3 +12,4 @@ _backups/
 
 # typescript incremental build cache
 tsconfig.tsbuildinfo
+.env*
