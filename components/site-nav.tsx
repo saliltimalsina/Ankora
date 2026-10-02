@@ -12,8 +12,17 @@ const LINKS = [
   { href: "/#show-stage", label: "Work" },
   { href: "/#why-us", label: "Why Us" },
   { href: "/#testimonials", label: "Testimonials" },
-  { href: "/#main-footer", label: "Contact" },
+  { href: "/contact", label: "Contact" },
 ];
+
+// "Book a Call" opens the Cal.com popup (public/site-kit.js); the href is the
+// fallback when scripts haven't loaded.
+const BOOK = {
+  href: "https://cal.com/ankoralabs/30min",
+  "data-cal-link": "ankoralabs/30min",
+  "data-cal-namespace": "30min",
+  "data-cal-config": '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}',
+};
 
 const SERVICES = [
   {
@@ -146,7 +155,7 @@ export default function SiteNav() {
           </div>
 
           <div className={s.actions}>
-            <a className={s.book} href="/contact">Book a Call</a>
+            <a className={s.book} {...BOOK}>Book a Call</a>
             <a className={s.cta} href="/contact">Build with us</a>
           </div>
         </div>
@@ -182,7 +191,7 @@ export default function SiteNav() {
           </nav>
           <div className={s.panelActions}>
             <a className={s.cta} href="/contact">Build with us</a>
-            <a className={s.book} href="/contact">Book a Call</a>
+            <a className={s.book} {...BOOK}>Book a Call</a>
           </div>
         </div>
       )}

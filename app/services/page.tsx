@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import SiteNav from "../../components/site-nav";
 import Hero from "../../components/services/hero";
 import ServiceIndex from "../../components/services/service-index";
@@ -79,6 +80,7 @@ export default function ServicesPage() {
       </main>
       <SiteFooter />
       <ScrollRefresh />
+      <Script src="/site-kit.js" strategy="afterInteractive" />
       <noscript>
         <style>{`[data-hero-hide]{visibility:visible!important}`}</style>
       </noscript>

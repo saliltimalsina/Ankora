@@ -85,9 +85,27 @@ const BUSINESS_LD = () =>
     areaServed: ["Nepal", "Worldwide"],
     openingHours: "Mo-Su",
     sameAs: ["https://www.linkedin.com/company/ankoralabs"],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      telephone: "+977-9840171882",
+      email: "ankoralabscontact@gmail.com",
+      url: "https://wa.me/ankoralabs",
+      availableLanguage: ["English", "Nepali"],
+      areaServed: "NP",
+    },
+    potentialAction: {
+      "@type": "ReserveAction",
+      name: "Book a 30-minute call",
+      target: "https://cal.com/ankoralabs/30min",
+    },
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +
   "</script>";
+
+// Cal.com booking popup, booking-link shim and WhatsApp pill (public/site-kit.js),
+// shared by every page.
+const SITE_KIT = '<script src="/site-kit.js" defer></script>';
 
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
@@ -113,7 +131,7 @@ export async function GET() {
     )
     .replace(DEAD_LINKS, 'href="/services"')
     .replace("</head>", BUSINESS_LD() + plHead + "</head>")
-    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + KEEP_TITLE + "</body>");
+    .replace("</body>", HIDE_REACT_NAV + navbar + plBody + hashScroll + KEEP_TITLE + SITE_KIT + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });

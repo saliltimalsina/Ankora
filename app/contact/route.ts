@@ -31,6 +31,9 @@ const SEO_HEAD =
   `<meta property="og:type" content="website"/>` +
   `<meta name="twitter:card" content="summary_large_image"/>`;
 
+// Cal.com booking popup and inline calendar, WhatsApp pill: public/site-kit.js.
+const SITE_KIT = '<script src="/site-kit.js" defer></script>';
+
 export async function GET() {
   const [page, navbar, plHead, plBody] = await Promise.all([
     readFile(join(process.cwd(), "contact.html"), "utf8"),
@@ -43,7 +46,7 @@ export async function GET() {
     .replace(OLD_DESC, `<meta name="description" content="${DESC}"/>`)
     .replace("<!--ANKORA_NAV-->", navbar)
     .replace("</head>", SEO_HEAD + plHead + "</head>")
-    .replace("</body>", plBody + "</body>");
+    .replace("</body>", plBody + SITE_KIT + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });
