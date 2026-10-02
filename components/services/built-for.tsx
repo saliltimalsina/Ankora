@@ -84,6 +84,8 @@ export default function BuiltFor() {
         ))}
       </ul>
 
+      <p className={s.note}>Named projects were designed and built by our founding team, some before Ankora.</p>
+
       <div data-board className={s.board}>
         <p className={s.boardHead}>
           <span className={s.label}>Plugs into</span>

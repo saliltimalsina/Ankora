@@ -219,8 +219,9 @@ export const PRICE_FACTORS = [
   "Care plan after launch",
 ];
 
-// Who the work is for. Each kind of client is backed by real work (see the
-// chapter clients above); `look` is the phrase people search for it.
+// Who the work is for. Each kind of client is backed by a product our
+// founding team shipped (before Ankora, as the homepage notes); `look` is the
+// phrase people search for it.
 export const INDUSTRIES = [
   { name: "E-commerce & retail", look: "E-commerce website development", proof: "Ratna · Hukut", color: "#D5E27B" },
   { name: "Fintech & payments", look: "Fintech & money transfer apps", proof: "TransferNet", color: "#EBD5C0" },

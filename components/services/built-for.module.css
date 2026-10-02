@@ -79,6 +79,8 @@
   white-space: nowrap;
 }
 
+.note { max-width: 1300px; margin: 16px auto 0; font-size: 13px; color: var(--muted); }
+
 .board {
   max-width: 1300px;
   margin: clamp(56px, 9vh, 96px) auto 0;

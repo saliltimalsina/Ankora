@@ -104,8 +104,11 @@ const BUSINESS_LD = () =>
   "</script>";
 
 // Cal.com booking popup, booking-link shim and WhatsApp pill (public/site-kit.js),
-// shared by every page.
-const SITE_KIT = '<script src="/site-kit.js" defer></script>';
+// shared by every page, plus the homepage's closing CTA (public/home-cta.js).
+const SITE_KIT =
+  '<script src="/site-kit.js" defer></script>' +
+  // closing "Your idea, next" CTA band, injected after hydration
+  '<script src="/home-cta.js" defer></script>';
 
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
