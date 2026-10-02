@@ -18,13 +18,13 @@ import { siteUrl } from "../../lib/site-url";
 // which will also feed /services/[slug] when the per-service pages land.
 
 export const metadata: Metadata = {
-  title: "Services: Product Design, Web, Mobile & AI | Ankora Labs",
+  title: "Web Design, UI/UX & App Development in Nepal | Ankora Labs",
   description:
-    "Product design, engineering, mobile and AI from one team. See what Ankora Labs builds and how we work.",
+    "Website and web app development, UI/UX and product design, mobile apps and AI from one Kathmandu team. See what Ankora Labs builds and how we work.",
   alternates: { canonical: "/services" },
   openGraph: {
-    title: "Services: Product Design, Web, Mobile & AI | Ankora Labs",
-    description: "Product design, engineering, mobile and AI from one team.",
+    title: "Web Design, UI/UX & App Development in Nepal | Ankora Labs",
+    description: "Web development, UI/UX design, mobile apps and AI from one Kathmandu team.",
     url: "/services",
     images: ["/images/homepage/meta-image.jpg"],
     type: "website",

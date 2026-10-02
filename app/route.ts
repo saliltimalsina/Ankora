@@ -36,24 +36,36 @@ const JSON_LD = /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g
 const JSON_LD_URL = /"(url|logo|@id)":"\/([^"]*)"/g;
 const DEAD_LINKS = /href="\/(?:accounts-payable|invoices)\/"/g;
 
-// The snapshot's title is the tagline alone, which says nothing about what
-// Ankora does; search results get the studio description instead. Only the
-// HTML tags are rewritten: editing the same string inside the RSC payload
-// breaks the stream ("Connection closed" on hydration).
+// The snapshot's title and description are the tagline alone, which says
+// nothing about what Ankora does or where; search results get the studio's
+// Nepal web design/development description instead (the searches Nepali
+// buyers actually make). Only the HTML tags are rewritten: editing the same
+// strings inside the RSC payload breaks the stream ("Connection closed" on
+// hydration).
 const OLD_TITLE = "Ankora Labs | Design. Build. Grow.";
-const TITLE = "Ankora Labs | Product Design & Development Studio";
+const TITLE = "Ankora Labs | Web Design & Development Company in Nepal";
+const OLD_DESC =
+  "Ankora Labs designs and builds digital products that are fast, scalable, and built to make an impact.";
+const DESC =
+  "Ankora Labs is a web design and development studio in Kathmandu. We design and build websites, web apps and mobile apps for businesses in Nepal, from UI/UX to launch.";
 const TITLE_TAGS = [
   [`<title>${OLD_TITLE}</title>`, `<title>${TITLE}</title>`],
   [`<meta property="og:title" content="${OLD_TITLE}"/>`, `<meta property="og:title" content="${TITLE}"/>`],
   [`<meta name="twitter:title" content="${OLD_TITLE}"/>`, `<meta name="twitter:title" content="${TITLE}"/>`],
+  [`<meta name="description" content="${OLD_DESC}"/>`, `<meta name="description" content="${DESC}"/>`],
+  [`<meta property="og:description" content="${OLD_DESC}"/>`, `<meta property="og:description" content="${DESC}"/>`],
+  [`<meta name="twitter:description" content="${OLD_DESC}"/>`, `<meta name="twitter:description" content="${DESC}"/>`],
 ];
-// Hydration puts the payload's old title back, and search engines read the
-// rendered page, so keep document.title on the new one.
+// Hydration puts the payload's old title and description back, and search
+// engines read the rendered page, so keep both on the new ones.
 const KEEP_TITLE =
   "<script>(function(){var t=" +
   JSON.stringify(TITLE) +
-  ";function f(){if(document.title!==t)document.title=t}f();" +
-  "new MutationObserver(f).observe(document.head,{childList:true,subtree:true,characterData:true})})()</script>";
+  ",d=" +
+  JSON.stringify(DESC) +
+  ";function f(){if(document.title!==t)document.title=t;" +
+  "var m=document.querySelector('meta[name=\"description\"]');if(m&&m.content!==d)m.content=d}f();" +
+  "new MutationObserver(f).observe(document.head,{childList:true,subtree:true,characterData:true,attributes:true})})()</script>";
 
 // Business details the snapshot's Organization lacks (location, contact, what
 // it offers), on the same @id so Google merges them into one entity.
@@ -70,7 +82,7 @@ const BUSINESS_LD = () =>
     email: "ankoralabscontact@gmail.com",
     telephone: "+977-9840171882",
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
-    areaServed: "Worldwide",
+    areaServed: ["Nepal", "Worldwide"],
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +
   "</script>";
