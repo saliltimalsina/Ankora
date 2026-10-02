@@ -5,8 +5,8 @@
  * 2. Booking-link shim: the homepage snapshot still carries the old Cal link
  *    inside its RSC payload (can't be edited without breaking hydration), so
  *    every [data-cal-link] is pointed at the current one on click, before Cal
- *    reads it. Buttons that also carry an href (a no-JS fallback) don't
- *    navigate away while the Cal loader is present.
+ *    reads it. If embed.js never loaded (blocked by an extension), the click
+ *    opens the cal.com booking page in a new tab instead of doing nothing.
  * 3. Floating WhatsApp pill on phones, shown after the first screen (not on
  *    /contact, which has WhatsApp everywhere already).
  */
@@ -18,6 +18,10 @@
   /* ---- 1. Cal.com loader (vendor snippet) ---- */
   (function (C, A, L) { var p = function (a, ar) { a.q.push(ar); }; var d = C.document; C.Cal = C.Cal || function () { var cal = C.Cal; var ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
   Cal("init", "30min", { origin: "https://app.cal.com" });
+  // Note when embed.js actually arrives; blockers (ad/tracker extensions) often stop it.
+  var calReady = false;
+  var tag = document.querySelector('script[src="https://app.cal.com/embed/embed.js"]');
+  if (tag) tag.addEventListener("load", function () { calReady = true; });
   Cal.config = Cal.config || {};
   Cal.config.forwardQueryParams = true;
   Cal.ns["30min"]("ui", {
@@ -36,7 +40,14 @@
       el.setAttribute("data-cal-link", CAL_LINK);
       el.setAttribute("data-cal-namespace", "30min");
       el.setAttribute("data-cal-config", CAL_CONFIG);
-      if (el.hasAttribute("href") && window.Cal && window.Cal.loaded) e.preventDefault();
+      if (!calReady) {
+        // popup can't open: send them to the booking page instead
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.open("https://cal.com/" + CAL_LINK, "_blank", "noopener");
+        return;
+      }
+      if (el.hasAttribute("href")) e.preventDefault();
     },
     true,
   );
