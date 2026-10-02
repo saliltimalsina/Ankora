@@ -910,6 +910,10 @@ section:has(> #svc-stage){display:block!important}
   box-shadow:0 46px 90px -50px rgba(0,40,19,.42),0 16px 36px -26px rgba(0,40,19,.18);
   transition:opacity .42s cubic-bezier(.2,.7,.2,1),transform .42s cubic-bezier(.2,.7,.2,1)}
 .shw-card.swap{opacity:0;transform:translateY(14px)}
+/* pinned: cap the card's width by the viewport height so the 16:10 shot plus its
+   caption always fit the stage on short screens (Dock showing, small laptops).
+   ~200px is the caption + card padding; 8vh is the wrap's top+bottom padding. */
+.shw.is-pinned .shw-card{max-width:min(854px,calc((100vh - var(--shw-top,0px) - 8vh - 200px) * 1.6 + 32px))}
 .shw-browser{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;text-decoration:none;
   transition:transform .4s cubic-bezier(.2,.7,.2,1)}
 a.shw-browser:hover{transform:translateY(-3px)}
