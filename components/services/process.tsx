@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "../../lib/gsap";
 import { PROCESS } from "../../lib/services";
+import SectionHead from "../ui/section-head";
 import s from "./process.module.css";
 
 // A hand-drawn line winds through the five steps and draws itself as you
@@ -93,13 +94,10 @@ export default function Process() {
 
   return (
     <section ref={root} id="process" className={s.process} aria-labelledby="svc-process-title">
-      <div className={s.head} data-head>
-        <p className={s.kicker}>How we work</p>
-        <h2 id="svc-process-title" className={s.h2}>
-          From first call <br />
-          to <em>launch day.</em>
-        </h2>
-      </div>
+      <SectionHead id="svc-process-title" kicker="How we work" className={s.head}>
+        From first call <br />
+        to <em>launch day.</em>
+      </SectionHead>
 
       <div data-wrap className={s.wrap}>
         <svg data-svg className={s.svg} aria-hidden="true" preserveAspectRatio="none">

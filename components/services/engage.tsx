@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "../../lib/gsap";
 import { ENGAGEMENTS } from "../../lib/services";
+import SectionHead from "../ui/section-head";
 import s from "./engage.module.css";
 
 // "Ways to work with us": three cards dealt onto the table from a single stack,
@@ -69,12 +70,9 @@ export default function Engage() {
 
   return (
     <section ref={root} className={s.engage} aria-labelledby="svc-engage-title">
-      <div className={s.head} data-head>
-        <p className={s.kicker}>Ways to work with us</p>
-        <h2 id="svc-engage-title" className={s.h2}>
-          Start small, <em>or go all in.</em>
-        </h2>
-      </div>
+      <SectionHead id="svc-engage-title" kicker="Ways to work with us" className={s.head}>
+        Start small, <em>or go all in.</em>
+      </SectionHead>
 
       <div data-cards className={s.cards}>
         {ENGAGEMENTS.map((e, i) => (

@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "../../lib/gsap";
 import { INDUSTRIES, INTEGRATIONS } from "../../lib/services";
+import SectionHead from "../ui/section-head";
 import s from "./built-for.module.css";
 
 // "Who we build for": the kinds of clients we already ship for, each row a
@@ -66,12 +67,9 @@ export default function BuiltFor() {
 
   return (
     <section ref={root} id="built-for" className={s.built} aria-labelledby="svc-built-title">
-      <div className={s.head} data-head>
-        <p className={s.kicker}>Who we build for</p>
-        <h2 id="svc-built-title" className={s.h2}>
-          Built for <em>Nepali businesses.</em>
-        </h2>
-      </div>
+      <SectionHead id="svc-built-title" kicker="Who we build for" className={s.head}>
+        Built for <em>Nepali businesses.</em>
+      </SectionHead>
 
       <ul className={s.rows}>
         {INDUSTRIES.map((x, i) => (

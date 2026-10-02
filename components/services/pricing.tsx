@@ -3,24 +3,9 @@
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "../../lib/gsap";
 import { PRICE_FACTORS, PRICING } from "../../lib/services";
+import SectionHead from "../ui/section-head";
+import { BookCall, WaIcon, WhatsApp } from "../ui/links";
 import s from "./pricing.module.css";
-
-const WA = "https://wa.me/ankoralabs";
-// Cal.com popup (public/site-kit.js); the href is the no-script fallback.
-const BOOK = {
-  href: "https://cal.com/ankoralabs/30min",
-  "data-cal-link": "ankoralabs/30min",
-  "data-cal-namespace": "30min",
-  "data-cal-config": '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}',
-};
-
-function WaIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
-      <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z" />
-    </svg>
-  );
-}
 
 // a little fountain pen that hovers over the blank quote line
 function Pen({ className }: { className: string }) {
@@ -72,16 +57,19 @@ export default function Pricing() {
 
   return (
     <section ref={root} id="pricing" className={s.pricing} aria-labelledby="svc-pricing-title">
-      <div className={s.head} data-head>
-        <p className={s.kicker}>Pricing</p>
-        <h2 id="svc-pricing-title" className={s.h2}>
-          What a website costs <em>in Nepal.</em>
-        </h2>
-        <p className={s.lede}>
-          Every business is different, so we don&apos;t do rate cards. Here&apos;s what each kind of project includes
-          and how long it takes; after a 30-minute call you get a fixed quote in NPR, in writing.
-        </p>
-      </div>
+      <SectionHead
+        id="svc-pricing-title"
+        kicker="Pricing"
+        className={s.head}
+        after={
+          <p className={s.lede}>
+            Every business is different, so we don&apos;t do rate cards. Here&apos;s what each kind of project includes
+            and how long it takes; after a 30-minute call you get a fixed quote in NPR, in writing.
+          </p>
+        }
+      >
+        What a website costs <em>in Nepal.</em>
+      </SectionHead>
 
       <div data-slots className={s.slots}>
         {PRICING.map((p, i) => (
@@ -122,18 +110,11 @@ export default function Pricing() {
                 <a href={`/contact?need=${p.need}#brief`} className={s.cta}>
                   Get my quote <span aria-hidden="true">→</span>
                 </a>
-                <a
-                  href={`${WA}?text=${encodeURIComponent(`Hi Ankora! I'm interested in a ${p.name.toLowerCase()}. Can we talk?`)}`}
-                  className={s.wa}
-                  target="_blank"
-                  rel="noopener"
-                >
+                <WhatsApp text={`Hi Ankora! I'm interested in a ${p.name.toLowerCase()}. Can we talk?`} className={s.wa}>
                   <WaIcon /> Ask on WhatsApp
-                </a>
+                </WhatsApp>
               </div>
-              <a className={s.call} {...BOOK}>
-                or book a free call
-              </a>
+              <BookCall className={s.call}>or book a free call</BookCall>
             </div>
           </article>
         ))}
@@ -154,9 +135,7 @@ export default function Pricing() {
           <a href="/contact#brief" className={s.cta}>
             Help me choose <span aria-hidden="true">→</span>
           </a>
-          <a className={s.ghost} {...BOOK}>
-            Book a call
-          </a>
+          <BookCall className={s.ghost}>Book a call</BookCall>
         </div>
       </div>
 
