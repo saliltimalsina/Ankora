@@ -4,6 +4,15 @@ import { useRef } from "react";
 import { gsap, MQ, SplitText, useGSAP } from "../../lib/gsap";
 import s from "./cta.module.css";
 
+const WA = "https://wa.me/ankoralabs?text=" + encodeURIComponent("Hi Ankora! I'd like to talk about a project.");
+// Cal.com popup (public/site-kit.js); the href is the no-script fallback.
+const BOOK = {
+  href: "https://cal.com/ankoralabs/30min",
+  "data-cal-link": "ankoralabs/30min",
+  "data-cal-namespace": "30min",
+  "data-cal-config": '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}',
+};
+
 // Closing call to action. The giant "LET'S BUILD" rises letter by letter as the
 // section scrolls in (scrubbed), and the button leans toward the pointer.
 export default function Cta() {
@@ -71,10 +80,13 @@ export default function Cta() {
       </p>
       <div data-fade className={s.actions}>
         <div data-magnet className={s.magnet}>
-          <a className={s.primary} href="/contact">
+          <a className={s.primary} {...BOOK}>
             Book a Call
           </a>
         </div>
+        <a className={s.secondary} href={WA} target="_blank" rel="noopener">
+          WhatsApp us <span aria-hidden="true">→</span>
+        </a>
         <a className={s.secondary} href="/#show-stage">
           See our work <span aria-hidden="true">→</span>
         </a>

@@ -1,5 +1,5 @@
-/* Homepage closing CTA: "Your idea, next." band between the testimonials and
- * the footer.
+/* Homepage closing CTA: the same "Let's build" ending as /services
+ * (components/services/cta.tsx), so both pages close the same way.
  *
  * The homepage is a hydrated RSC snapshot, so this can't live in ankora.html's
  * markup (hydration would drop it). Like the footer (#ankora-footer-js), it's
@@ -8,49 +8,33 @@
  */
 (function () {
   var ID = "ank-next";
-  var WA = "https://wa.me/ankoralabs?text=" + encodeURIComponent("Hi Ankora! I saw your work and I'd like to talk about a project.");
+  var WA = "https://wa.me/ankoralabs?text=" + encodeURIComponent("Hi Ankora! I'd like to talk about a project.");
   var CAL_CFG = '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}';
 
+  // mirrors components/services/cta.module.css
   var css =
-    "@font-face{font-family:'Caveat';src:url(/fonts/caveat-0.woff2) format('woff2');font-display:swap}" +
-    "#ank-next{position:relative;overflow:hidden;background:#002813;color:#fbf8ef;padding:clamp(90px,14vh,150px) clamp(20px,5vw,72px);font-family:'Basis Grotesque Pro',ui-sans-serif,system-ui,sans-serif}" +
-    "#ank-next .nx-in{position:relative;z-index:1;max-width:1300px;margin:0 auto}" +
-    "#ank-next .nx-kick{margin:0 0 18px;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#8fab6f}" +
-    "#ank-next h2{margin:0;font-family:'RadionB','Arial Narrow',system-ui,sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(48px,8vw,128px);line-height:.88;letter-spacing:-.02em;color:#d5e27b}" +
-    "#ank-next h2 em{display:block;font-family:'Tobias',Georgia,serif;font-style:italic;font-weight:400;text-transform:none;color:#fbf8ef}" +
-    "#ank-next .nx-hand{display:inline-block;margin:22px 0 0;font-family:'Caveat',cursive;font-size:clamp(24px,2.4vw,32px);color:#e7b7af;transform:rotate(-2deg)}" +
-    "#ank-next .nx-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(40px,6vh,64px)}" +
-    "#ank-next .nx-card{display:flex;flex-direction:column;gap:8px;padding:24px 24px 22px;border-radius:20px;text-decoration:none;cursor:pointer;transition:transform .35s cubic-bezier(.2,.9,.3,1.2),box-shadow .35s}" +
-    "#ank-next .nx-card:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:0 24px 40px -24px rgba(0,0,0,.6)}" +
-    "#ank-next .nx-card:nth-child(2):hover{transform:translateY(-6px) rotate(1deg)}" +
-    "#ank-next .nx-card b{font-family:'RadionB','Arial Narrow',system-ui,sans-serif;font-size:clamp(24px,2.2vw,32px);text-transform:uppercase;line-height:1}" +
-    "#ank-next .nx-card span{font-size:15px;line-height:1.5;opacity:.8}" +
-    "#ank-next .nx-card i{margin-top:auto;padding-top:14px;font-style:normal;font-weight:500}" +
-    "#ank-next .nx-cal{background:#d5e27b;color:#002813}" +
-    "#ank-next .nx-wa{background:#fbf8ef;color:#002813}" +
-    "#ank-next .nx-quote{background:transparent;color:#fbf8ef;border:1.5px solid #fbf8ef55}" +
-    "#ank-next .nx-promise{display:flex;flex-wrap:wrap;gap:10px 28px;margin:clamp(36px,5vh,52px) 0 0;padding:0;list-style:none;font-size:15px;color:#c2d6a4}" +
-    "#ank-next .nx-promise li::before{content:'\\2713';margin-right:8px;color:#d5e27b;font-weight:700}" +
-    "#ank-next .nx-ring{position:absolute;right:-120px;top:-120px;width:420px;height:420px;border:2px dashed #d5e27b33;border-radius:50%;animation:nx-spin 60s linear infinite}" +
-    "@keyframes nx-spin{to{transform:rotate(360deg)}}" +
-    "@media (max-width:900px){#ank-next .nx-cards{grid-template-columns:1fr}#ank-next .nx-ring{width:260px;height:260px;right:-90px;top:-90px}}" +
-    "@media (prefers-reduced-motion:reduce){#ank-next .nx-ring{animation:none}#ank-next .nx-card{transition:none}}";
+    "#ank-next{position:relative;display:flex;flex-direction:column;align-items:center;padding:clamp(120px,18vh,200px) clamp(20px,5vw,72px) clamp(110px,16vh,180px);background:#002813;color:#fbf8ef;text-align:center;font-family:'Basis Grotesque Pro',ui-sans-serif,system-ui,sans-serif}" +
+    "#ank-next .nx-tear{position:absolute;top:-3.3vw;left:0;width:100%;height:8vw;object-fit:cover;z-index:2;pointer-events:none}" +
+    "#ank-next .nx-kick{margin:0;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#d5e27b}" +
+    "#ank-next h2{margin:18px 0 0;font-family:'RadionB','Arial Narrow',system-ui,sans-serif;font-size:clamp(64px,15vw,260px);font-weight:700;line-height:.86;letter-spacing:-.035em;text-transform:uppercase;white-space:nowrap;color:#d5e27b}" +
+    "#ank-next .nx-sub{max-width:44ch;margin:28px 0 0;font-size:clamp(16px,1.3vw,20px);line-height:1.5;color:rgba(251,248,239,.78)}" +
+    "#ank-next .nx-act{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 28px;margin-top:40px}" +
+    "#ank-next .nx-primary{display:inline-block;padding:18px 34px;border-radius:99px;background:#e7b7af;color:#002813;font-size:17px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .3s}" +
+    "#ank-next .nx-primary:hover{background:#f0c7c0}" +
+    "#ank-next .nx-secondary{font-weight:500;color:#fbf8ef;text-decoration:none}" +
+    "#ank-next .nx-secondary span{display:inline-block;transition:transform .3s}" +
+    "#ank-next .nx-secondary:hover span{transform:translateX(4px)}" +
+    "@media (prefers-reduced-motion:no-preference){#ank-next .nx-f{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}#ank-next.in .nx-f{opacity:1;transform:none}#ank-next.in .nx-f:nth-child(3){transition-delay:.1s}#ank-next.in .nx-f:nth-child(4){transition-delay:.2s}#ank-next.in .nx-f:nth-child(5){transition-delay:.3s}}";
 
   var html =
-    '<span class="nx-ring" aria-hidden="true"></span>' +
-    '<div class="nx-in">' +
-    '<p class="nx-kick">Your turn</p>' +
-    '<h2 id="ank-next-title">Your idea,<em>next on the list.</em></h2>' +
-    '<p class="nx-hand">pick whichever feels easiest ↓</p>' +
-    '<div class="nx-cards">' +
-    '<a class="nx-card nx-cal" href="https://cal.com/ankoralabs/30min" data-cal-link="ankoralabs/30min" data-cal-namespace="30min" data-cal-config=\'' + CAL_CFG + '\'>' +
-    "<b>Book a free call</b><span>30 minutes, online. Bring the idea, we bring the questions.</span><i>Pick a time →</i></a>" +
-    '<a class="nx-card nx-wa" href="' + WA + '" target="_blank" rel="noopener">' +
-    "<b>WhatsApp us</b><span>The quickest way to reach us, weekdays and weekends.</span><i>Open chat →</i></a>" +
-    '<a class="nx-card nx-quote" href="/contact#brief">' +
-    "<b>Get a quote</b><span>Tell us what you’re building in three taps. Fixed quote in writing.</span><i>Start here →</i></a>" +
-    "</div>" +
-    '<ul class="nx-promise"><li>Reply within 24 hours</li><li>Fixed quote, no surprises</li><li>Weekly demos on a live link</li><li>You own all code &amp; designs</li></ul>' +
+    '<img class="nx-tear" src="/images/texture/paper-tear.webp" alt="" aria-hidden="true">' +
+    '<p class="nx-kick nx-f">Got something in mind?</p>' +
+    '<h2 id="ank-next-title" class="nx-f">Let’s build</h2>' +
+    '<p class="nx-sub nx-f">Tell us what you’re making. We’ll come back with a plan, not a sales deck.</p>' +
+    '<div class="nx-act nx-f">' +
+    '<a class="nx-primary" href="https://cal.com/ankoralabs/30min" data-cal-link="ankoralabs/30min" data-cal-namespace="30min" data-cal-config=\'' + CAL_CFG + "'>Book a Call</a>" +
+    '<a class="nx-secondary" href="' + WA + '" target="_blank" rel="noopener">WhatsApp us <span aria-hidden="true">→</span></a>' +
+    '<a class="nx-secondary" href="/services">Our services <span aria-hidden="true">→</span></a>' +
     "</div>";
 
   function put() {
@@ -68,6 +52,12 @@
     sec.setAttribute("aria-labelledby", "ank-next-title");
     sec.innerHTML = html;
     anchor.parentNode.insertBefore(sec, anchor.nextSibling);
+    try {
+      var io = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { sec.classList.add("in"); io.disconnect(); }
+      }, { threshold: 0.3 });
+      io.observe(sec);
+    } catch (e) { sec.classList.add("in"); }
   }
 
   document.addEventListener("DOMContentLoaded", put);
