@@ -2,12 +2,13 @@
 
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "../../lib/gsap";
-import { CARE_PLAN, PRICING } from "../../lib/services";
+import { PRICE_FACTORS, PRICING } from "../../lib/services";
 import s from "./pricing.module.css";
 
 // "What a website costs": three paper receipts that print out of a slot, one
-// after another, as the section scrolls in. Starting prices in NPR, line items
-// as the tear-off list, and a care-plan sticker slapped on at the end.
+// after another, as the section scrolls in. No prices on purpose: the total is
+// a hand-drawn blank, filled in after the first call, with the line items and
+// timeline as the tear-off list and a "fixed quote" sticker slapped on last.
 export default function Pricing() {
   const root = useRef<HTMLElement>(null);
 
@@ -36,6 +37,7 @@ export default function Pricing() {
           ).from(r.querySelectorAll("[data-line]"), { autoAlpha: 0, x: -8, stagger: 0.05, duration: 0.3 }, i * 0.25 + 0.6);
         });
         tl.from(q("[data-sticker]"), { scale: 2.2, rotate: -40, autoAlpha: 0, duration: 0.5, ease: "back.out(2)" }, "-=0.2");
+        tl.from(q("[data-blank]"), { scaleX: 0, transformOrigin: "left", duration: 0.5, stagger: 0.15, ease: "power2.out" }, 0.9);
       });
     },
     { scope: root },
@@ -49,8 +51,8 @@ export default function Pricing() {
           What a website costs <em>in Nepal.</em>
         </h2>
         <p className={s.lede}>
-          Honest starting prices for custom websites, e-commerce, web apps and mobile apps. No templates, no hidden
-          extras: after a first call you get a fixed quote in writing.
+          Every business is different, so we don&apos;t do rate cards. Here&apos;s what each kind of project includes
+          and how long it takes; after a 30-minute call you get a fixed quote in NPR, in writing.
         </p>
       </div>
 
@@ -66,7 +68,9 @@ export default function Pricing() {
               <h3>{p.name}</h3>
               <p className={s.fits}>{p.fits}</p>
               <p className={s.price}>
-                <small>from</small> Rs {p.from}
+                <small>your quote</small>
+                Rs <span data-blank className={s.blank} aria-hidden="true" />
+                <span className={s.fill}>filled in after a 30-min call</span>
               </p>
               <ul>
                 {p.items.map((it) => (
@@ -90,17 +94,20 @@ export default function Pricing() {
         ))}
 
         <p data-sticker className={s.sticker}>
-          <span>Care plan</span>
-          <b>Rs {CARE_PLAN.from}</b>
-          <span>per month</span>
+          <span>Fixed quote</span>
+          <b>In writing</b>
+          <span>no surprises</span>
         </p>
       </div>
 
-      <p className={s.foot}>
-        <span className={s.hand}>what moves the price?</span> Number of pages, custom features, integrations like
-        eSewa or Khalti, and how much content we write for you. Care plan from Rs {CARE_PLAN.from}/month:{" "}
-        {CARE_PLAN.note.toLowerCase()} Prices are indicative, in NPR, excluding VAT.
-      </p>
+      <div className={s.foot}>
+        <p className={s.hand}>so what moves the price?</p>
+        <ul className={s.factors}>
+          {PRICE_FACTORS.map((f) => (
+            <li key={f}>{f}</li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }

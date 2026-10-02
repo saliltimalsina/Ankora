@@ -13,7 +13,7 @@ import BuiltFor from "../../components/services/built-for";
 import Cta from "../../components/services/cta";
 import ScrollRefresh from "../../components/services/scroll-refresh";
 import SiteFooter from "../../components/site-footer";
-import { FAQ, PRICING, SERVICES } from "../../lib/services";
+import { FAQ, SERVICES } from "../../lib/services";
 import { siteUrl } from "../../lib/site-url";
 
 // /services — every service on one page. Content comes from lib/services.ts,
@@ -33,8 +33,7 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured data: the four services (each at its section anchor), the
-// starting prices and the FAQ,
+// Structured data: the four services (each at its section anchor) and the FAQ,
 // so search can show them as rich results.
 const ld = JSON.stringify({
   "@context": "https://schema.org",
@@ -52,23 +51,6 @@ const ld = JSON.stringify({
           url: `${siteUrl}/services#${x.slug}`,
           provider: { "@id": `${siteUrl}/#organization` },
         },
-      })),
-    },
-    {
-      "@type": "OfferCatalog",
-      name: "Website and app development pricing in Nepal",
-      url: `${siteUrl}/services#pricing`,
-      itemListElement: PRICING.map((p) => ({
-        "@type": "Offer",
-        name: p.name,
-        description: p.items.join(", "),
-        priceSpecification: {
-          "@type": "PriceSpecification",
-          minPrice: Number(p.from.replace(/,/g, "")),
-          priceCurrency: "NPR",
-        },
-        areaServed: "Nepal",
-        seller: { "@id": `${siteUrl}/#organization` },
       })),
     },
     {

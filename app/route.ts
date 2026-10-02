@@ -84,7 +84,6 @@ const BUSINESS_LD = () =>
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
     areaServed: ["Nepal", "Worldwide"],
     openingHours: "Mo-Su",
-    priceRange: "Rs 60,000+",
     sameAs: ["https://www.linkedin.com/company/ankoralabs"],
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +

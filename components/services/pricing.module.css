@@ -181,7 +181,48 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.sticker b { font-family: var(--disp); font-size: 24px; letter-spacing: 0; line-height: 1.1; }
+.sticker b { font-family: var(--disp); font-size: 21px; letter-spacing: 0; line-height: 1.1; }
+
+/* the hand-drawn blank where a price would be */
+.blank {
+  display: inline-block;
+  width: 58%;
+  height: 0.12em;
+  margin-left: 0.2em;
+  vertical-align: baseline;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: 0.85;
+  transform: rotate(-1deg);
+}
+.fill {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--hand);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ever);
+  transform: rotate(-1.5deg);
+}
+.slot:nth-child(2) .fill { color: var(--lime); }
+.factors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.factors li {
+  padding: 8px 16px;
+  border: 1.5px dashed rgba(0, 40, 19, 0.35);
+  border-radius: 99px;
+  background: #fffef7;
+  color: var(--green-d);
+  font-size: 14.5px;
+}
 
 .foot {
   position: relative;
@@ -194,7 +235,7 @@
 }
 .hand {
   display: block;
-  margin-bottom: 6px;
+  margin: 0 0 6px;
   font-family: var(--hand);
   font-size: 26px;
   color: var(--green-d);
