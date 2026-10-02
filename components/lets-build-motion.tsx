@@ -60,5 +60,6 @@ export default function LetsBuildMotion({ html }: { html: string }) {
     { scope: root },
   );
 
-  return <div ref={root} style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: html }} />;
+  // site.js rewrites the Cal attributes on click, possibly before hydration
+  return <div ref={root} style={{ display: "contents" }} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: html }} />;
 }

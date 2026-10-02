@@ -7,5 +7,12 @@ import { join } from "node:path";
 const read = (f: string) => readFileSync(join(process.cwd(), "partials", f), "utf8");
 
 export default function Preloader() {
-  return <div style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: read("preloader-head.html") + read("preloader.html") }} />;
+  // the preloader removes its own overlay when done, possibly before hydration
+  return (
+    <div
+      style={{ display: "contents" }}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: read("preloader-head.html") + read("preloader.html") }}
+    />
+  );
 }

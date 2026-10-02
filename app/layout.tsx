@@ -67,14 +67,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    // the preloader (and browser extensions) add classes to <html> before hydration
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${disp.variable} ${body.variable} ${serif.variable} ${hand.variable}`}
     >
       <body>
         {children}
         {/* booking popup, nav menu, footer plants, WhatsApp pill (public/kit/site.js) */}
-        <div hidden dangerouslySetInnerHTML={{ __html: kitScripts() }} />
+        <div hidden suppressHydrationWarning dangerouslySetInnerHTML={{ __html: kitScripts() }} />
       </body>
     </html>
   );
