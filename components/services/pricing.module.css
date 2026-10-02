@@ -247,3 +247,104 @@
   .slot:nth-child(2) { margin-top: 0; }
   .sticker { width: 112px; height: 112px; bottom: -40px; right: -6px; }
 }
+
+/* the blank: on hover a pen wiggles over it and writes "sized to you" */
+.line { position: relative; display: inline-block; width: 58%; vertical-align: baseline; }
+.line .blank { width: 100%; margin-left: 0; }
+.ink {
+  position: absolute;
+  left: 6px;
+  bottom: 0.32em;
+  font-family: var(--hand);
+  font-size: 0.56em;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: var(--ever);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.9s steps(12);
+}
+.slot:nth-child(2) .ink { color: var(--lime); }
+.pen {
+  position: absolute;
+  right: -6px;
+  bottom: 0.18em;
+  width: 0.5em;
+  height: 0.5em;
+  opacity: 0.5;
+  transform-origin: bottom left;
+}
+.slot:hover .ink { clip-path: inset(0 0 0 0); }
+.slot:hover .pen { opacity: 1; animation: pen-write 0.9s ease-in-out; }
+@keyframes pen-write {
+  0% { transform: translateX(-9em) rotate(0); }
+  25% { transform: translateX(-7em) rotate(-10deg); }
+  50% { transform: translateX(-4.5em) rotate(6deg); }
+  75% { transform: translateX(-2em) rotate(-8deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+
+/* actions */
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.actions .cta { margin-top: 0; }
+.wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border: 1.5px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 99px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.wa:hover { border-color: currentColor; transform: translateY(-1px); }
+.call {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--hand);
+  font-size: 21px;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  opacity: 0.85;
+}
+.call:hover { opacity: 1; }
+
+/* not sure which fits */
+.unsure {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 30px;
+  max-width: 1300px;
+  margin: clamp(70px, 10vh, 100px) auto 0;
+  padding: clamp(22px, 2.6vw, 34px) clamp(22px, 3vw, 40px);
+  border: 1.5px dashed rgba(0, 40, 19, 0.35);
+  border-radius: 22px;
+  background: #fffef7;
+}
+.unsure p { margin: 0; max-width: 620px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+.unsure b { display: block; margin-bottom: 4px; font-family: var(--disp); font-size: clamp(24px, 2.4vw, 34px); text-transform: uppercase; color: var(--green-d); line-height: 1; }
+.unsureGo { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.unsureGo .cta { margin-top: 0; }
+.ghost {
+  padding: 11px 20px;
+  border: 1.5px solid var(--green-d);
+  border-radius: 99px;
+  color: var(--green-d);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.ghost:hover { background: var(--green-d); color: var(--lime-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ink { transition: none; }
+  .slot:hover .pen { animation: none; }
+}

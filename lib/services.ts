@@ -187,18 +187,22 @@ export const FAQ = [
 export const PRICING = [
   {
     name: "Business website",
+    // preselects this in the /contact brief builder (/contact?need=website#brief)
+    need: "website",
     weeks: "3–5 weeks",
     fits: "Companies, startups & professionals",
     items: ["Custom design, no templates", "Up to 8 pages + CMS", "Mobile-first & fast", "SEO setup & Google Analytics", "Hosting, domain & SSL setup"],
   },
   {
     name: "E-commerce & web apps",
+    need: "ecommerce",
     weeks: "6–10 weeks",
     fits: "Online stores, portals & dashboards",
     items: ["Everything in Business website", "eSewa, Khalti & Fonepay checkout", "Products, orders & inventory admin", "Customer accounts & dashboards", "APIs & third-party integrations"],
   },
   {
     name: "Product build",
+    need: "app",
     weeks: "10–16 weeks",
     fits: "Startups & new digital products",
     items: ["UX research & clickable prototype", "Web app + iOS & Android apps", "Backend, APIs & admin panel", "Analytics, QA & store launch", "Weekly demos on staging"],

@@ -5,6 +5,33 @@ import { gsap, MQ, useGSAP } from "../../lib/gsap";
 import { PRICE_FACTORS, PRICING } from "../../lib/services";
 import s from "./pricing.module.css";
 
+const WA = "https://wa.me/ankoralabs";
+// Cal.com popup (public/site-kit.js); the href is the no-script fallback.
+const BOOK = {
+  href: "https://cal.com/ankoralabs/30min",
+  "data-cal-link": "ankoralabs/30min",
+  "data-cal-namespace": "30min",
+  "data-cal-config": '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"light"}',
+};
+
+function WaIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+      <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z" />
+    </svg>
+  );
+}
+
+// a little fountain pen that hovers over the blank quote line
+function Pen({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16.5 3.5l4 4L9 19l-5 1 1-5z" />
+      <path d="M14 6l4 4" />
+    </svg>
+  );
+}
+
 // "What a website costs": three paper receipts that print out of a slot, one
 // after another, as the section scrolls in. No prices on purpose: the total is
 // a hand-drawn blank, filled in after the first call, with the line items and
@@ -69,8 +96,13 @@ export default function Pricing() {
               <p className={s.fits}>{p.fits}</p>
               <p className={s.price}>
                 <small>your quote</small>
-                Rs <span data-blank className={s.blank} aria-hidden="true" />
-                <span className={s.fill}>filled in after a 30-min call</span>
+                Rs{" "}
+                <span className={s.line} aria-hidden="true">
+                  <span data-blank className={s.blank} />
+                  <span className={s.ink}>sized to you</span>
+                  <Pen className={s.pen} />
+                </span>
+                <span className={s.fill}>filled in after a free 30-min call</span>
               </p>
               <ul>
                 {p.items.map((it) => (
@@ -86,8 +118,21 @@ export default function Pricing() {
                 <i aria-hidden="true" />
                 <span>{p.weeks}</span>
               </p>
-              <a href="/contact" className={s.cta}>
-                Get a fixed quote <span aria-hidden="true">→</span>
+              <div className={s.actions}>
+                <a href={`/contact?need=${p.need}#brief`} className={s.cta}>
+                  Get my quote <span aria-hidden="true">→</span>
+                </a>
+                <a
+                  href={`${WA}?text=${encodeURIComponent(`Hi Ankora! I'm interested in a ${p.name.toLowerCase()}. Can we talk?`)}`}
+                  className={s.wa}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <WaIcon /> Ask on WhatsApp
+                </a>
+              </div>
+              <a className={s.call} {...BOOK}>
+                or book a free call
               </a>
             </div>
           </article>
@@ -98,6 +143,21 @@ export default function Pricing() {
           <b>In writing</b>
           <span>no surprises</span>
         </p>
+      </div>
+
+      <div className={s.unsure}>
+        <p>
+          <b>Not sure which one fits?</b> Tell us what you&apos;re building in three taps and we&apos;ll point you
+          to the right one.
+        </p>
+        <div className={s.unsureGo}>
+          <a href="/contact#brief" className={s.cta}>
+            Help me choose <span aria-hidden="true">→</span>
+          </a>
+          <a className={s.ghost} {...BOOK}>
+            Book a call
+          </a>
+        </div>
       </div>
 
       <div className={s.foot}>
