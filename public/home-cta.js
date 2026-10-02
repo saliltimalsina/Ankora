@@ -24,6 +24,17 @@
     "#ank-next .nx-secondary{font-weight:500;color:#fbf8ef;text-decoration:none}" +
     "#ank-next .nx-secondary span{display:inline-block;transition:transform .3s}" +
     "#ank-next .nx-secondary:hover span{transform:translateX(4px)}" +
+    // WhatsApp chat bubble, mirrors .bubble in components/services/cta.module.css
+    "#ank-next .nx-bubble{position:relative;display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border:1.5px solid rgba(213,226,123,.55);border-radius:26px 26px 26px 6px;color:#fbf8ef;font-size:16px;font-weight:500;text-decoration:none;transition:background .3s,color .3s,border-color .3s,transform .4s cubic-bezier(.2,.9,.3,1.3)}" +
+    "#ank-next .nx-bubble svg{width:19px;height:19px;flex:none;color:#d5e27b;transition:color .3s}" +
+    "#ank-next .nx-bubble:hover{background:#d5e27b;border-color:#d5e27b;color:#002813;transform:rotate(-2deg) translateY(-2px)}" +
+    "#ank-next .nx-bubble:hover svg{color:#002813}" +
+    "#ank-next .nx-typing{display:inline-flex;gap:3px;width:0;overflow:hidden;transition:width .3s}" +
+    "#ank-next .nx-typing i{width:4px;height:4px;border-radius:50%;background:currentColor;animation:nx-typing 1.1s infinite ease-in-out}" +
+    "#ank-next .nx-typing i:nth-child(2){animation-delay:.15s}#ank-next .nx-typing i:nth-child(3){animation-delay:.3s}" +
+    "#ank-next .nx-bubble:hover .nx-typing{width:18px}" +
+    "@keyframes nx-typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-3px);opacity:1}}" +
+    "@media (prefers-reduced-motion:reduce){#ank-next .nx-typing i{animation:none}#ank-next .nx-bubble{transition:none}}" +
     "@media (prefers-reduced-motion:no-preference){#ank-next .nx-f{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}#ank-next.in .nx-f{opacity:1;transform:none}#ank-next.in .nx-f:nth-child(3){transition-delay:.1s}#ank-next.in .nx-f:nth-child(4){transition-delay:.2s}#ank-next.in .nx-f:nth-child(5){transition-delay:.3s}}";
 
   var html =
@@ -33,7 +44,9 @@
     '<p class="nx-sub nx-f">Tell us what you’re making. We’ll come back with a plan, not a sales deck.</p>' +
     '<div class="nx-act nx-f">' +
     '<a class="nx-primary" href="https://cal.com/ankoralabs/30min" data-cal-link="ankoralabs/30min" data-cal-namespace="30min" data-cal-config=\'' + CAL_CFG + "'>Book a Call</a>" +
-    '<a class="nx-secondary" href="' + WA + '" target="_blank" rel="noopener">WhatsApp us <span aria-hidden="true">→</span></a>' +
+    '<a class="nx-bubble" href="' + WA + '" target="_blank" rel="noopener">' +
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>' +
+    'WhatsApp us<span class="nx-typing" aria-hidden="true"><i></i><i></i><i></i></span></a>' +
     '<a class="nx-secondary" href="/services">Our services <span aria-hidden="true">→</span></a>' +
     "</div>";
 
