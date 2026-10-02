@@ -85,6 +85,7 @@ const BUSINESS_LD = () =>
     areaServed: ["Nepal", "Worldwide"],
     openingHours: "Mo-Su",
     priceRange: "Rs 60,000+",
+    sameAs: ["https://www.linkedin.com/company/ankoralabs"],
     knowsAbout: ["Product design", "UX/UI design", "Web development", "Mobile app development", "AI development"],
   }) +
   "</script>";
