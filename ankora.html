@@ -441,6 +441,38 @@ img[alt="leaves"]{width:5.5vw!important;height:auto!important;aspect-ratio:640/1
 .svc-cta:hover::after{transform:scaleX(.6)}
 .svc-cta .ar{transition:transform .25s}
 .svc-cta:hover .ar{transform:translateX(3px)}
+.svc-follow{position:fixed;left:50%;bottom:28px;z-index:60;display:inline-flex;align-items:center;gap:14px;height:56px;padding:0 9px;border-radius:999px;background:#002813;color:#F8F5ED;font-weight:500;font-size:15px;text-decoration:none;overflow:hidden;isolation:isolate;
+  box-shadow:0 18px 40px -16px rgba(0,40,19,.6);--ty:170%;transform:translate(-50%,var(--ty)) translate(var(--mx,0px),var(--my,0px));transition:transform .55s cubic-bezier(.2,.8,.2,1),color .35s .05s}
+.svc-follow.show{--ty:0%}
+.svc-follow>span{position:relative;z-index:1}
+/* hover: the lime arrow-dot floods the whole pill */
+.svc-follow::before{content:"";position:absolute;right:9px;top:50%;width:38px;height:38px;margin-top:-19px;border-radius:50%;background:#D5E27B;transform:scale(0);transition:transform .55s cubic-bezier(.2,.8,.2,1);z-index:0}
+.svc-follow:hover::before,.svc-follow:focus-visible::before{transform:scale(14)}
+.svc-follow:hover,.svc-follow:focus-visible{color:#002813}
+.svc-follow-n{display:inline-grid;overflow:hidden;height:30px;font-size:11px;font-weight:500;letter-spacing:1px;padding:0 11px;border-radius:999px;background:rgba(213,226,123,.16);color:#D5E27B;transition:background .35s,color .35s}
+.svc-follow-n>span{grid-area:1/1;line-height:30px;white-space:nowrap}
+.svc-follow:hover .svc-follow-n{background:rgba(0,40,19,.1);color:#002813}
+.svc-follow-t{display:inline-grid;overflow:hidden;height:22px}
+.svc-follow-t>span{grid-area:1/1;line-height:22px;white-space:nowrap}
+.svc-follow .in{animation:svcIn .45s cubic-bezier(.2,.8,.2,1)}
+.svc-follow .out{animation:svcOut .4s forwards}
+/* the arrow gives way to a sprout on hover */
+.svc-follow .ar{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#D5E27B;color:#002813;transition:background .35s}
+.svc-follow .ar svg{grid-area:1/1;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.svc-follow .ar .leaf{opacity:0;transform:translateY(10px) scale(.4)}
+.svc-follow:hover .ar{background:#002813;color:#D5E27B}
+.svc-follow:hover .ar svg:first-child{opacity:0;transform:translateX(14px)}
+.svc-follow:hover .ar .leaf{opacity:1;transform:none;transition-delay:.12s}
+/* a little squash whenever the service changes */
+.svc-follow.bump{animation:svcBump .5s cubic-bezier(.3,1.6,.5,1)}
+.svc-follow:active{scale:.96}
+@keyframes svcBump{0%{scale:1}30%{scale:1.07 .92}60%{scale:.97 1.04}100%{scale:1}}
+@keyframes svcIn{from{transform:translateY(100%);opacity:0}}
+@keyframes svcOut{to{transform:translateY(-100%);opacity:0}}
+/* on phones the WhatsApp bubble steps aside while the services CTA is up */
+@media (max-width:900px){body.svc-follow-on #ank-wa{transform:translateY(170%)!important}}
+@media (max-width:640px){.svc-follow{bottom:18px;height:50px;font-size:14px;gap:10px}.svc-follow-n{display:none}.svc-follow .ar{width:34px;height:34px}}
+@media (prefers-reduced-motion:reduce){.svc-follow,.svc-follow *,.svc-follow::before{transition:none!important;animation:none!important}}
 
 /* ---- right stage ---- */
 .svc-stagebox{position:relative;width:100%;height:440px;max-width:520px;perspective:1600px}
@@ -592,23 +624,23 @@ section:has(> #svc-stage){display:block!important}
     {n:"01",eb:"Product design",pc:"var(--sv-lime)",
      h:"Design that earns trust on sight.",
      p:"Research, wireframes, and polished interfaces — we turn rough ideas into products people actually want to use.",
-     cta:"UI / UX design",
+     cta:"Start a design project",slug:"design",need:"uiux",
      scr:"/images/texture/scribble-arrow-1.webp",scrCss:"top:50%;left:40px;width:460px;height:460px"},
     {n:"02",eb:"Engineering",pc:"var(--sv-ever)",
      h:"Websites engineered to perform.",
      p:"Fast, accessible, search-ready builds on a modern stack — shipped to production, not just handed off as a mockup.",
-     cta:"Web development",
-     scr:"/images/texture/scribble-arrow-2.webp",scrCss:"top:46%;left:-20px;width:480px;height:480px"},
+     cta:"Start a website",slug:"engineering",need:"website",
+     scr:"/images/texture/scribble-arrow-2.webp",scrCss:"top:64%;left:-20px;width:420px;height:420px"},
     {n:"03",eb:"Mobile",pc:"var(--sv-copper)",
      h:"Apps that feel right at home.",
      p:"Native-quality iOS and Android from one codebase — smooth, offline-ready, and built to scale with you.",
-     cta:"Mobile apps",
+     cta:"Start an app",slug:"mobile",need:"app",
      scr:"/images/texture/scribble-filter.webp",scrCss:"top:54%;left:250px;width:300px;height:300px"},
     {n:"04",eb:"Intelligence",pc:"var(--sv-pink)",
      h:"Intelligence built into the product.",
      p:"Chat, search, automation, and agents wired into your product with the latest models — useful, not gimmicky.",
-     cta:"AI engineering",
-     scr:"/images/texture/scribble-checklist.webp",scrCss:"top:22%;left:340px;width:200px;height:450px"}
+     cta:"Add AI to your product",slug:"ai",need:"ai",
+     scr:"/images/texture/scribble-checklist.webp",scrCss:"top:66%;left:250px;width:150px;height:340px"}
   ];
 
   var SCENES = [
@@ -658,7 +690,7 @@ section:has(> #svc-stage){display:block!important}
   function panelHTML(s){
     return '<div class="svc-panel-in"><span class="svc-eyebrow"><b>'+s.n+'</b> '+s.eb+'</span>'+
       '<h3>'+s.h+'</h3><p>'+s.p+'</p>'+
-      '<a class="svc-cta" href="#">'+s.cta+' <span class="ar">→</span></a></div>';
+      '<a class="svc-cta" href="/services#'+s.slug+'">How we do it <span class="ar">→</span></a></div>';
   }
 
   /* ---- per-scene animation runners (idempotent, layout-agnostic) ---- */
@@ -763,7 +795,44 @@ section:has(> #svc-stage){display:block!important}
     scs.forEach(function(s){io.observe(s);});
   }
 
-  function build(mount){ if(MOBILE()) buildMobile(mount); else buildDesktop(mount); }
+  function build(mount){ if(MOBILE()) buildMobile(mount); else buildDesktop(mount); follow(mount); }
+
+  /* ---- one floating CTA whose label follows the active service ---- */
+  function follow(mount){
+    var pill=document.getElementById("svc-follow");
+    if(!pill){
+      pill=document.createElement("a"); pill.id="svc-follow"; pill.className="svc-follow";
+      pill.innerHTML='<span class="svc-follow-n"><span></span></span><span class="svc-follow-t"></span><span class="ar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><svg class="leaf" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-8"/><path d="M12 13c-4 0-7-3-7-7 4 0 7 3 7 7z"/><path d="M12 15c0-4 3-7 7-7 0 4-3 7-7 7z"/></svg></span>';
+      document.body.appendChild(pill);
+      // magnetic: the pill leans toward a nearby cursor
+      if(window.matchMedia("(pointer:fine)").matches && !RM){
+        document.addEventListener("mousemove",function(e){
+          if(!pill.classList.contains("show")) return;
+          var r=pill.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2, dx=e.clientX-cx, dy=e.clientY-cy;
+          var near=Math.abs(dx)<r.width/2+70 && Math.abs(dy)<r.height/2+60;
+          pill.style.setProperty("--mx",(near?dx*.18:0)+"px"); pill.style.setProperty("--my",(near?dy*.28:0)+"px");
+        },{passive:true});
+      }
+    }
+    if(pill._io) pill._io.disconnect(); if(pill._vis) pill._vis.disconnect();
+    var cur=-1, t=pill.querySelector(".svc-follow-t");
+    function set(i){
+      if(i===cur) return; cur=i; var sv=SERVICES[i];
+      pill.href="/contact?need="+sv.need+"#brief";
+      var n=pill.querySelector(".svc-follow-n"), nn=document.createElement("span"); nn.textContent=sv.n+" / 0"+SERVICES.length;
+      [].slice.call(n.children).forEach(function(o){ o.className="out"; setTimeout(function(){ if(o.parentNode) o.parentNode.removeChild(o); },400); });
+      nn.className="in"; n.appendChild(nn);
+      if(cur>0 || t.children.length){ pill.classList.remove("bump"); void pill.offsetWidth; pill.classList.add("bump"); }
+      var nu=document.createElement("span"); nu.textContent=sv.cta; nu.className="in";
+      [].slice.call(t.children).forEach(function(o){ o.className="out"; setTimeout(function(){ if(o.parentNode) o.parentNode.removeChild(o); },400); });
+      t.appendChild(nu);
+    }
+    pill._io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting) set(+e.target.dataset.i); });},{rootMargin:"-45% 0px -45% 0px"});
+    mount.querySelectorAll("[data-i]").forEach(function(el){ pill._io.observe(el); });
+    pill._vis=new IntersectionObserver(function(es){ var on=es[0].isIntersecting; pill.classList.toggle("show",on); document.body.classList.toggle("svc-follow-on",on); },{rootMargin:"-35% 0px -35% 0px"});
+    pill._vis.observe(mount);
+    set(0);
+  }
 
   // Find the "You bring the vision / We ship the product" CTA section (a child of <main>).
   function visionSection(){
