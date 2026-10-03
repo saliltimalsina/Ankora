@@ -74,7 +74,7 @@
   z-index: 130;
   display: flex;
   gap: 16px;
-  min-width: 580px;
+  width: max-content;
   padding: 18px;
   border: 1px solid #e7e2d2;
   border-radius: 18px;
@@ -88,13 +88,15 @@
 .ank-mega::before { content: ""; position: absolute; top: -16px; left: 0; right: 0; height: 16px; }
 .ank-svc:hover .ank-mega,
 .ank-svc:focus-within .ank-mega { opacity: 1; visibility: visible; transform: translateY(0); }
-.ank-mega-grid { display: grid; grid-template-columns: repeat(2, minmax(196px, 1fr)); gap: 4px; }
+/* fixed tracks: Safari under-measures a 1fr grid inside a shrink-to-fit flex box,
+   which let the featured card spill out of the menu */
+.ank-mega-grid { display: grid; flex: none; grid-template-columns: repeat(2, 214px); gap: 4px; }
 .ank-mega-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 12px; transition: background 0.15s ease; }
 .ank-mega-item:hover { background: #eef3e6; }
 .ank-mi-ic { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: #e3efd0; color: #1f5130; }
 .ank-mi-t { display: block; color: #0d2a16; font-size: 15px; font-weight: 600; line-height: 1.2; }
 .ank-mi-s { display: block; margin-top: 3px; color: #5f6b5f; font-size: 12.5px; line-height: 1.32; }
-.ank-mega-feat { display: flex; flex: 0 0 200px; flex-direction: column; padding: 18px; border-radius: 14px; background: #0c3a1f; color: #f8f6ed; transition: background 0.15s ease; }
+.ank-mega-feat { display: flex; flex: none; width: 200px; flex-direction: column; padding: 18px; border-radius: 14px; background: #0c3a1f; color: #f8f6ed; transition: background 0.15s ease; }
 .ank-mega-feat:hover { background: #0f4a28; }
 .ank-feat-tag { align-self: flex-start; padding: 3px 9px; border-radius: 999px; background: #cfe8a3; color: #16361f; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .ank-feat-title { margin-top: 20px; font-size: 17px; font-weight: 600; line-height: 1.28; }
