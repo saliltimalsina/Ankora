@@ -23,6 +23,7 @@ const TOKENS: Record<string, string> = {
   WA_HELLO: waLink(),
   WA_HANDLE: SITE.whatsappHandle,
   LINKEDIN: SITE.linkedin,
+  YEAR: String(new Date().getFullYear()),
   CAL_URL: SITE.calUrl,
   CAL_LINK: SITE.calLink,
   CAL_NS: SITE.calNamespace,
