@@ -4,17 +4,19 @@ import SiteFooter from "../../components/site-footer";
 import Preloader from "../../components/preloader";
 import CareersHero from "../../components/careers/hero";
 import Roles from "../../components/careers/roles";
-import Culture, { Hiring } from "../../components/careers/culture";
+import Culture from "../../components/careers/culture";
 import Apply from "../../components/careers/apply";
 import CareersMotion from "../../components/careers/motion";
 import { ROLES } from "../../lib/careers";
 import { SITE } from "../../lib/site";
 import { siteUrl } from "../../lib/site-url";
+import "../../components/ui/desk.css";
+import "../../components/ui/sentence.css";
 import "../../components/careers/careers.css";
 
-// /careers: the hero, open roles from lib/careers.ts, how the studio works,
-// the "apply in a minute" message builder (WhatsApp or email, CV attached
-// there), and what happens next.
+// /careers: the studio as a place to work (hero with the lanyard badge), then
+// whatever roles are open (lib/careers.ts) as paper documents, the "apply in a
+// minute" sentence form, and last, how we work as an annotated desk.
 
 const TITLE = "Careers at Ankora Labs | Join a Kathmandu Web Studio";
 const DESC =
@@ -65,12 +67,11 @@ export default function CareersPage() {
     <>
       <Preloader />
       <SiteNav />
-      <main id="start" className="careers-page">
+      <main id="start" className="dk-page careers-page">
         <CareersHero />
         <Roles />
-        <Culture />
         <Apply />
-        <Hiring />
+        <Culture />
       </main>
       <SiteFooter />
       <CareersMotion />

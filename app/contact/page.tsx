@@ -3,14 +3,16 @@ import SiteNav from "../../components/site-nav";
 import SiteFooter from "../../components/site-footer";
 import Preloader from "../../components/preloader";
 import ContactHero from "../../components/contact/hero";
-import Ways from "../../components/contact/ways";
-import Brief from "../../components/contact/brief";
-import Slot from "../../components/contact/slot";
+import Write from "../../components/contact/write";
+import Talk from "../../components/contact/talk";
 import NextSteps from "../../components/contact/next-steps";
+import ContactMotion from "../../components/contact/motion";
+import "../../components/ui/desk.css";
+import "../../components/ui/sentence.css";
 import "../../components/contact/contact.css";
 
-// /contact: every way to reach the studio. Hero card, three ways in, the
-// three-taps brief builder, the inline calendar, then what happens next.
+// /contact: the hero with every direct line (email first), the sentence form,
+// "Rather talk?" (calendar and WhatsApp side by side), then what happens next.
 
 const TITLE = "Contact Ankora Labs | Web Design Company in Kathmandu, Nepal";
 const DESC =
@@ -29,14 +31,14 @@ export default function ContactPage() {
     <>
       <Preloader />
       <SiteNav />
-      <main id="start" className="contact-page">
+      <main id="start" className="dk-page contact-page">
         <ContactHero />
-        <Ways />
-        <Brief />
-        <Slot />
+        <Write />
+        <Talk />
         <NextSteps />
       </main>
       <SiteFooter />
+      <ContactMotion />
     </>
   );
 }

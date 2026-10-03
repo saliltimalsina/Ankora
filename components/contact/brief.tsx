@@ -3,17 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { SITE, waLink } from "../../lib/site";
 import { GROUPS, type Group } from "../../lib/brief";
+import { Choose, Fill, Stamp } from "../ui/sentence";
 
-// "Tell us in three taps": chips and a few fields on a notebook page write a
-// handwritten message. "Send message" posts it to /api/contact, which emails
-// the studio and sends the sender a "we've got it" email; WhatsApp and the
-// visitor's own email app stay as fallbacks with the same message ready. The
-// pricing receipts link here as /contact?need=<key>#brief to preselect "I need".
+// The /contact form (in ./write.tsx): the message is the form. Gaps in one sentence pick
+// who they are, what they need and when (lib/brief.ts), then a name and an
+// email. "Send it" posts to /api/contact, which emails the studio and sends the
+// sender a "we've got it" email; WhatsApp and the visitor's own email app stay
+// as fallbacks with the same message ready. The pricing receipts link here as
+// /contact?need=<key>#brief to preselect "I need".
 
 const message = (p: Record<Group, string>) =>
   `Hi Ankora! I’m ${p.who || "___"} and I need ${p.need || "___"}, ${p.when || "___"}. Can we talk?`;
 
+const PLACEHOLDER: Record<Group, string> = { who: "who you are", need: "what you need", when: "when" };
+
 type Status = { s: "idle" | "sending" | "sent" } | { s: "error"; msg: string };
+type Bad = "" | "name" | "email";
 
 export default function Brief() {
   const [pick, setPick] = useState<Record<Group, string>>({ who: "", need: "", when: "" });
@@ -21,7 +26,9 @@ export default function Brief() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [more, setMore] = useState("");
+  const [extra, setExtra] = useState(false);
   const [status, setStatus] = useState<Status>({ s: "idle" });
+  const [bad, setBad] = useState<Bad>("");
   const [nudge, setNudge] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -36,21 +43,39 @@ export default function Brief() {
   }, []);
 
   // a warning goes away once the form changes
-  useEffect(() => setNudge(""), [name, email]);
+  useEffect(() => {
+    setNudge("");
+    setBad("");
+  }, [name, email]);
 
-  const toggle = (g: Group, v: string) => setPick((p) => ({ ...p, [g]: p[g] === v ? "" : v }));
   const label = (g: Group) => GROUPS.find((x) => x.key === g)!.chips.find((c) => c.v === pick[g])?.label ?? "";
   const plain = [message(pick), more.trim(), name.trim() ? `— ${name.trim()}` : ""].filter(Boolean).join("\n\n");
-  const blank = (v: string) => (v ? <mark>{v}</mark> : <span style={{ opacity: 0.45 }}>___</span>);
+  const group = (g: Group) => GROUPS.find((x) => x.key === g)!;
+  // the five gaps in reading order; the first empty one is cued
+  const gaps = { who: !!pick.who, need: !!pick.need, when: !!pick.when, name: !!name.trim(), email: !!email.trim() };
+  const done = Object.values(gaps).filter(Boolean).length;
+  const cue = bad ? "" : (Object.keys(gaps) as (keyof typeof gaps)[]).find((k) => !gaps[k]) ?? "";
+  const choose = (g: Group) => (
+    <Choose
+      cue={cue === g}
+      label={group(g).legend}
+      placeholder={PLACEHOLDER[g]}
+      options={group(g).chips}
+      value={pick[g]}
+      onChange={(v) => setPick((p) => ({ ...p, [g]: v }))}
+    />
+  );
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status.s === "sending") return;
     if (!name.trim()) {
-      setNudge("Add your name first.");
+      setBad("name");
+      setNudge("Add your name, so we know who to reply to.");
       return nameRef.current?.focus();
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setBad("email");
       setNudge("Add an email address we can reply to.");
       return emailRef.current?.focus();
     }
@@ -76,109 +101,117 @@ export default function Brief() {
   };
 
   const sending = status.s === "sending";
+  const sent = status.s === "sent";
+  const hint = nudge || (status.s === "error" ? `${status.msg} Try WhatsApp or email below.` : "");
 
   return (
-    <section className="gb" id="brief" aria-labelledby="gb-title">
-      <div className="gb-in">
-        <div className="gb-head">
-          <p className="gn-kick">Not sure what to say?</p>
-          <h2 id="gb-title" className="gn-h2">
-            Tell us in <em>three taps.</em>
-          </h2>
+    <form className="sn-form" onSubmit={submit} noValidate data-sent={sent || undefined}>
+      {!sent && (
+        <div className="sn-how">
+          <p>
+            <b>Fill in the gaps.</b> Tap a highlighted word to pick an answer or type it in.
+          </p>
+          <p className="sn-progress" aria-hidden="true">
+            <span className="sn-dots">
+              {Object.values(gaps).map((on, i) => (
+                <i key={i} data-on={on || undefined} />
+              ))}
+            </span>
+            {done} of 5
+          </p>
         </div>
-        <div className="gb-pad">
-          <form id="gb-form" className="gb-groups" onSubmit={submit} noValidate>
-            {GROUPS.map((g) => (
-              <fieldset key={g.key} className="gb-group">
-                <legend>{g.legend}</legend>
-                <div className="gb-chips" data-group={g.key}>
-                  {g.chips.map((c) => (
-                    <button key={c.label} type="button" aria-pressed={pick[g.key] === c.v} onClick={() => toggle(g.key, c.v)}>
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-            ))}
-
-            <div className="gb-fields">
-              <label className="gb-field">
-                <span>Your name</span>
-                <input ref={nameRef} type="text" name="name" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Ram Thapa" />
-              </label>
-              <label className="gb-field">
-                <span>Email</span>
-                <input ref={emailRef} type="email" name="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" />
-              </label>
-              <label className="gb-field">
-                <span>
-                  Phone or WhatsApp <i>(optional)</i>
-                </span>
-                <input type="tel" name="phone" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="98XXXXXXXX" />
-              </label>
-              <label className="gb-field gb-field-wide">
-                <span>
-                  Anything else? <i>(optional)</i>
-                </span>
-                <textarea rows={3} name="message" value={more} onChange={(e) => setMore(e.target.value)} placeholder="Your business, your current website, a deadline…" />
-              </label>
+      )}
+      <fieldset className="sn-words" disabled={sent || sending}>
+        <legend className="sr-only">Your message</legend>
+        <div className="sn">
+          Hi Ankora, I’m {choose("who")} and I need <span className="sn-nb">{choose("need")},</span>{" "}
+          <span className="sn-nb">{choose("when")}.</span>
+        </div>
+        <div className="sn">
+          My name is{" "}
+          <span className="sn-nb">
+            <Fill ref={nameRef} label="Your name" name="name" autoComplete="name" required value={name} onChange={setName} placeholder="your name" invalid={bad === "name"} cue={cue === "name"} />,
+          </span>{" "}
+          reply to me at{" "}
+          <span className="sn-nb">
+            <Fill
+              ref={emailRef}
+              label="Your email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              required
+              value={email}
+              onChange={setEmail}
+              placeholder="you@business.com"
+              invalid={bad === "email"}
+              cue={cue === "email"}
+            />
+            .
+          </span>
+        </div>
+        {extra && (
+          <div className="sn-extra">
+            <div className="sn">
+              You can also call me on{" "}
+              <Fill label="Phone or WhatsApp (optional)" type="tel" name="phone" autoComplete="tel" value={phone} onChange={setPhone} placeholder="98XXXXXXXX" />.
             </div>
-            {/* spam trap: hidden from people, filled in by bots */}
-            <input ref={trap} type="text" name="company" tabIndex={-1} autoComplete="off" className="gb-trap" aria-hidden="true" />
-          </form>
+            <textarea
+              className="sn-note"
+              rows={3}
+              name="message"
+              aria-label="Anything else (optional)"
+              value={more}
+              onChange={(e) => setMore(e.target.value)}
+              placeholder="Your business, your current website, a deadline…"
+            />
+          </div>
+        )}
+      </fieldset>
 
-          <div className="gb-note">
-            {status.s === "sent" ? (
-              <div role="status">
-                <p className="gb-label">Sent</p>
-                <p className="gb-msg gb-done">Thank you, {name.trim().split(" ")[0]}! It’s in our inbox.</p>
-                <p className="gb-done-p">
-                  We’ll reply within 24 hours, weekends too. A copy is on its way to <b>{email.trim()}</b>.
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="gb-label">Your message</p>
-                <p className="gb-msg" aria-live="polite">
-                  Hi Ankora! I’m {blank(pick.who)} and I need {blank(pick.need)}, {blank(pick.when)}. Can we talk?
-                  {more.trim() && (
-                    <>
-                      <br />
-                      <span className="gb-more">{more.trim()}</span>
-                    </>
-                  )}
-                  {name.trim() && (
-                    <>
-                      <br />— {name.trim()}
-                    </>
-                  )}
-                </p>
-                <div className="gb-send">
-                  <button type="submit" form="gb-form" className="gb-btn gb-btn-wa" disabled={sending}>
-                    {sending ? "Sending…" : "Send message"} {!sending && <span aria-hidden="true">→</span>}
-                  </button>
-                </div>
-                {(nudge || status.s === "error") && (
-                  <p className="gb-nudge" role="alert">
-                    {nudge || (status.s === "error" && `${status.msg} Try WhatsApp or email below.`)}
-                  </p>
-                )}
-                <p className="gb-or">
-                  <span>or send it your way</span>
-                </p>
-                <div className="gb-alt">
-                  <a href={waLink(plain)} target="_blank" rel="noopener">
-                    WhatsApp
-                  </a>
-                  <a href={`mailto:${SITE.email}?subject=${encodeURIComponent("Project enquiry — Ankora Labs")}&body=${encodeURIComponent(plain + "\n\n")}`}>
-                    Your email app
-                  </a>
-                </div>
-              </>
-            )}
+      {/* spam trap: hidden from people, filled in by bots */}
+      <input ref={trap} type="text" name="company" tabIndex={-1} autoComplete="off" className="sn-trap" aria-hidden="true" />
+
+      {sent ? (
+        <div className="sn-done" role="status">
+          <Stamp top="Ankora Labs" bottom="Kathmandu" />
+          <div>
+            <p className="sn-done-h">Thank you, {name.trim().split(" ")[0]}. It’s in our inbox.</p>
+            <p className="sn-done-p">
+              We’ll reply within 24 hours, weekends too. A copy is on its way to <b>{email.trim()}</b>.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
+      ) : (
+        <>
+          <p className="sn-hint" role="alert" data-err={hint ? "" : undefined}>
+            {hint}
+          </p>
+          <div className="sn-actions">
+            {!extra && (
+              <button type="button" className="sn-more" aria-expanded={false} onClick={() => setExtra(true)}>
+                <i aria-hidden="true">+</i> Add a phone number or a note
+              </button>
+            )}
+            <button type="submit" className="sn-send" disabled={sending}>
+              {sending ? "Sending…" : "Send it"}
+              <i aria-hidden="true">→</i>
+            </button>
+          </div>
+          <p className="sn-alt">
+            Rather talk? <a href="#call">Book a call or WhatsApp us</a>. Or send this same message from{" "}
+            <a href={waLink(plain)} target="_blank" rel="noopener">
+              WhatsApp
+            </a>{" "}
+            or{" "}
+            <a href={`mailto:${SITE.email}?subject=${encodeURIComponent("Project enquiry — Ankora Labs")}&body=${encodeURIComponent(plain + "\n\n")}`}>
+              your email app
+            </a>
+            .
+          </p>
+        </>
+      )}
+    </form>
   );
 }

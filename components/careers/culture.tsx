@@ -1,77 +1,73 @@
-// /careers: how the studio works (four cards) and, as Hiring, what happens
-// after you apply (four steps), both with handwritten notes like the rest of the site.
+// (04) on /careers, "How we work": a small desk made of the site's object
+// photos, with the four ways we work written beside it as handwritten labels.
+// Each label and its object share a numbered pin; hovering or focusing either
+// one spotlights the pair and dims the rest (pure CSS, careers.css). Motion:
+// the objects drop in, the labels follow (./motion.tsx).
 
 const WAYS = [
-  {
-    title: "Remote-first",
-    body: "Work from anywhere in Nepal. We meet online, and in Kathmandu when it actually helps.",
-    note: "chiya breaks encouraged",
-  },
-  {
-    title: "One squad",
-    body: "Designers, engineers and partners on the same thread. Nobody is “just sales” and nothing gets lost in hand-offs.",
-    note: "no silos here",
-  },
-  {
-    title: "Real work, shipped",
-    body: "The projects you help bring in go live for real Nepali businesses, not into a drawer.",
-    note: "your name on the launch",
-  },
-  {
-    title: "Straight talk",
-    body: "Clear terms, written down. Paid on time, and credit where it’s due.",
-    note: "in writing, always",
-  },
+  { n: 1, title: "Remote-first", body: "Work from anywhere in Nepal. We meet online, and in Kathmandu when it actually helps.", side: "l" },
+  { n: 2, title: "One squad", body: "Designers, engineers and partners on the same thread. Nobody is “just sales”.", side: "r" },
+  { n: 3, title: "Straight talk", body: "Clear terms, written down. Paid on time, and credit where it’s due.", side: "l" },
+  { n: 4, title: "Real work, shipped", body: "What we make goes live for real Nepali businesses, not into a drawer.", side: "r" },
 ];
 
-const HIRING = [
-  { title: "You send it", body: "Your message and CV, on WhatsApp or by email.", note: "a minute, tops" },
-  { title: "We reply", body: "Within 5 working days, to everyone, even when it’s a no.", note: "no ghosting" },
-  { title: "A 30-min chat", body: "Online. We talk about you, your network and how you like to work.", note: "no trick questions" },
-  { title: "In writing", body: "Your role, terms and commission rate agreed on paper before you start.", note: "then we build" },
+const OBJECTS = [
+  { src: "/images/contact-v2/coffee.webp", cls: "cr-o-1", pin: 1 },
+  { src: "/images/desk/prototype.webp", cls: "cr-o-2", pin: 2 },
+  { src: "/images/items/ledger.webp", cls: "cr-o-3", pin: 3 },
+  { src: "/images/items/phones.webp", cls: "cr-o-4", pin: 4 },
+  { src: "/images/desk/keyboard.webp", cls: "cr-o-keys" },
+  { src: "/images/contact-v2/pencil.webp", cls: "cr-o-pencil" },
 ];
 
-export default function Culture() {
+function Label({ w }: { w: (typeof WAYS)[number] }) {
   return (
-    <section className="cr-sec cr-sec-ground" aria-labelledby="cr-ways-h">
-      <div className="cr-in">
-        <p className="cr-kick">How we work</p>
-        <h2 id="cr-ways-h" className="cr-h2">
-          Small team. <em>Big ownership.</em>
-        </h2>
-        <ul className="cr-ways">
-          {WAYS.map((w, i) => (
-            <li key={w.title} className="cr-way" style={{ "--r": `${[-1.2, 0.8, -0.6, 1.1][i]}deg` } as React.CSSProperties}>
-              <span className="cr-way-pin" aria-hidden="true" />
-              <h3>{w.title}</h3>
-              <p>{w.body}</p>
-              <span className="cr-hand">{w.note}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    <li className={`cr-label cr-label-${w.n}`} data-cr-label tabIndex={0}>
+      <span className="cr-pin" aria-hidden="true">
+        {w.n}
+      </span>
+      <b>{w.title}</b>
+      <span>{w.body}</span>
+    </li>
   );
 }
 
-export function Hiring() {
+export default function Culture() {
   return (
-    <section className="cr-sec" aria-labelledby="cr-hiring-h">
-      <div className="cr-in">
-        <p className="cr-kick">After you hit send</p>
-        <h2 id="cr-hiring-h" className="cr-h2">
-          From hello <em>to your first project.</em>
-        </h2>
-        <ol className="cr-steps">
-          {HIRING.map((s, i) => (
-            <li key={s.title} className="cr-step">
-              <span className="cr-dot">0{i + 1}</span>
-              <h3>{s.title}</h3>
-              <p>{s.body}</p>
-              <span className="cr-hand">{s.note}</span>
-            </li>
-          ))}
-        </ol>
+    <section className="cr-culture" aria-labelledby="cr-ways-h">
+      <div className="dk-wrap">
+        <div className="dk-head">
+          <div>
+            <p className="dk-no" aria-hidden="true">
+              (04)
+            </p>
+            <h2 id="cr-ways-h" className="dk-h2">
+              Small team. Big ownership.
+            </h2>
+          </div>
+          <p>How the studio works, day to day. Point at a note to find it on the desk.</p>
+        </div>
+
+        <div className="cr-deskwrap">
+          <ul className="cr-labels cr-labels-l">
+            {WAYS.filter((w) => w.side === "l").map((w) => (
+              <Label key={w.n} w={w} />
+            ))}
+          </ul>
+          <div className="cr-desk" aria-hidden="true">
+            {OBJECTS.map((o) => (
+              <span key={o.cls} className={`cr-obj ${o.cls}`} data-cr-obj>
+                <img src={o.src} alt="" />
+                {o.pin && <span className="cr-pin">{o.pin}</span>}
+              </span>
+            ))}
+          </div>
+          <ul className="cr-labels cr-labels-r">
+            {WAYS.filter((w) => w.side === "r").map((w) => (
+              <Label key={w.n} w={w} />
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

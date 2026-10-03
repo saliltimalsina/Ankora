@@ -16,6 +16,8 @@ export type Role = {
   get: string[];
   posted: string; // YYYY-MM-DD
   validThrough: string; // YYYY-MM-DD
+  /** show the printed commission slip on this role's sheet (commission-paid roles) */
+  commissionSlip?: boolean;
 };
 
 export const ROLES: Role[] = [
@@ -52,6 +54,7 @@ export const ROLES: Role[] = [
     ],
     posted: "2026-10-03",
     validThrough: "2027-04-03",
+    commissionSlip: true,
   },
 ];
 

@@ -10,7 +10,9 @@ declare global {
   }
 }
 
-// "Grab a slot right now": the Cal.com calendar inline. The loader comes from
+// The Cal.com calendar inline, in the "Rather talk?" section. ./talk.tsx
+// mounts it as the section nears the viewport, so the page doesn't load Cal's
+// iframe for people who never scroll that far. The loader comes from
 // public/kit/site.js; until Cal reports the calendar ready, a message with a
 // direct booking link sits behind it (and stays if an extension blocks Cal).
 export default function Slot() {
@@ -35,32 +37,18 @@ export default function Slot() {
   }, []);
 
   return (
-    <section className="gs" aria-labelledby="gs-title">
-      <div className="gs-in">
-        <div className="gs-head">
-          <p className="gn-kick">Already sure?</p>
-          <h2 id="gs-title" className="gn-h2">
-            Grab a slot <em>right now.</em>
-          </h2>
-          <p className="gs-sub">Times show in your timezone, and the meeting link lands in your inbox.</p>
-        </div>
-        <div className="gs-frame">
-          <span className="gs-tape" aria-hidden="true" />
-          <div className="gs-stage">
-            {!ready && (
-              <p className="gs-wait">
-                <span className="gs-spin" aria-hidden="true" />
-                <span>Loading the calendar…</span>
-                <span className="gs-or">Not showing up? A browser extension may be blocking it.</span>
-                <a className="gs-fallback" href={SITE.calUrl} target="_blank" rel="noopener">
-                  Open the booking page →
-                </a>
-              </p>
-            )}
-            <div id="cal-inline" className="gs-cal" />
-          </div>
-        </div>
-      </div>
-    </section>
+    <div className="ct-cal">
+      {!ready && (
+        <p className="ct-cal-wait">
+          <span className="ct-spin" aria-hidden="true" />
+          <span>Loading the calendar…</span>
+          <span className="ct-cal-or">Not showing up? A browser extension may be blocking it.</span>
+          <a className="ct-cal-fallback" href={SITE.calUrl} target="_blank" rel="noopener">
+            Open the booking page →
+          </a>
+        </p>
+      )}
+      <div id="cal-inline" className="ct-cal-in" />
+    </div>
   );
 }

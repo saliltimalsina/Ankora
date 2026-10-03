@@ -3,18 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { SITE, waLink } from "../../lib/site";
 import { SEATS, BACKGROUND } from "../../lib/careers";
+import { Choose, Fill, Stamp } from "../ui/sentence";
 
-// "Apply in a minute": a short form with a CV upload. The letter beside it
-// writes the application as you type (the same idea as the /contact brief
-// builder). "Send application" posts everything, CV included, to /api/apply,
-// which emails it to the studio inbox. WhatsApp and email stay as fallbacks
-// with the same message ready. "Apply for this role" buttons elsewhere on the
-// page preselect a role through data-apply-role.
+// (03) on /careers, "Apply in a minute": the application is one sentence with
+// gaps (the same pieces as the /contact form, components/ui/sentence.tsx), plus
+// a CV that clips onto the sheet. "Send application" posts everything, CV
+// included, to /api/apply, which emails it to the studio inbox. WhatsApp and
+// email stay as fallbacks with the same message ready. "Apply for this role"
+// buttons elsewhere on the page preselect a role through data-apply-role.
 
 const MAX_CV = 4 * 1024 * 1024;
 const CV_TYPES = /\.(pdf|docx?)$/i;
 
 type Status = { s: "idle" | "sending" | "sent" } | { s: "error"; msg: string };
+type Bad = "" | "name" | "seat" | "email";
 
 const kb = (n: number) => (n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 
@@ -26,13 +28,16 @@ export default function Apply() {
   const [bg, setBg] = useState("");
   const [link, setLink] = useState("");
   const [about, setAbout] = useState("");
+  const [extra, setExtra] = useState(false);
   const [cv, setCv] = useState<File | null>(null);
   const [cvErr, setCvErr] = useState("");
   const [drag, setDrag] = useState(false);
   const [status, setStatus] = useState<Status>({ s: "idle" });
+  const [bad, setBad] = useState<Bad>("");
   const [nudge, setNudge] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const seatRef = useRef<HTMLButtonElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const trap = useRef<HTMLInputElement>(null);
   const opened = useRef(0); // when the form appeared; the API ignores instant (bot) sends
@@ -41,7 +46,7 @@ export default function Apply() {
     opened.current = Date.now();
   }, []);
 
-  // "Apply for this role" on a role card
+  // "Apply for this role" on a role sheet
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as Element).closest?.("[data-apply-role]");
@@ -54,7 +59,10 @@ export default function Apply() {
   }, []);
 
   // a warning goes away once the form changes
-  useEffect(() => setNudge(""), [name, email, seat]);
+  useEffect(() => {
+    setNudge("");
+    setBad("");
+  }, [name, email, seat]);
 
   const pickCv = (f: File | undefined | null) => {
     setCvErr("");
@@ -76,27 +84,39 @@ export default function Apply() {
     .join("\n");
   const subject = `Application: ${seatLabel || "Open application"}${name.trim() ? ` — ${name.trim()}` : ""}`;
 
+  // the three gaps we need, in reading order; the first empty one is cued
+  const gaps = { name: !!name.trim(), seat: !!seat, email: !!email.trim() };
+  const done = Object.values(gaps).filter(Boolean).length;
+  const cue = bad ? "" : (Object.keys(gaps) as (keyof typeof gaps)[]).find((k) => !gaps[k]) ?? "";
+
   // WhatsApp / email fallbacks only need a name and a role
   const guard = (e: React.MouseEvent) => {
     if (name.trim() && seat) return;
     e.preventDefault();
+    setBad(name.trim() ? "seat" : "name");
     setNudge("Add your name and pick a role first.");
     if (!name.trim()) nameRef.current?.focus();
+    else seatRef.current?.focus();
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status.s === "sending") return;
     if (!name.trim()) {
+      setBad("name");
       setNudge("Add your name first.");
       return nameRef.current?.focus();
     }
+    if (!seat) {
+      setBad("seat");
+      setNudge("Pick the role you’re applying for.");
+      return seatRef.current?.focus();
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setBad("email");
       setNudge("Add an email address we can reply to.");
       return emailRef.current?.focus();
     }
-    if (!seat) return setNudge("Pick the role you’re applying for.");
-    setNudge("");
     setStatus({ s: "sending" });
     const fd = new FormData();
     fd.set("name", name.trim());
@@ -119,97 +139,113 @@ export default function Apply() {
     }
   };
 
-  const blank = (v: string) => (v ? <mark>{v}</mark> : <span className="cr-blank">___</span>);
   const sending = status.s === "sending";
+  const sent = status.s === "sent";
+  const hint = nudge || (status.s === "error" ? `${status.msg} Try WhatsApp or email below.` : "");
 
   return (
-    <section className="cr-sec cr-sec-apply" id="apply" aria-labelledby="cr-apply-h">
-      <div className="cr-in">
-        <p className="cr-kick">Apply in a minute</p>
-        <h2 id="cr-apply-h" className="cr-h2">
-          Fill it in. <em>Attach your CV.</em>
-        </h2>
-        <p className="cr-sub">
-          No portal, no account. Your application and CV land straight in our inbox. Prefer WhatsApp or your own email?
-          That works too.
-        </p>
+    <section className="cr-apply" id="apply" aria-labelledby="cr-apply-h">
+      <div className="dk-wrap">
+        <div className="dk-head">
+          <div>
+            <p className="dk-no" aria-hidden="true">
+              (03)
+            </p>
+            <h2 id="cr-apply-h" className="dk-h2">
+              Apply in a minute.
+            </h2>
+          </div>
+          <p>No portal, no account. Your application and CV land straight in our inbox.</p>
+        </div>
 
-        <div className="cr-apply">
-          <form id="cr-apply-form" className="cr-form" onSubmit={submit} noValidate>
-            <div className="cr-row">
-              <label className="cr-field">
-                <span>Your name</span>
-                <input ref={nameRef} type="text" name="name" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Sita Sharma" />
-              </label>
-              <label className="cr-field">
-                <span>Email</span>
-                <input ref={emailRef} type="email" name="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-              </label>
+        <form className="dk-sheet sn-form" onSubmit={submit} noValidate>
+          <img className="dk-clip" src="/images/desk/paperclip.webp" alt="" aria-hidden="true" />
+          {!sent && (
+            <div className="sn-how">
+              <p>
+                <b>Fill in the gaps.</b> Tap a highlighted word to pick an answer or type it in.
+              </p>
+              <p className="sn-progress" aria-hidden="true">
+                <span className="sn-dots">
+                  {Object.values(gaps).map((on, i) => (
+                    <i key={i} data-on={on || undefined} />
+                  ))}
+                </span>
+                {done} of 3
+              </p>
             </div>
+          )}
 
-            <label className="cr-field">
-              <span>
-                Phone or WhatsApp <i>(optional)</i>
+          <fieldset className="sn-words" disabled={sent || sending}>
+            <legend className="sr-only">Your application</legend>
+            <div className="sn">
+              Hi Ankora, I’m{" "}
+              <Fill ref={nameRef} label="Your name" name="name" autoComplete="name" required value={name} onChange={setName} placeholder="your name" invalid={bad === "name"} cue={cue === "name"} />{" "}
+              and I’d like to join as{" "}
+              <span className="sn-nb">
+                <Choose ref={seatRef} label="I’d like to join as" placeholder="which role" options={SEATS} value={seat} onChange={setSeat} invalid={bad === "seat"} cue={cue === "seat"} />.
               </span>
-              <input type="tel" name="phone" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="98XXXXXXXX" />
-            </label>
-
-            <fieldset className="cr-field">
-              <legend>I’d like to join as</legend>
-              <div className="cr-chips">
-                {SEATS.map((s) => (
-                  <button key={s.label} type="button" aria-pressed={seat === s.v} onClick={() => setSeat(seat === s.v ? "" : s.v)}>
-                    {s.label}
-                  </button>
-                ))}
+            </div>
+            <div className="sn">
+              I’m <Choose label="Where I’m at (optional)" placeholder="where you’re at" options={BACKGROUND} value={bg} onChange={setBg} />, and you can see my work at{" "}
+              <span className="sn-nb">
+                <Fill label="LinkedIn, portfolio or GitHub (optional)" type="url" inputMode="url" name="link" value={link} onChange={setLink} placeholder="a link" />.
+              </span>
+            </div>
+            <div className="sn">
+              Reply to me at{" "}
+              <span className="sn-nb">
+                <Fill
+                  ref={emailRef}
+                  label="Your email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  required
+                  value={email}
+                  onChange={setEmail}
+                  placeholder="you@example.com"
+                  invalid={bad === "email"}
+                  cue={cue === "email"}
+                />
+                .
+              </span>
+            </div>
+            {extra && (
+              <div className="sn-extra">
+                <div className="sn">
+                  You can also call me on{" "}
+                  <span className="sn-nb">
+                    <Fill label="Phone or WhatsApp (optional)" type="tel" name="phone" autoComplete="tel" value={phone} onChange={setPhone} placeholder="98XXXXXXXX" />.
+                  </span>
+                </div>
+                <textarea
+                  className="sn-note"
+                  rows={3}
+                  name="about"
+                  aria-label="In a line or two: why you? (optional)"
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                  placeholder="In a line or two, why you? A project you’re proud of, what you want to get better at, anything."
+                />
               </div>
-            </fieldset>
+            )}
 
-            <fieldset className="cr-field">
-              <legend>
-                Where I’m at <i>(optional)</i>
-              </legend>
-              <div className="cr-chips">
-                {BACKGROUND.map((s) => (
-                  <button key={s.label} type="button" aria-pressed={bg === s.v} onClick={() => setBg(bg === s.v ? "" : s.v)}>
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            <label className="cr-field">
-              <span>
-                LinkedIn, portfolio or GitHub <i>(optional)</i>
-              </span>
-              <input type="url" inputMode="url" name="link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="linkedin.com/in/…" />
-            </label>
-
-            <label className="cr-field">
-              <span>
-                In a line or two: why you? <i>(optional)</i>
-              </span>
-              <textarea
-                rows={3}
-                name="about"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-                placeholder="e.g. I run social media for 12 restaurants in Lalitpur and half of them need a new website."
-              />
-            </label>
-
-            <div className="cr-field">
-              <span>
-                Your CV or resume <i>(PDF or Word, up to 4 MB)</i>
-              </span>
+            {/* the CV clips onto the sheet */}
+            <div className="cr-cv">
               {cv ? (
                 <div className="cr-file">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-                    <path d="M14 3v5h5M9 13h6M9 17h4" />
-                  </svg>
-                  <span className="cr-file-name">{cv.name}</span>
-                  <span className="cr-file-size">{kb(cv.size)}</span>
+                  <span className="cr-file-page" aria-hidden="true">
+                    <img src="/images/desk/paperclip.webp" alt="" />
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="cr-file-t">
+                    <b>{cv.name}</b>
+                    <span>{kb(cv.size)} · clipped to your application</span>
+                  </span>
                   <button
                     type="button"
                     onClick={() => {
@@ -223,7 +259,8 @@ export default function Apply() {
                 </div>
               ) : (
                 <label
-                  className={`cr-drop${drag ? " is-drag" : ""}`}
+                  className="cr-drop"
+                  data-drag={drag || undefined}
                   onDragOver={(e) => {
                     e.preventDefault();
                     setDrag(true);
@@ -235,12 +272,22 @@ export default function Apply() {
                     pickCv(e.dataTransfer.files?.[0]);
                   }}
                 >
-                  <input ref={fileRef} type="file" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={(e) => pickCv(e.target.files?.[0])} />
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M12 16V4M7 9l5-5 5 5M5 20h14" />
-                  </svg>
-                  <b>Drop your CV here</b>
-                  <span>or click to choose a file</span>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    name="cv"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={(e) => pickCv(e.target.files?.[0])}
+                  />
+                  <span className="cr-drop-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9" />
+                    </svg>
+                  </span>
+                  <span>
+                    <b>Clip on your CV</b> <i>(optional)</i>
+                    <span>Drop it here or click to choose. PDF or Word, up to 4 MB.</span>
+                  </span>
                 </label>
               )}
               {cvErr && (
@@ -249,71 +296,57 @@ export default function Apply() {
                 </p>
               )}
             </div>
+          </fieldset>
 
-            {/* spam trap: hidden from people, filled in by bots */}
-            <input ref={trap} type="text" name="company" tabIndex={-1} autoComplete="off" className="cr-trap" aria-hidden="true" />
-          </form>
+          {/* spam trap: hidden from people, filled in by bots */}
+          <input ref={trap} type="text" name="company" tabIndex={-1} autoComplete="off" className="sn-trap" aria-hidden="true" />
 
-          <div className="cr-letter">
-            <img className="cr-clip" src="/images/desk/paperclip.webp" alt="" aria-hidden="true" />
-            {status.s === "sent" ? (
-              <div className="cr-done" role="status">
-                <p className="cr-letter-lbl">Sent</p>
-                <p className="cr-done-h">Thank you, {name.trim().split(" ")[0]}!</p>
-                <p className="cr-done-p">
-                  Your application{cv ? " and CV are" : " is"} in our inbox. We reply to everyone within 5 working days, at{" "}
+          {sent ? (
+            <div className="sn-done" role="status">
+              <Stamp top="Ankora Labs" bottom="Careers" />
+              <div>
+                <p className="sn-done-h">Thank you, {name.trim().split(" ")[0]}. It’s in our inbox.</p>
+                <p className="sn-done-p">
+                  Your application{cv ? " and CV are" : " is"} with us. We reply to everyone within 5 working days, at{" "}
                   <b>{email.trim()}</b>.
                 </p>
               </div>
-            ) : (
-              <>
-                <p className="cr-letter-lbl">Your message</p>
-                <div className="cr-letter-msg" aria-live="polite">
-                  <p>
-                    Hi Ankora! I’m {blank(name.trim())}, and I’d like to apply as {blank(seat)}.
-                  </p>
-                  {bg && <p>I’m {blank(bg)}.</p>}
-                  {link.trim() && (
-                    <p>
-                      You can see more of me here: <mark>{link.trim()}</mark>
-                    </p>
-                  )}
-                  {about.trim() && <p>{about.trim()}</p>}
-                  <p>{cv ? <>My CV is attached: <mark>{cv.name}</mark></> : "My CV is attached."}</p>
-                </div>
-
-                <div className="cr-send">
-                  <button type="submit" form="cr-apply-form" className="cr-btn cr-btn-fill" disabled={sending}>
-                    {sending ? "Sending…" : "Send application"} {!sending && <span aria-hidden="true">→</span>}
+            </div>
+          ) : (
+            <>
+              <p className="sn-hint" role="alert" data-err={hint ? "" : undefined}>
+                {hint}
+              </p>
+              <div className="sn-actions">
+                {!extra && (
+                  <button type="button" className="sn-more" aria-expanded={false} onClick={() => setExtra(true)}>
+                    <i aria-hidden="true">+</i> Add a phone number or why you
                   </button>
-                </div>
-                {(nudge || status.s === "error") && (
-                  <p className="cr-nudge" role="alert">
-                    {nudge || (status.s === "error" && `${status.msg} Try WhatsApp or email below.`)}
-                  </p>
                 )}
-
-                <p className="cr-or">
-                  <span>or send it your way</span>
-                </p>
-                <div className="cr-alt">
-                  <a href={waLink(plain)} target="_blank" rel="noopener" onClick={guard}>
-                    WhatsApp
-                  </a>
-                  <a href={`mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plain + "\n\n")}`} onClick={guard}>
-                    Your email app
-                  </a>
-                </div>
-                <p className="cr-cv">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9" />
-                  </svg>
-                  Going that way? Attach your CV in the chat or email before you send.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
+                <button type="submit" className="sn-send" disabled={sending}>
+                  {sending ? "Sending…" : "Send application"}
+                  <i aria-hidden="true">→</i>
+                </button>
+              </div>
+              <ol className="cr-after" aria-label="After you apply">
+                <li>We reply within 5 working days, even when it’s a no</li>
+                <li>A 30-minute chat online</li>
+                <li>Your role and terms agreed in writing</li>
+              </ol>
+              <p className="sn-alt">
+                Or send the same message from{" "}
+                <a href={waLink(plain)} target="_blank" rel="noopener" onClick={guard}>
+                  WhatsApp
+                </a>{" "}
+                or{" "}
+                <a href={`mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plain + "\n\n")}`} onClick={guard}>
+                  your email app
+                </a>
+                , and attach your CV there.
+              </p>
+            </>
+          )}
+        </form>
       </div>
     </section>
   );

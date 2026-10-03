@@ -1,0 +1,131 @@
+/* The "sentence is the form" pieces (components/ui/sentence.tsx), shared by
+   /contact and /careers. The sentence sits in .sn: large Basis type, fixed
+   words in a muted green, gaps in deep green on a dashed underline that turns
+   into a lime highlighter stroke once filled. */
+
+.sn{margin:0;font-family:var(--body);font-weight:500;font-size:clamp(26px,3.3vw,50px);line-height:1.5;letter-spacing:-.02em;color:#6f8a78;text-wrap:pretty;}
+.sn + .sn{margin-top:.15em;}
+
+/* shared gap look */
+.sn-fill,.sn-gap{position:relative;color:var(--green-d);}
+.sn-fill::before,.sn-gap::before{content:"";position:absolute;left:0;right:0;bottom:.12em;height:2px;
+  background:repeating-linear-gradient(90deg,#0c3d2666 0 7px,transparent 7px 12px);transition:height .35s cubic-bezier(.2,.9,.3,1),background .25s;z-index:-1;}
+.sn-fill[data-filled]::before,.sn-gap[data-filled]::before{height:.42em;background:var(--lime);}
+.sn-fill:focus-within::before,.sn-gap:focus-visible::before,.sn-choose[data-open] .sn-gap::before{height:3px;background:var(--green-d);}
+.sn-fill[data-filled]:focus-within::before{height:.42em;background:#c7d65f;}
+.sn-fill:has([aria-invalid])::before,.sn-gap[aria-invalid]::before{height:3px;background:var(--copper);}
+.sn-fill:has([aria-invalid]),.sn-gap[aria-invalid]{animation:sn-shake .4s;}
+@keyframes sn-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+
+/* empty gaps read as fields: a tinted box with an icon; the cued one pulses */
+.sn-fill,.sn-gap{border-radius:.16em;transition:background .25s;}
+.sn-fill:not([data-filled]),.sn-gap:not([data-filled]){background:#d5e27b38;cursor:text;}
+.sn-gap:not([data-filled]){cursor:pointer;}
+.sn-fill:not([data-filled]):hover,.sn-gap:not([data-filled]):hover{background:#d5e27b70;}
+.sn-fill:not([data-filled]):focus-within,.sn-choose[data-open] .sn-gap{background:#fff;box-shadow:0 0 0 1.5px #0c3d2622;}
+.sn-fill[data-cue]:not(:focus-within),.sn-gap[data-cue]{animation:sn-cue 2.4s ease-in-out infinite;}
+@keyframes sn-cue{0%,100%{background:#d5e27b38;box-shadow:0 0 0 0 #d5e27b00}50%{background:#d5e27b8c;box-shadow:0 0 0 .14em #d5e27b55}}
+.sn-icon{width:.4em;height:.4em;flex:none;align-self:center;margin:0 .1em 0 .02em;color:var(--green-d);opacity:.75;}
+.sn-fill[data-filled] .sn-icon,.sn-fill:focus-within .sn-icon{display:none;}
+
+/* text gap: input over an invisible twin of its text, so it grows as you type */
+.sn-fill{display:inline-flex;align-items:baseline;vertical-align:baseline;isolation:isolate;max-width:100%;}
+.sn-fill-in{display:inline-grid;min-width:0;}
+.sn-fill-in::after{content:attr(data-v);grid-area:1/1;visibility:hidden;white-space:pre;overflow:hidden;padding:0 .12em 0 .08em;}
+.sn-fill input{grid-area:1/1;width:100%;min-width:2ch;margin:0;padding:0 .12em 0 .08em;border:0;border-radius:0;background:transparent;outline:none;
+  font:inherit;letter-spacing:inherit;color:inherit;}
+.sn-fill input::placeholder{color:#0c3d2659;}
+
+/* choose gap */
+.sn-choose{position:relative;display:inline-block;}
+.sn-gap{display:inline-flex;align-items:baseline;gap:.18em;margin:0;padding:0 .08em;border:0;background:none;font:inherit;letter-spacing:inherit;line-height:inherit;cursor:pointer;isolation:isolate;text-align:left;}
+.sn-gap:not([data-filled]) .sn-gap-t{color:#0c3d2659;}
+.sn-gap:focus-visible{outline:none;}
+.sn-caret{width:.42em;height:.42em;flex:none;align-self:center;color:var(--green-d);transition:transform .3s;}
+.sn-choose[data-open] .sn-caret{transform:rotate(180deg);}
+.sn-gap:hover .sn-caret{transform:translateY(2px);}
+
+.sn-pop{position:absolute;z-index:30;top:calc(100% + 6px);left:0;min-width:240px;margin:0;padding:8px;list-style:none;border-radius:16px;background:var(--green-d);color:var(--paper);
+  box-shadow:0 30px 60px -20px rgba(0,40,19,.55);font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;outline:none;transform-origin:top left;animation:sn-pop .22s cubic-bezier(.2,.9,.3,1.2);}
+@keyframes sn-pop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+.sn-pop li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 14px;border-radius:10px;cursor:pointer;}
+.sn-pop li[data-active]{background:#ffffff14;}
+.sn-pop li svg{width:16px;height:16px;opacity:0;color:var(--lime);}
+.sn-pop li[aria-selected="true"]{color:var(--lime);}
+.sn-pop li[aria-selected="true"] svg{opacity:1;}
+.sn-pop .sn-pop-h{padding:6px 14px 8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d5e27b99;cursor:default;}
+.sn-scrim{display:none;}
+
+/* the message under the sentence: errors and help, in body size */
+.sn-hint{min-height:1.6em;margin:18px 0 0;font-size:15px;color:var(--muted);}
+.sn-hint[data-err]{color:var(--copper);font-weight:500;}
+
+/* "+ add a note" */
+.sn-more{display:inline-flex;align-items:center;gap:10px;margin:0;padding:0;border:0;background:none;font:inherit;font-size:16px;font-weight:500;color:var(--green-d);cursor:pointer;}
+.sn-more i{display:grid;place-items:center;width:28px;height:28px;border:1.5px solid currentColor;border-radius:50%;font-style:normal;font-size:18px;line-height:1;transition:transform .3s,background .2s,color .2s;}
+.sn-more:hover i{background:var(--green-d);color:var(--lime);}
+.sn-more[aria-expanded="true"] i{transform:rotate(45deg);}
+.sn-note{display:block;width:100%;margin-top:14px;padding:14px 16px;border:1.5px solid #0c3d2633;border-radius:14px;background:#fffef7;font:inherit;font-size:17px;line-height:1.5;color:var(--green-d);resize:vertical;outline:none;transition:border-color .2s;}
+.sn-note:focus{border-color:var(--green-d);}
+.sn-note::placeholder{color:#7d8c80;}
+
+/* send button: the lime pill from the homepage, bigger */
+.sn-send{display:inline-flex;align-items:center;gap:14px;padding:18px 18px 18px 30px;border:0;border-radius:99px;background:var(--lime);color:var(--green-d);
+  font:inherit;font-size:18px;font-weight:500;cursor:pointer;transition:background .25s,transform .25s cubic-bezier(.2,.9,.3,1.2);}
+.sn-send i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--green-d);color:var(--lime);font-style:normal;transition:transform .35s cubic-bezier(.2,.9,.3,1.2);}
+.sn-send:hover{background:#cbd96a;}
+.sn-send:hover i{transform:rotate(-45deg);}
+.sn-send:disabled{opacity:.65;cursor:progress;}
+.sn-alt{margin:0;font-size:15px;color:var(--muted);}
+.sn-alt a{color:var(--green-d);font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;}
+.sn-alt a:hover{text-decoration-color:var(--lime);}
+
+.sn-trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
+
+/* "Received" stamp */
+.sn-stamp{display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:12px 22px;border:3px solid var(--ever);border-radius:12px;color:var(--ever);
+  box-shadow:inset 0 0 0 2px #fffef7,inset 0 0 0 4px var(--ever);transform:rotate(-8deg);mix-blend-mode:multiply;opacity:.9;}
+.sn-stamp b{font-family:var(--disp);font-weight:700;font-size:44px;line-height:.9;letter-spacing:.02em;text-transform:uppercase;}
+.sn-stamp-t{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;}
+
+/* the form around the sentence: "Fill in the gaps" bar with a progress count,
+   the button row, the sent state with its stamp */
+.sn-words{margin:0;padding:0;border:0;min-width:0;}
+.sn-words:disabled{opacity:.42;transition:opacity .6s;}
+.sn-extra{margin-top:.3em;}
+.sn-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px 30px;margin-top:8px;}
+.sn-actions .sn-send{margin-left:auto;}
+.sn-form .sn-alt{margin-top:22px;padding-top:20px;border-top:1.5px dashed #0c3d2622;}
+.sn-done{display:flex;flex-wrap:wrap;align-items:center;gap:22px 40px;margin-top:34px;}
+.sn-done .sn-stamp{animation:sn-stamp-in .5s cubic-bezier(.2,1.4,.4,1) both;}
+@keyframes sn-stamp-in{from{opacity:0;transform:rotate(-14deg) scale(1.8)}}
+.sn-done-h{margin:0;font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:clamp(26px,2.6vw,40px);line-height:.95;color:var(--green-d);}
+.sn-done-p{margin:10px 0 0;font-size:17px;color:#3c5141;}
+.sn-done-p b{font-weight:500;color:var(--green-d);}
+.sn-how{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;margin:0 0 clamp(22px,3vw,36px);padding-bottom:16px;border-bottom:1.5px dashed #0c3d2622;}
+.sn-how p{margin:0;font-size:15.5px;color:#3c5141;}
+.sn-how b{font-weight:500;color:var(--green-d);}
+.sn-progress{display:flex;align-items:center;gap:10px;font-size:13px!important;font-weight:500;color:var(--muted)!important;font-variant-numeric:tabular-nums;}
+.sn-dots{display:flex;gap:5px;}
+.sn-dots i{width:18px;height:6px;border-radius:3px;background:#0c3d261f;transition:background .3s;}
+.sn-dots i[data-on]{background:var(--lime);}
+
+@media (max-width:640px){
+  .sn-actions .sn-send{margin-left:0;}
+  .sn{font-size:clamp(24px,7.4vw,34px);line-height:1.55;}
+  .sn-scrim{display:block;position:fixed;inset:0;z-index:29;background:#00281366;animation:sn-fade .2s;}
+  .sn-pop{position:fixed;top:auto;left:8px;right:8px;bottom:8px;padding:12px 10px calc(12px + env(safe-area-inset-bottom));border-radius:22px;font-size:18px;animation:sn-up .28s cubic-bezier(.2,.9,.3,1);}
+  .sn-pop li{padding:15px 16px;}
+  .sn-send{width:100%;justify-content:space-between;}
+}
+@keyframes sn-fade{from{opacity:0}}
+@keyframes sn-up{from{transform:translateY(100%)}}
+@media (prefers-reduced-motion:reduce){
+  .sn-pop,.sn-scrim{animation:none;}
+  .sn-fill,.sn-gap{animation:none!important;}
+  .sn-done .sn-stamp{animation:none;}
+  .sn-fill[data-cue],.sn-gap[data-cue]{background:#d5e27b8c;}
+}
+/* keeps a gap and the punctuation after it on one line */
+.sn-nb{white-space:nowrap;}
+
