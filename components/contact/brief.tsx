@@ -88,7 +88,7 @@ export default function Brief() {
     fd.set("need", label("need"));
     fd.set("when", label("when"));
     fd.set("message", [message(pick), more.trim()].filter(Boolean).join("\n\n"));
-    fd.set("company", trap.current?.value ?? "");
+    fd.set("hp", trap.current?.value ?? "");
     fd.set("t", String(opened.current));
     try {
       const res = await fetch("/api/contact", { method: "POST", body: fd });
@@ -171,7 +171,7 @@ export default function Brief() {
       </fieldset>
 
       {/* spam trap: hidden from people, filled in by bots */}
-      <input ref={trap} type="text" name="company" tabIndex={-1} autoComplete="off" className="sn-trap" aria-hidden="true" />
+      <input ref={trap} type="text" name="hp" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" className="sn-trap" aria-hidden="true" />
 
       {sent ? (
         <div className="sn-done" role="status">
