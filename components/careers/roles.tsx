@@ -53,16 +53,18 @@ export default function Roles() {
               <span>Role no. 0{n + 1}</span>
               <span>Posted {posted(r.posted)}</span>
             </p>
-            <h3 id={`${r.slug}-h`} className="cr-doc-h">
-              {r.title}
-            </h3>
-            <ul className="cr-stamps" aria-label="Role details">
-              {r.tags.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
             <div className={r.commissionSlip ? "cr-doc-top cr-doc-top-slip" : "cr-doc-top"}>
-              <p className="cr-doc-sum">{r.summary}</p>
+              <div className="cr-doc-head">
+                <h3 id={`${r.slug}-h`} className="cr-doc-h">
+                  {r.title}
+                </h3>
+                <p className="cr-doc-sum">{r.summary}</p>
+                <ul className="cr-stamps" aria-label="Role details">
+                  {r.tags.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
+                </ul>
+              </div>
               {r.commissionSlip && <Slip />}
             </div>
             <div className="cr-doc-grid">
