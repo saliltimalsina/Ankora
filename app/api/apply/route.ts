@@ -3,8 +3,9 @@ import { SEATS, BACKGROUND } from "../../../lib/careers";
 import { confirmation, fail, field, isEmail, looksLikeBot, mailReady, notification, send } from "../../../lib/mail";
 
 // POST /api/apply: the /careers application form (components/careers/apply.tsx).
-// Emails the application, CV attached, to the studio inbox (Reply-To the
-// applicant), then sends the applicant a "we've got it" email. See lib/mail.ts
+// Emails the application, CV attached, to careers@ (Reply-To the applicant),
+// then sends the applicant a "we've got it" email whose replies also go to
+// careers@. See lib/mail.ts
 // for the Brevo setup. Without BREVO_API_KEY the route answers 503 and the
 // form points people to WhatsApp or email instead.
 
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   const sent = await send({
-    to: { email: SITE.email, name: "Ankora Labs" },
+    to: { email: SITE.careersEmail, name: "Ankora Labs Careers" },
     replyTo: { email, name },
     subject: `Application: ${seat} — ${name}`,
     html: notification(
@@ -70,6 +71,7 @@ export async function POST(req: Request) {
   // is only logged
   await send({
     to: { email, name },
+    replyTo: { email: SITE.careersEmail, name: "Ankora Labs Careers" },
     subject: "We’ve got your application — Ankora Labs",
     ...confirmation({
       name,

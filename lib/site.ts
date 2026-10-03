@@ -7,6 +7,7 @@ const CAL_LINK = "ankoralabs/30min";
 
 export const SITE = {
   email: "hello@ankoralabs.com",
+  careersEmail: "careers@ankoralabs.com", // job applications (/careers form)
   phone: "+977 9840171882",
   phoneHref: "tel:+9779840171882",
   whatsapp: "https://wa.me/ankoralabs",
