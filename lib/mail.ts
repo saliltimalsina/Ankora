@@ -24,15 +24,16 @@ export const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 export const fail = (status: number, error: string) => Response.json({ ok: false, error }, { status });
 
-/** Hidden "hp" field filled in, or sent faster than a person could: a bot.
- *  The trap is named "hp", not something like "company", because browser
- *  autofill fills recognisable names and real people got dropped as bots.
- *  Drops are logged, since the bot gets a fake "ok" back. */
+/** Sent faster than a person could fill the form: a bot. The form sends how
+ *  long it was open ("ms"), measured in the browser so server and visitor
+ *  clocks are never compared. There's no hidden "honeypot" text field: browser
+ *  autofill filled it and real people were dropped. Drops are logged, since
+ *  the bot gets a fake "ok" back. */
 export function looksLikeBot(f: FormData) {
-  const t = Number(field(f, "t"));
-  const why = field(f, "hp") ? "trap filled" : !t ? "no timestamp" : Date.now() - t < 3000 ? "too fast" : "";
-  if (why) console.warn("mail: dropped as bot,", why);
-  return !!why;
+  const ms = Number(field(f, "ms"));
+  if (ms >= 3000) return false;
+  console.warn("mail: dropped as bot, open for", field(f, "ms") || "no", "ms");
+  return true;
 }
 
 /** First name for a greeting; anything that looks like a link or junk becomes "there". */

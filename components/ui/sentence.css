@@ -80,7 +80,6 @@
 .sn-alt a{color:var(--green-d);font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;}
 .sn-alt a:hover{text-decoration-color:var(--lime);}
 
-.sn-trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
 
 /* "Received" stamp */
 .sn-stamp{display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:12px 22px;border:3px solid var(--ever);border-radius:12px;color:var(--ever);

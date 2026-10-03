@@ -39,7 +39,6 @@ export default function Apply() {
   const emailRef = useRef<HTMLInputElement>(null);
   const seatRef = useRef<HTMLButtonElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const trap = useRef<HTMLInputElement>(null);
   const opened = useRef(0); // when the form appeared; the API ignores instant (bot) sends
 
   useEffect(() => {
@@ -126,8 +125,7 @@ export default function Apply() {
     fd.set("background", BACKGROUND.find((b) => b.v === bg)?.label ?? "");
     fd.set("link", link.trim());
     fd.set("about", about.trim());
-    fd.set("hp", trap.current?.value ?? "");
-    fd.set("t", String(opened.current));
+    fd.set("ms", String(Date.now() - opened.current));
     if (cv) fd.set("cv", cv);
     try {
       const res = await fetch("/api/apply", { method: "POST", body: fd });
@@ -297,9 +295,6 @@ export default function Apply() {
               )}
             </div>
           </fieldset>
-
-          {/* spam trap: hidden from people, filled in by bots */}
-          <input ref={trap} type="text" name="hp" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" className="sn-trap" aria-hidden="true" />
 
           {sent ? (
             <div className="sn-done" role="status">

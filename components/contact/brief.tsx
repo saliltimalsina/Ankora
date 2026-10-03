@@ -32,7 +32,6 @@ export default function Brief() {
   const [nudge, setNudge] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const trap = useRef<HTMLInputElement>(null);
   const opened = useRef(0); // when the form appeared; the API ignores instant (bot) sends
 
   useEffect(() => {
@@ -88,8 +87,7 @@ export default function Brief() {
     fd.set("need", label("need"));
     fd.set("when", label("when"));
     fd.set("message", [message(pick), more.trim()].filter(Boolean).join("\n\n"));
-    fd.set("hp", trap.current?.value ?? "");
-    fd.set("t", String(opened.current));
+    fd.set("ms", String(Date.now() - opened.current));
     try {
       const res = await fetch("/api/contact", { method: "POST", body: fd });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
@@ -169,9 +167,6 @@ export default function Brief() {
           </div>
         )}
       </fieldset>
-
-      {/* spam trap: hidden from people, filled in by bots */}
-      <input ref={trap} type="text" name="hp" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" className="sn-trap" aria-hidden="true" />
 
       {sent ? (
         <div className="sn-done" role="status">
