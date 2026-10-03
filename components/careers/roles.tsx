@@ -1,13 +1,15 @@
 import { ROLES } from "../../lib/careers";
 import { WhatsApp } from "../ui/links";
 import Slip from "./slip";
+import ShareRole from "./share-role";
 
 // (02) on /careers, "Open roles": each role in lib/careers.ts as one paper
 // document (title, stamped tags, summary, the four lists; a commission-paid
 // role also gets the printed commission slip, ./slip.tsx), with "Apply for
 // this role" preselecting it in the form below (./apply.tsx listens for
-// [data-apply-role]). The "Don't see your role?" note is a sticky note on the
-// last sheet, or the whole section when no roles are open.
+// [data-apply-role]); "Share this role" shares /careers#slug (./share-role.tsx).
+// The "Don't see your role?" note is a sticky note on the last sheet, or the
+// whole section when no roles are open.
 
 const BLOCKS = [
   { key: "doing", title: "What you’ll do" },
@@ -87,6 +89,7 @@ export default function Roles() {
               <WhatsApp className="cr-ghost" text={`Hi Ankora! I have a question about the ${r.title} role.`}>
                 Ask about it on WhatsApp
               </WhatsApp>
+              <ShareRole slug={r.slug} title={r.title} />
             </div>
             {n === ROLES.length - 1 && <Note />}
           </article>
