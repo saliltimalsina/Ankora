@@ -122,6 +122,18 @@ const KIT = () => ({
   nav: kitHtml("nav"),
 });
 
+// The footer's kit HTML also goes into the React payload (row 3b), so hydration
+// keeps the server-rendered footer instead of clearing it. It sits inside a JSON
+// row that is itself a JS string literal: encode twice, then HTML-escape like Next.
+const forPayload = (html: string) =>
+  JSON.stringify(JSON.stringify(html).slice(1, -1))
+    .slice(1, -1)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+
 const HIDE_REACT_NAV =
   '<style id="ankc-hide-react-nav">' +
   ".rt-fixed.rt-top-0.rt-h-1100{display:none!important}" +
@@ -148,6 +160,7 @@ export async function GET() {
     // function replacements: the snippets are inserted literally ("$" stays "$")
     .replace("<!--KIT:footer-css-->", () => kit.footerCss)
     .replaceAll("<!--KIT:footer-->", () => kit.footer)
+    .replace("KIT_FOOTER_RSC", () => forPayload(kit.footer))
     .replace("<!--KIT:showcase-css-->", () => kit.showcaseCss)
     .replace("<!--KIT:showcase-js-->", "")
     .replace("</head>", () => BUSINESS_LD() + kit.head + plHead + "</head>")

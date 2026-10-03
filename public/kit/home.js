@@ -14,18 +14,6 @@
   function findAnchor() {
     var brown = document.querySelector('section[class*="25201f"]');
     if (brown) return brown;
-    var els = document.querySelectorAll("h1,h2,h3,p,div,span");
-    for (var i = 0; i < els.length; i++) {
-      var t = els[i].textContent;
-      if (t && t.indexOf("Payables that stay on track") >= 0 && els[i].children.length <= 4) {
-        var w = els[i];
-        while (w.parentElement && w.parentElement.children.length < 2) w = w.parentElement;
-        for (var k = 0; k < 8 && w.parentElement; k++) {
-          if (w.nextElementSibling) return w.nextElementSibling;
-          w = w.parentElement;
-        }
-      }
-    }
     return null;
   }
   // The stage lands inside a dark (#002813) section; without a masking graphic
