@@ -42,31 +42,41 @@ export function firstName(name: string) {
   return /^[\p{L}][\p{L}'’-]{0,29}$/u.test(first) ? first : "there";
 }
 
+type Who = { email: string; name?: string };
 type Send = {
-  to: { email: string; name?: string };
-  replyTo?: { email: string; name?: string };
+  to: Who;
+  /** sender; must be a Brevo sender on the authenticated domain. If Brevo
+   *  refuses it, the email goes out from the default sender instead */
+  from?: Who;
+  replyTo?: Who;
   subject: string;
   html: string;
   text?: string;
   attachment?: { name: string; content: string }[];
 };
 
-export async function send({ to, replyTo, subject, html, text, attachment }: Send) {
+const DEFAULT_FROM: Who = { name: "Ankora Labs", email: process.env.APPLY_FROM || SITE.email };
+
+export async function send({ from, replyTo, ...mail }: Send): Promise<boolean> {
+  const sender = from ?? DEFAULT_FROM;
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify({
-      sender: { name: "Ankora Labs", email: process.env.APPLY_FROM || SITE.email },
-      to: [to],
-      replyTo: replyTo ?? { email: SITE.email, name: "Ankora Labs" },
-      subject,
-      htmlContent: html,
-      textContent: text,
-      attachment,
+      sender,
+      to: [mail.to],
+      replyTo: replyTo ?? sender,
+      subject: mail.subject,
+      htmlContent: mail.html,
+      textContent: mail.text,
+      attachment: mail.attachment,
     }),
   });
-  if (!res.ok) console.error("mail: brevo", res.status, await res.text().catch(() => ""));
-  return res.ok;
+  if (res.ok) return true;
+  console.error("mail: brevo", res.status, sender.email, await res.text().catch(() => ""));
+  // a sender Brevo doesn't know yet: retry from the default, keeping Reply-To
+  if (from && res.status === 400) return send({ ...mail, replyTo: replyTo ?? from });
+  return false;
 }
 
 /** The studio's copy: a heading, a table of fields, and an optional message. */
