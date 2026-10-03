@@ -104,17 +104,32 @@ export function confirmation(o: {
   const hi = `Hi ${firstName(o.name)},`;
   const extra = "If you want to add anything, just reply to this email.";
 
-  const p = (html: string) => `<p style="margin:0 0 14px;">${html}</p>`;
-  const a = (href: string, label: string) => `<a href="${esc(href)}" style="color:#004822;">${label}</a>`;
-  const html = `<!doctype html><html><body style="margin:0;padding:16px;${FONT}font-size:15px;line-height:1.6;color:#1f2e25;">
-<div style="max-width:560px;">
+  // a light touch of the brand (wordmark, green, a quiet summary, a signature)
+  // but no images, buttons, coloured blocks or tables
+  const G = "#004822";
+  const MUTED = "#7a8a7d";
+  const p = (html: string, css = "") => `<p style="margin:0 0 16px;${css}">${html}</p>`;
+  const a = (href: string, label: string) => `<a href="${esc(href)}" style="color:${G};font-weight:600;text-decoration:underline;text-underline-offset:2px;">${label}</a>`;
+  const html = `<!doctype html><html><body style="margin:0;padding:24px 16px;background:#ffffff;">
+<div style="max-width:540px;${FONT}font-size:15px;line-height:1.65;color:#22302a;">
+${p("Ankora Labs", `margin-bottom:24px;font-size:17px;font-weight:800;letter-spacing:-.2px;color:${G};`)}
 ${p(esc(hi))}
 ${p(esc(o.intro))}
-${summary.length ? p(summary.map(([k, v]) => `${esc(k)}: <b>${esc(v)}</b>`).join("<br>")) : ""}
-${p("What happens next:")}
-<ol style="margin:0 0 14px;padding-left:20px;">${o.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
-${p(`${esc(extra)} You can also ${a(waLink(o.waText), "message us on WhatsApp")} or ${a(SITE.calUrl, "book a call")}.`)}
-${p("Thanks,<br>Ankora Labs")}
+${
+  summary.length
+    ? `<div style="margin:0 0 20px;padding:2px 0 2px 14px;border-left:3px solid #d5e27b;">${summary
+        .map(([k, v]) => `<div><span style="display:inline-block;min-width:90px;color:${MUTED};">${esc(k)}</span><b style="color:#002813;">${esc(v)}</b></div>`)
+        .join("")}</div>`
+    : ""
+}
+${p("What happens next", `margin-bottom:6px;font-weight:700;color:#002813;`)}
+<ol style="margin:0 0 20px;padding-left:20px;">${o.steps.map((s) => `<li style="margin-bottom:4px;padding-left:2px;">${esc(s)}</li>`).join("")}</ol>
+${p(`${esc(extra)} You can also ${a(waLink(o.waText), "message us on WhatsApp")} or ${a(SITE.calUrl, "book a 30-minute call")}.`)}
+${p("Thanks,", "margin-bottom:2px;")}
+${p("The Ankora Labs team", "font-weight:600;color:#002813;")}
+<div style="margin-top:28px;padding-top:14px;border-top:1px solid #e8e4d8;font-size:12.5px;line-height:1.6;color:${MUTED};">
+Ankora Labs · Websites, stores and apps · Kathmandu<br>${a("https://ankoralabs.com", "ankoralabs.com")}
+</div>
 </div></body></html>`;
 
   const text = [
@@ -123,7 +138,8 @@ ${p("Thanks,<br>Ankora Labs")}
     summary.map(([k, v]) => `${k}: ${v}`).join("\n"),
     "What happens next:\n" + o.steps.map((s, i) => `${i + 1}. ${s}`).join("\n"),
     `${extra}\nWhatsApp: ${waLink(o.waText)}\nBook a call: ${SITE.calUrl}`,
-    "Thanks,\nAnkora Labs",
+    "Thanks,\nThe Ankora Labs team",
+    "Ankora Labs · Websites, stores and apps · Kathmandu\nhttps://ankoralabs.com",
   ]
     .filter(Boolean)
     .join("\n\n");
