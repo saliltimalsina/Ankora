@@ -6,7 +6,7 @@
 const CAL_LINK = "ankoralabs/30min";
 
 export const SITE = {
-  email: "ankoralabscontact@gmail.com",
+  email: "hello@ankoralabs.com",
   phone: "+977 9840171882",
   phoneHref: "tel:+9779840171882",
   whatsapp: "https://wa.me/ankoralabs",
