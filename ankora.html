@@ -305,10 +305,19 @@ $RC=function(a,b){if(b=document.getElementById(b))(a=document.getElementById(a))
     var n=h; while(n.parentElement && n.parentElement!==hero) n=n.parentElement;
     return (n.parentElement===hero) ? n : null;
   }
-  var el=null;
+  var el=null, owned=false;
   function onScroll(){
     el = (el && el.isConnected) ? el : findText();
     if(!el) return;
+    /* Desktop belongs to the pinned GSAP timeline. Writing opacity/filter here too
+       made the two fight: a ScrollTrigger refresh mid-swipe recorded our half-faded
+       values as GSAP's start state, so the headline stayed blurred back at the top.
+       Hand the element back (once) and stay out of the way. */
+    if(!isMobile()){
+      if(owned){ owned=false; el.style.opacity=""; el.style.filter=""; el.style.transition=""; el.style.transform=""; el.style.willChange=""; }
+      return;
+    }
+    owned=true;
     var y=window.scrollY||window.pageYOffset||0, h=window.innerHeight||800;
     var p=Math.min(1,Math.max(0, y/(h*0.5)));   /* fully gone by ~half a viewport */
     el.style.opacity = String(1 - p);
