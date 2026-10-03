@@ -47,10 +47,11 @@ type Send = {
   replyTo?: { email: string; name?: string };
   subject: string;
   html: string;
+  text?: string;
   attachment?: { name: string; content: string }[];
 };
 
-export async function send({ to, replyTo, subject, html, attachment }: Send) {
+export async function send({ to, replyTo, subject, html, text, attachment }: Send) {
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json", accept: "application/json" },
@@ -60,6 +61,7 @@ export async function send({ to, replyTo, subject, html, attachment }: Send) {
       replyTo: replyTo ?? { email: SITE.email, name: "Ankora Labs" },
       subject,
       htmlContent: html,
+      textContent: text,
       attachment,
     }),
   });
@@ -82,60 +84,49 @@ export function notification(heading: string, rows: [string, string][], message:
   );
 }
 
-const C = { ink: "#002813", green: "#004822", lime: "#d5e27b", paper: "#fbf8ef", line: "#e3decf", text: "#3c5141", muted: "#7a8a7d" };
 const FONT = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;";
 
 /**
- * The "we've got it" email, in the site's colours. Every argument is either
- * our own copy or a value the sender picked from a fixed list, never free text.
+ * The "we've got it" email, written like a short personal note: no banner,
+ * buttons, boxes or address footer, and a plain-text part alongside the HTML.
+ * Gmail files newsletter-shaped mail under Promotions; a note lands in Primary.
+ * Every argument is either our own copy or a value the sender picked from a
+ * fixed list, never free text.
  */
 export function confirmation(o: {
   name: string;
-  heading: string;
   intro: string;
   summary?: [string, string][];
   steps: string[];
   waText: string;
 }) {
   const summary = (o.summary ?? []).filter(([, v]) => v);
-  const btn = (href: string, label: string, solid: boolean) =>
-    `<a href="${esc(href)}" style="${FONT}display:inline-block;margin:0 8px 8px 0;padding:12px 22px;border-radius:99px;font-size:15px;font-weight:600;text-decoration:none;${
-      solid ? `background:${C.green};color:${C.lime};` : `border:1.5px solid ${C.green};color:${C.green};`
-    }">${label}</a>`;
+  const hi = `Hi ${firstName(o.name)},`;
+  const extra = "If you want to add anything, just reply to this email.";
 
-  return `<!doctype html><html><body style="margin:0;padding:0;background:${C.paper};">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.paper};padding:24px 12px;">
-<tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fffef7;border:1px solid ${C.line};border-radius:18px;overflow:hidden;">
-  <tr><td style="background:${C.ink};padding:22px 28px;${FONT}font-size:22px;font-weight:700;letter-spacing:.5px;color:${C.lime};">Ankora Labs</td></tr>
-  <tr><td style="padding:30px 28px 8px;${FONT}">
-    <p style="margin:0 0 6px;font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:${C.muted};">${esc(o.heading)}</p>
-    <h1 style="margin:0 0 16px;font-size:26px;line-height:1.2;color:${C.ink};">Thanks, ${esc(firstName(o.name))}!</h1>
-    <p style="margin:0 0 18px;font-size:16px;line-height:1.6;color:${C.text};">${o.intro}</p>
-    ${
-      summary.length
-        ? `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 20px;background:${C.paper};border:1px solid ${C.line};border-radius:12px;">
-      ${summary
-        .map(
-          ([k, v]) =>
-            `<tr><td style="${FONT}padding:10px 16px;font-size:13px;color:${C.muted};width:110px;">${esc(k)}</td><td style="${FONT}padding:10px 16px 10px 0;font-size:15px;color:${C.ink};">${esc(v)}</td></tr>`,
-        )
-        .join("")}
-    </table>`
-        : ""
-    }
-    <p style="margin:0 0 8px;font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:${C.muted};">What happens next</p>
-    <ol style="margin:0 0 22px;padding-left:20px;font-size:15px;line-height:1.6;color:${C.text};">
-      ${o.steps.map((s) => `<li style="margin-bottom:6px;">${s}</li>`).join("")}
-    </ol>
-    <p style="margin:0 0 10px;font-size:15px;line-height:1.6;color:${C.text};">Want to add something? Just reply to this email, or message us:</p>
-    <p style="margin:0 0 6px;">${btn(waLink(o.waText), "Chat on WhatsApp", true)}${btn(SITE.calUrl, "Book a 30-min call", false)}</p>
-  </td></tr>
-  <tr><td style="padding:18px 28px 26px;border-top:1px solid ${C.line};${FONT}font-size:12.5px;line-height:1.6;color:${C.muted};">
-    Ankora Labs · Web design &amp; development · Kathmandu, Nepal<br>
-    <a href="mailto:${SITE.email}" style="color:${C.green};">${SITE.email}</a> · ${esc(SITE.phone)}<br>
-    You’re getting this because this address was used on a form at ankoralabs.com. If that wasn’t you, ignore this email.
-  </td></tr>
-</table>
-</td></tr></table></body></html>`;
+  const p = (html: string) => `<p style="margin:0 0 14px;">${html}</p>`;
+  const a = (href: string, label: string) => `<a href="${esc(href)}" style="color:#004822;">${label}</a>`;
+  const html = `<!doctype html><html><body style="margin:0;padding:16px;${FONT}font-size:15px;line-height:1.6;color:#1f2e25;">
+<div style="max-width:560px;">
+${p(esc(hi))}
+${p(esc(o.intro))}
+${summary.length ? p(summary.map(([k, v]) => `${esc(k)}: <b>${esc(v)}</b>`).join("<br>")) : ""}
+${p("What happens next:")}
+<ol style="margin:0 0 14px;padding-left:20px;">${o.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+${p(`${esc(extra)} You can also ${a(waLink(o.waText), "message us on WhatsApp")} or ${a(SITE.calUrl, "book a call")}.`)}
+${p("Thanks,<br>Ankora Labs")}
+</div></body></html>`;
+
+  const text = [
+    hi,
+    o.intro,
+    summary.map(([k, v]) => `${k}: ${v}`).join("\n"),
+    "What happens next:\n" + o.steps.map((s, i) => `${i + 1}. ${s}`).join("\n"),
+    `${extra}\nWhatsApp: ${waLink(o.waText)}\nBook a call: ${SITE.calUrl}`,
+    "Thanks,\nAnkora Labs",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
+  return { html, text };
 }

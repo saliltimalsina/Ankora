@@ -71,9 +71,8 @@ export async function POST(req: Request) {
   await send({
     to: { email, name },
     subject: "We’ve got your application — Ankora Labs",
-    html: confirmation({
+    ...confirmation({
       name,
-      heading: "Application received",
       intro: `Your application${attachment ? " and CV are" : " is"} in our inbox, and a real person will read ${attachment ? "them" : "it"}.`,
       summary: [
         ["Role", seat],

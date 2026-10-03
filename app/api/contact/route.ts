@@ -57,9 +57,8 @@ export async function POST(req: Request) {
   await send({
     to: { email, name },
     subject: "We’ve got your message — Ankora Labs",
-    html: confirmation({
+    ...confirmation({
       name,
-      heading: "Message received",
       intro: "Your message is in our inbox, and a real person will reply within 24 hours, weekends too.",
       summary: [
         ["You are", who],
