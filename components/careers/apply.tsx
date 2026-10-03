@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SITE, waLink } from "../../lib/site";
-import { ROLES } from "../../lib/careers";
+import { SEATS, BACKGROUND } from "../../lib/careers";
 
 // "Apply in a minute": a short form with a CV upload. The letter beside it
 // writes the application as you type (the same idea as the /contact brief
@@ -11,17 +11,6 @@ import { ROLES } from "../../lib/careers";
 // with the same message ready. "Apply for this role" buttons elsewhere on the
 // page preselect a role through data-apply-role.
 
-const SEATS = [
-  ...ROLES.map((r) => ({ label: r.chip, v: `a ${r.chip.toLowerCase()}` })),
-  { label: "Designer", v: "a designer" },
-  { label: "Developer", v: "a developer" },
-  { label: "Something else", v: "something else (I’ll explain)" },
-];
-const BACKGROUND = [
-  { label: "Student", v: "a student" },
-  { label: "1–3 years in", v: "1–3 years into my career" },
-  { label: "4+ years in", v: "4+ years into my career" },
-];
 const MAX_CV = 4 * 1024 * 1024;
 const CV_TYPES = /\.(pdf|docx?)$/i;
 
@@ -46,6 +35,11 @@ export default function Apply() {
   const emailRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const trap = useRef<HTMLInputElement>(null);
+  const opened = useRef(0); // when the form appeared; the API ignores instant (bot) sends
+
+  useEffect(() => {
+    opened.current = Date.now();
+  }, []);
 
   // "Apply for this role" on a role card
   useEffect(() => {
@@ -113,6 +107,7 @@ export default function Apply() {
     fd.set("link", link.trim());
     fd.set("about", about.trim());
     fd.set("company", trap.current?.value ?? "");
+    fd.set("t", String(opened.current));
     if (cv) fd.set("cv", cv);
     try {
       const res = await fetch("/api/apply", { method: "POST", body: fd });

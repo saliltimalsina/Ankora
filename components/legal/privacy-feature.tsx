@@ -17,10 +17,10 @@ const ROWS: { what: string; how: string; why: string; who: string; keep: string 
     keep: "12 months after we last talk",
   },
   {
-    what: "An email",
-    how: "address, message, attachments",
+    what: "An email or contact form",
+    how: "name, address, message, attachments",
     why: "To reply and send quotes",
-    who: "Cloudflare (routing), Google (inbox)",
+    who: "Brevo (forms), Cloudflare (routing), Google (inbox)",
     keep: "12 months after we last talk",
   },
   {

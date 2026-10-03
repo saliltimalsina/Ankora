@@ -67,6 +67,10 @@ const SECTIONS: LegalSection[] = [
             <strong>When you email us:</strong> your email address, your message and any attachments.
           </li>
           <li>
+            <strong>When you use our contact form:</strong> your name, email address, phone number if you give it, the
+            options you pick and your message. We send you one email confirming we received it.
+          </li>
+          <li>
             <strong>When you apply for a role:</strong> your name, email, phone number if you give it, CV, portfolio or
             profile links and anything you write in the form.
           </li>
@@ -129,7 +133,8 @@ const SECTIONS: LegalSection[] = [
             <strong>WhatsApp</strong> (Meta) carries chats you start with us.
           </li>
           <li>
-            <strong>Brevo</strong> delivers job applications sent through our careers form to our inbox.
+            <strong>Brevo</strong> delivers messages and job applications sent through our website forms to our inbox,
+            and sends you the email confirming we got them.
           </li>
         </ul>
         <p>

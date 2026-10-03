@@ -114,6 +114,29 @@
 .gb-btn-wa{background:var(--green);color:var(--lime-soft);}
 .gb-btn-wa:hover{background:var(--ever);}
 .gb-btn-mail{border:1.5px solid var(--green);color:var(--green);}
+/* brief form fields */
+.gb-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 22px;margin-top:8px;}
+.gb-field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.gb-field-wide{grid-column:1/-1;}
+.gb-field > span{font-family:var(--hand);font-size:22px;line-height:1.1;color:var(--ever);}
+.gb-field i{font-family:var(--body);font-style:normal;font-size:12.5px;color:var(--muted);}
+.gb-field input,.gb-field textarea{width:100%;padding:9px 2px;border:0;border-bottom:1.5px solid #0c3d2655;border-radius:0;background:transparent;font:inherit;font-size:16px;color:var(--green-d);outline:none;transition:border-color .2s;resize:vertical;}
+.gb-field textarea{padding:9px 12px;border:1.5px solid #0c3d2633;border-radius:12px;background:#fffef7;}
+.gb-field input:focus,.gb-field textarea:focus{border-color:var(--green);}
+.gb-field input::placeholder,.gb-field textarea::placeholder{color:#7d8c80;}
+.gb-trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
+button.gb-btn{border:0;font:inherit;font-weight:500;font-size:15px;cursor:pointer;}
+.gb-btn:disabled{opacity:.6;cursor:progress;transform:none;}
+.gb-more{font-size:.82em;}
+.gb-nudge{margin:12px 0 0;font-family:var(--hand);font-size:22px;color:var(--copper);}
+.gb-or{display:flex;align-items:center;gap:12px;margin:22px 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.gb-or::after{content:"";flex:1;border-top:1.3px solid #0c3d2622;}
+.gb-alt{display:flex;flex-wrap:wrap;gap:8px 18px;}
+.gb-alt a{font-size:15px;font-weight:500;color:var(--green);text-decoration:underline;text-underline-offset:4px;}
+.gb-alt a:hover{color:var(--ever);}
+.gb-done{flex:0;min-height:0;}
+.gb-done-p{margin:14px 0 0;font-size:16px;line-height:1.6;color:#3c5141;}
+.gb-done-p b{color:var(--green-d);font-weight:500;}
 /* grab a slot */
 .gs-sub{margin:18px 0 0;font-size:16px;color:#3c5141;}
 .gs-frame{position:relative;margin-top:clamp(36px,5vh,56px);padding:18px;border-radius:22px;background:#fffef7;border:1px solid var(--line);box-shadow:0 30px 60px -44px rgba(0,40,19,.55);}
@@ -131,6 +154,8 @@
   .gw-cards{grid-template-columns:1fr;}
   .gb-pad{grid-template-columns:1fr;background-image:linear-gradient(90deg,transparent 30px,#e7b7af 30px,#e7b7af 32px,transparent 32px),repeating-linear-gradient(#fffef7 0 35px,#0c3d2618 35px 36px);}
   .gb-groups{padding:26px 20px 10px 48px;}
+  .gb-fields{grid-template-columns:1fr;}
+  .gb-send .gb-btn{width:100%;justify-content:center;}
   .gb-note{padding:24px 20px 26px 48px;border-left:0;border-top:1.5px dashed #0c3d2633;}
   .gs-frame{padding:8px;}
 }

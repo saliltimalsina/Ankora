@@ -54,3 +54,17 @@ export const ROLES: Role[] = [
     validThrough: "2027-04-03",
   },
 ];
+
+// The apply form's chips. /api/apply only accepts these labels: they're echoed
+// in the confirmation email, so free text can't be.
+export const SEATS = [
+  ...ROLES.map((r) => ({ label: r.chip, v: `a ${r.chip.toLowerCase()}` })),
+  { label: "Designer", v: "a designer" },
+  { label: "Developer", v: "a developer" },
+  { label: "Something else", v: "something else (I’ll explain)" },
+];
+export const BACKGROUND = [
+  { label: "Student", v: "a student" },
+  { label: "1–3 years in", v: "1–3 years into my career" },
+  { label: "4+ years in", v: "4+ years into my career" },
+];

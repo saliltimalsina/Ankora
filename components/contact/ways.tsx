@@ -2,12 +2,9 @@ import { SITE } from "../../lib/site";
 import { BookCall, WhatsApp } from "../ui/links";
 import Today from "./today";
 
-// "Pick your way in": a call (tear-off calendar), WhatsApp (chat bubble) or an
-// email brief (envelope). Each card is the whole link.
-
-const MAIL_BODY =
-  "Hi Ankora,\n\nWho we are: \nWhat we need (website / e-commerce / app / UI/UX / AI): \nWhen we’d like to launch: \nAnything else: \n\nThanks!";
-const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent("Project enquiry — Ankora Labs")}&body=${encodeURIComponent(MAIL_BODY)}`;
+// "Pick your way in": a call (tear-off calendar), WhatsApp (chat bubble) or a
+// written message (envelope), which jumps to the form below. Each card is the
+// whole link.
 
 export default function Ways() {
   return (
@@ -58,7 +55,7 @@ export default function Ways() {
             </span>
           </WhatsApp>
 
-          <a className="gw-card gw-mail" href={mailto}>
+          <a className="gw-card gw-mail" href="#brief">
             <span className="gw-art" aria-hidden="true">
               <span className="gw-env">
                 <span className="gw-letter">
@@ -71,10 +68,10 @@ export default function Ways() {
                 <span className="gw-front" />
               </span>
             </span>
-            <h3>Email the brief</h3>
-            <p>Prefer writing it down? We’ve started the email for you, just fill in the blanks.</p>
+            <h3>Send a message</h3>
+            <p>Prefer writing it down? Fill in a short form. It lands in our inbox, and a copy lands in yours.</p>
             <span className="gw-go">
-              Write to us <span aria-hidden="true">→</span>
+              Write to us <span aria-hidden="true">↓</span>
             </span>
           </a>
         </div>
