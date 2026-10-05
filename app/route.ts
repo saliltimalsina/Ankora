@@ -88,7 +88,7 @@ const BUSINESS_LD = () =>
     telephone: SITE.phone.replace(" ", "-"),
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
     areaServed: ["Nepal", "Worldwide"],
-    openingHours: "Mo-Su",
+    openingHours: "Su-Fr 09:00-18:00", // keep in step with the Google Business Profile hours
     sameAs: [SITE.linkedin],
     contactPoint: {
       "@type": "ContactPoint",
