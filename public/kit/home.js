@@ -63,7 +63,23 @@
     } catch (e) { sec.classList.add("in"); }
   }
 
-  function both() { showcase(); letsBuild(); }
+  /* ---- 3. testimonials note ---- */
+  // The quotes are real, but about our team members' work, not Ankora client
+  // work, so the section says so (the same honesty rule as the portfolio).
+  function tmNote() {
+    var sec = document.getElementById("testimonials");
+    if (!sec || sec.querySelector("[data-tm-note]")) return;
+    var p = document.createElement("p");
+    p.setAttribute("data-tm-note", "");
+    p.textContent = "What people have said about working with our team members.";
+    p.style.cssText =
+      "position:absolute;top:20px;left:50%;transform:translateX(-50%);z-index:20;margin:0;" +
+      "width:max-content;max-width:calc(100% - 32px);padding:7px 14px;border-radius:999px;text-align:center;" +
+      "background:#F8F6ED;color:#25201f;font-size:14px;line-height:1.35;box-shadow:0 2px 10px rgba(0,0,0,.25);pointer-events:none";
+    sec.appendChild(p);
+  }
+
+  function both() { showcase(); letsBuild(); tmNote(); }
   function init() {
     both();
     var obs = new MutationObserver(both);
