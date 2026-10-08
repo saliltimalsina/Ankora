@@ -76,6 +76,13 @@ const KEEP_TITLE =
   "var m=document.querySelector('meta[name=\"description\"]');if(m&&m.content!==d)m.content=d}f();" +
   "new MutationObserver(f).observe(document.head,{childList:true,subtree:true,characterData:true,attributes:true})})()</script>";
 
+// The snapshot only links favicon.svg; Google's search-result icon wants a
+// square raster in a multiple of 48px too, so offer the same set as the React pages.
+const ICONS =
+  '<link rel="icon" href="/favicon.ico" sizes="any"/>' +
+  '<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png"/>' +
+  '<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>';
+
 // Business details the snapshot's Organization lacks (location, contact, what
 // it offers), on the same @id so Google merges them into one entity.
 const BUSINESS_LD = () =>
@@ -168,7 +175,7 @@ export async function GET() {
     .replace("KIT_FOOTER_RSC", () => forPayload(kit.footer))
     .replace("<!--KIT:showcase-css-->", () => kit.showcaseCss)
     .replace("<!--KIT:showcase-js-->", "")
-    .replace("</head>", () => BUSINESS_LD() + kit.head + plHead + "</head>")
+    .replace("</head>", () => ICONS + BUSINESS_LD() + kit.head + plHead + "</head>")
     .replace("</body>", () => HIDE_REACT_NAV + kit.nav + plBody + hashScroll + KEEP_TITLE + kit.scripts + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
