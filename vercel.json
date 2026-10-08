@@ -68,6 +68,15 @@
       ]
     },
     {
+      "source": "/((?!_next/|amplify/|api/|md/|images/|fonts/|kit/|statsig-disabled|.*\\.).*)",
+      "headers": [
+        {
+          "key": "Vary",
+          "value": "Accept"
+        }
+      ]
+    },
+    {
       "source": "/images/(.*)",
       "headers": [
         {
