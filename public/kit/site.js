@@ -92,8 +92,21 @@
   /* ---- 4. footer plants ---- */
   function plants() {
     var el = document.querySelector("#main-footer .afoot-plants");
-    // dataset.anim is shared with the snapshot's own footer script, so only one runs
     if (!el || el.dataset.anim) return;
+    // the drawing isn't in the page's HTML (see components/kit/footer.html): fetch it, then animate
+    if (!el.querySelector("svg")) {
+      if (el.dataset.load) return;
+      el.dataset.load = "1";
+      fetch("/kit/footer-plants.svg")
+        .then(function (r) { return r.ok ? r.text() : ""; })
+        .then(function (svg) {
+          if (svg.indexOf("<svg") !== 0) return;
+          el.innerHTML = svg;
+          plants();
+        })
+        .catch(function () {});
+      return;
+    }
     el.dataset.anim = "1";
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.classList.add("is-in"); return; }
     var longest = 0;

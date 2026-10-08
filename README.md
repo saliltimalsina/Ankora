@@ -54,6 +54,8 @@ in, and the prebuilt `/amplify/_next` chunks hydrate it.
                                  by lib/kit.ts.
     public/kit/site.js           behaviour on every page: Cal.com popup, nav
                                  mobile menu, footer plants, WhatsApp pill
+    public/kit/footer-plants.svg the footer drawing; site.js fetches it into
+                                 the footer so pages don't each carry 30 KB
     public/kit/showcase.js       the work showcase engine (both pages)
     public/kit/home.js           homepage only: places the showcase and the
                                  "Let's build" ending after hydration

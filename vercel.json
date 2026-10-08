@@ -68,11 +68,11 @@
       ]
     },
     {
-      "source": "/((?!_next/|amplify/|api/|md/|images/|fonts/|kit/|statsig-disabled|.*\\.).*)",
+      "source": "/kit/footer-plants.svg",
       "headers": [
         {
-          "key": "Vary",
-          "value": "Accept"
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
         }
       ]
     },

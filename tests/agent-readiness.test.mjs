@@ -43,7 +43,8 @@ test("homepage: Accept text/html still gets HTML, with Vary: Accept", async () =
     const res = await get("/", accept);
     assert.equal(res.status, 200);
     assert.equal(type(res), "text/html; charset=utf-8", `Accept: ${accept}`);
-    assert.ok(varies(res), `Vary is "${res.headers.get("vary")}"`);
+    // Vercel replaces a prerendered page's Vary with its own, so this holds only off Vercel
+    if (!process.env.BASE_URL) assert.ok(varies(res), `Vary is "${res.headers.get("vary")}"`);
     assert.match(await res.text(), /^<!DOCTYPE html>/i);
   }
 });
@@ -166,6 +167,33 @@ test("homepage HTML: one H1, and it is the first heading", async () => {
   const tpl = html.indexOf('<template id="ankora-ftpl">');
   assert.ok(tpl > html.indexOf("</main>") && tpl < html.indexOf('<script id="ankora-footer-js">'));
   assert.match(html, /<link rel="alternate" type="text\/markdown" href="\/index\.md"\/>/);
+});
+
+test("homepage HTML: text is at least 5% of the markup", async () => {
+  // An estimate of the Is Agentic "content ratio": visible text over the HTML
+  // left once scripts, styles, templates and the nav are taken out.
+  const html = await (await get("/", "text/html")).text();
+  const markup = html.replace(/<(script|style|template|nav|header)\b[\s\S]*?<\/\1>/g, "");
+  const text = markup.replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  assert.ok(text.length >= 500);
+  const ratio = text.length / markup.length;
+  assert.ok(ratio >= 0.05, `${text.length} chars of text in ${markup.length} of markup: ${(ratio * 100).toFixed(1)}%`);
+});
+
+test("footer plants: fetched by site.js, not inlined in every page", async () => {
+  const svg = await get("/kit/footer-plants.svg");
+  assert.equal(svg.status, 200);
+  assert.ok(type(svg).startsWith("image/svg+xml"));
+  const drawing = await svg.text();
+  assert.match(drawing, /^<svg class="afoot-plants-svg"/);
+  assert.ok(drawing.includes('class="aplant') && drawing.includes('class="aground"'));
+  for (const path of ["/", "/services"]) {
+    const html = await (await get(path, "text/html")).text();
+    assert.match(html, /<div class="afoot-plants"><noscript><img class="afoot-plants-svg" src="\/kit\/footer-plants\.svg"/);
+    assert.doesNotMatch(html, /<svg class="afoot-plants-svg"/, path);
+  }
+  const js = await (await get("/kit/site.js")).text();
+  assert.match(js, /fetch\("\/kit\/footer-plants\.svg"\)/);
 });
 
 test("homepage schema: every Organization has an address and a contact point", async () => {
