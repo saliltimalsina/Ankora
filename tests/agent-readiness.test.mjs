@@ -196,6 +196,19 @@ test("footer plants: fetched by site.js, not inlined in every page", async () =>
   assert.match(js, /fetch\("\/kit\/footer-plants\.svg"\)/);
 });
 
+test("homepage copy has no em dashes, before or after hydration", async () => {
+  const html = await (await get("/", "text/html")).text();
+  const visible = html.replace(/<(script|style|template)\b[\s\S]*?<\/\1>/g, "").replace(/<!--[\s\S]*?-->/g, "");
+  assert.doesNotMatch(visible, /—|&mdash;|&#8212;/);
+  // the React payload re-renders this copy on hydration, so it has to match
+  const payload = [...html.matchAll(/<script>self\.__next_f\.push\(([\s\S]*?)\)<\/script>/g)].map((m) => m[1]).join("");
+  assert.ok(payload.length > 1000);
+  assert.doesNotMatch(payload, /—|\\u2014/);
+  // the services section builds its copy in a script
+  const services = html.match(/<script id="svc-script">([\s\S]*?)<\/script>/)[1].replace(/\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(services, /—/);
+});
+
 test("homepage schema: every Organization has an address and a contact point", async () => {
   const html = await (await get("/", "text/html")).text();
   const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
