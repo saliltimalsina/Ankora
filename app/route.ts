@@ -40,6 +40,10 @@ const ABSOLUTE_META = /(<meta (?:property|name)="(?:og:url|og:image|twitter:imag
 const JSON_LD = /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g;
 const JSON_LD_URL = /"(url|logo|@id)":"\/([^"]*)"/g;
 const DEAD_LINKS = /href="\/(?:accounts-payable|invoices)\/"/g;
+// Source-site leftovers that cost requests for nothing: the Trustpilot widget
+// script (no widget on the page) and preloads for press logos the page never shows.
+const LEFTOVERS =
+  /<script src="\/\/widget\.trustpilot\.com\/[^"]*" async=""><\/script>|<link rel="preload" href="\/images\/homepage\/logos\/[a-z-]+\.webp" as="image"\/>/g;
 
 // The snapshot's title and description are the tagline alone, which says
 // nothing about what Ankora does or where; search results get the studio's
@@ -89,7 +93,7 @@ const BUSINESS_LD = () =>
     address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
     areaServed: ["Nepal", "Worldwide"],
     openingHours: "Su-Fr 09:00-18:00", // keep in step with the Google Business Profile hours
-    sameAs: [SITE.linkedin],
+    sameAs: [SITE.linkedin, "https://clutch.co/profile/ankora-labs"],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",
@@ -157,6 +161,7 @@ export async function GET() {
       close,
     )
     .replace(DEAD_LINKS, 'href="/services"')
+    .replace(LEFTOVERS, "")
     // function replacements: the snippets are inserted literally ("$" stays "$")
     .replace("<!--KIT:footer-css-->", () => kit.footerCss)
     .replaceAll("<!--KIT:footer-->", () => kit.footer)
