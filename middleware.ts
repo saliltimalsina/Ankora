@@ -6,7 +6,9 @@ import { prefersMarkdown } from "./lib/accept";
 //   - content negotiation: the page's own URL with "Accept: text/markdown"
 //   - a plain URL: the path plus ".md" ("/services.md"; the homepage is "/index.md")
 // A path that doesn't exist answers 404 with a Markdown body the same way.
-// Page URLs carry "Vary: Accept" in both formats so caches keep them apart.
+// Markdown responses carry "Vary: Accept" so caches keep the formats apart. On
+// the HTML side the homepage sets it itself (app/route.ts); the header added
+// below is dropped for React pages, where Next writes its own Vary.
 // Files (anything else with an extension), assets and the API are left alone.
 export const config = {
   matcher: ["/((?!_next/|amplify/|api/|md/|images/|fonts/|kit/|statsig-disabled).*)"],

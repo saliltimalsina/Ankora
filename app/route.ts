@@ -198,6 +198,7 @@ export async function GET() {
     .replace("</head>", () => ICONS + MARKDOWN_ALTERNATE + BUSINESS_LD() + kit.head + plHead + "</head>")
     .replace("</body>", () => HIDE_REACT_NAV + kit.nav + plBody + hashScroll + KEEP_TITLE + kit.scripts + "</body>");
   return new Response(html, {
-    headers: { "content-type": "text/html; charset=utf-8" },
+    // also served as Markdown at this URL (middleware.ts), so caches key on Accept
+    headers: { "content-type": "text/html; charset=utf-8", vary: "Accept" },
   });
 }
