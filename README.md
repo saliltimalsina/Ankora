@@ -23,6 +23,26 @@ in, and the prebuilt `/amplify/_next` chunks hydrate it.
                                          answers (the bundle is patched to call
                                          this path instead of the vendor)
 
+### For agents
+
+    middleware.ts                Markdown by content negotiation: a page URL
+                                 with "Accept: text/markdown", or the path plus
+                                 ".md" (/services.md, /index.md), is rewritten
+                                 to the Markdown route. Missing pages answer 404
+                                 in Markdown the same way.
+    app/md/[[...path]]/route.ts  the Markdown twin of every page
+    app/llms.txt/route.ts        /llms.txt: what we do, when to send someone
+                                 to us, and each page's Markdown URL
+    lib/markdown.ts              the Markdown itself, built from lib/site.ts,
+                                 lib/services.ts and lib/careers.ts. Pages with
+                                 no entry there (legal pages, new pages) are
+                                 converted from their HTML, so a new page needs
+                                 nothing extra.
+
+    npm test                                  build, then check all of the above
+    BASE_URL=https://ankoralabs.com npm test  check a deployment (skip the
+                                              build: node --test tests/*.test.mjs)
+
 ### Shared pieces: one copy each
 
     lib/site.ts                  contact details + booking (Cal.com, WhatsApp,

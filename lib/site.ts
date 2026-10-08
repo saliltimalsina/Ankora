@@ -13,6 +13,9 @@ export const SITE = {
   whatsapp: "https://wa.me/ankoralabs",
   whatsappHandle: "@ankoralabs",
   linkedin: "https://www.linkedin.com/company/ankoralabs",
+  // keep both in step with the Google Business Profile hours
+  openingHours: "Su-Fr 09:00-18:00", // schema.org format
+  hoursText: "Sunday to Friday, 09:00 to 18:00 Nepal time (UTC+5:45)",
   calLink: CAL_LINK,
   calUrl: `https://cal.com/${CAL_LINK}`,
   calNamespace: "30min",

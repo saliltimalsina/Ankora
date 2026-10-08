@@ -28,8 +28,9 @@ import { kitCss, kitHtml, kitScripts } from "../lib/kit";
 //
 // The snapshot's og:url, og:image, twitter:image and canonical are root-relative,
 // which link-preview scrapers ignore, so they're rewritten against siteUrl. The
-// JSON-LD blocks get the same treatment (schema.org wants absolute URLs), and the
-// older one's "Ankora" name is aligned with the "Ankora Labs" used everywhere else.
+// JSON-LD blocks get the same treatment (schema.org wants absolute URLs), the
+// older one's "Ankora" name is aligned with the "Ankora Labs" used everywhere
+// else, and each Organization in them gets the studio's address and contact point.
 //
 // The snapshot still holds two hidden links to the source site's pages
 // (/accounts-payable/, /invoices/) that 404 here; crawlers follow hidden links
@@ -76,6 +77,9 @@ const KEEP_TITLE =
   "var m=document.querySelector('meta[name=\"description\"]');if(m&&m.content!==d)m.content=d}f();" +
   "new MutationObserver(f).observe(document.head,{childList:true,subtree:true,characterData:true,attributes:true})})()</script>";
 
+// The homepage is also served as Markdown (middleware.ts); say where.
+const MARKDOWN_ALTERNATE = '<link rel="alternate" type="text/markdown" href="/index.md"/>';
+
 // The snapshot only links favicon.svg; Google's search-result icon wants a
 // square raster in a multiple of 48px too, so offer the same set as the React pages.
 const ICONS =
@@ -83,8 +87,30 @@ const ICONS =
   '<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png"/>' +
   '<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>';
 
-// Business details the snapshot's Organization lacks (location, contact, what
-// it offers), on the same @id so Google merges them into one entity.
+const ADDRESS = { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" };
+const CONTACT_POINT = {
+  "@type": "ContactPoint",
+  contactType: "sales",
+  telephone: SITE.phone.replace(" ", "-"),
+  email: SITE.email,
+  url: SITE.whatsapp,
+  availableLanguage: ["English", "Nepali"],
+  areaServed: "NP",
+};
+
+// The snapshot's Organization entries have no address and no way to reach us.
+// Readers that look only at @type Organization (not the ProfessionalService
+// below) need both there to answer "where are they, how do I contact them".
+function withContact(ld: string) {
+  const data = JSON.parse(ld);
+  for (const node of data["@graph"] ?? [data]) {
+    if (node["@type"] === "Organization") Object.assign(node, { address: ADDRESS, contactPoint: CONTACT_POINT });
+  }
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+// Business details the snapshot's Organization lacks (opening hours, what it
+// offers, booking), on the same @id so Google merges them into one entity.
 const BUSINESS_LD = () =>
   '<script type="application/ld+json">' +
   JSON.stringify({
@@ -97,19 +123,11 @@ const BUSINESS_LD = () =>
     image: `${siteUrl}/images/homepage/meta-image.jpg`,
     email: SITE.email,
     telephone: SITE.phone.replace(" ", "-"),
-    address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
+    address: ADDRESS,
     areaServed: ["Nepal", "Worldwide"],
-    openingHours: "Su-Fr 09:00-18:00", // keep in step with the Google Business Profile hours
+    openingHours: SITE.openingHours,
     sameAs: [SITE.linkedin, "https://clutch.co/profile/ankora-labs"],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "sales",
-      telephone: SITE.phone.replace(" ", "-"),
-      email: SITE.email,
-      url: SITE.whatsapp,
-      availableLanguage: ["English", "Nepali"],
-      areaServed: "NP",
-    },
+    contactPoint: CONTACT_POINT,
     potentialAction: {
       "@type": "ReserveAction",
       name: "Book a 30-minute call",
@@ -162,9 +180,11 @@ export async function GET() {
     .replace(ABSOLUTE_META, (_, tag, path) => `${tag}"${new URL(path, siteUrl)}"`)
     .replace(JSON_LD, (_, open, body, close) =>
       open +
-      body
-        .replace('"name":"Ankora",', '"name":"Ankora Labs",')
-        .replace(JSON_LD_URL, (_m: string, key: string, path: string) => `"${key}":"${new URL(path, siteUrl)}"`) +
+      withContact(
+        body
+          .replace('"name":"Ankora",', '"name":"Ankora Labs",')
+          .replace(JSON_LD_URL, (_m: string, key: string, path: string) => `"${key}":"${new URL(path, siteUrl)}"`),
+      ) +
       close,
     )
     .replace(DEAD_LINKS, 'href="/services"')
@@ -175,7 +195,7 @@ export async function GET() {
     .replace("KIT_FOOTER_RSC", () => forPayload(kit.footer))
     .replace("<!--KIT:showcase-css-->", () => kit.showcaseCss)
     .replace("<!--KIT:showcase-js-->", "")
-    .replace("</head>", () => ICONS + BUSINESS_LD() + kit.head + plHead + "</head>")
+    .replace("</head>", () => ICONS + MARKDOWN_ALTERNATE + BUSINESS_LD() + kit.head + plHead + "</head>")
     .replace("</body>", () => HIDE_REACT_NAV + kit.nav + plBody + hashScroll + KEEP_TITLE + kit.scripts + "</body>");
   return new Response(html, {
     headers: { "content-type": "text/html; charset=utf-8" },
