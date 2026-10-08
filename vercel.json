@@ -21,6 +21,28 @@
       ],
       "destination": "https://ankoralabs.com/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "ankora.saliltimalsina.com.np"
+        }
+      ],
+      "destination": "https://ankoralabs.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "ankora.saliltimalsina.com.np"
+        }
+      ],
+      "destination": "https://ankoralabs.com/:path*",
+      "permanent": true
     }
   ],
   "headers": [
